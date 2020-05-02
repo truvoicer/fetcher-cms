@@ -70,7 +70,6 @@ export const isAuthenticated = () => {
     //
     // return new Date().getTime() < expiresAt;
     let getAccessToken = getCookie("access_token");
-    console.log(getAccessToken);
     if (getAccessToken === "" || getAccessToken === null) {
         return false;
     }
@@ -83,9 +82,8 @@ export const getApiUser = async () => {
             access_token: getCookie("access_token")
         }
         let response = await axios.post(apiConfig.apiUrl + apiConfig.endpoints.getUser, data );
-        console.log(response);
         if (response.status === 200) {
-
+            return response.data.data;
         }
         return response;
     } catch (e) {
