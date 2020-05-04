@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import Authenticate from "../../library/api/authenticate";
+import Authenticate from "../../library/session/authenticate";
 
 export default class Logout extends React.Component {
     constructor(props) {

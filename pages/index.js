@@ -1,7 +1,23 @@
-import Head from 'next/head'
-import Authenticate from "../library/api/authenticate";
-import { useRouter } from 'next/router'
+import { isAuthenticated } from "../library/session/authenticate";
+import Router from 'next/router'
 
-export default function Home() {
-  return <h1>Home</h1>
+export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.loggedIn = false;
+  }
+
+  componentDidMount() {      
+      if (!isAuthenticated) {
+          Router.push("/auth/login");
+      }
+      Router.push('/admin/dashboard')
+  }
+
+  render() {
+      return (
+        <h1>Home</h1>
+      )
+  
+  }
 }

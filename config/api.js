@@ -4,6 +4,7 @@ export default
     "endpoints": {
         "login": "/api/login",
         "getUser": "/api/get-user",
-        "createUser": "/api/admin/create-user"
+        "createUser": "/api/admin/create-user",
+        "providers": "/api/providers",
     }
 }

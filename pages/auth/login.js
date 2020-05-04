@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router'
-const { login } = require("../../library/api/authenticate")
+const { login, getApiUser } = require("../../library/session/authenticate")
 
 export default function Login() {
 
@@ -19,7 +19,6 @@ export default function Login() {
         e.preventDefault();
         const response = await login(loginData);
         if (response.status === 200) {
-            console.log("router");
             await router.push("/admin/dashboard");
         }
     };
@@ -35,7 +34,7 @@ export default function Login() {
 
                 <form method="post" onSubmit={submitHandler}>
                 <div class="input-group mb-3">
-                    <input type="email" class="form-control" name="email" placeholder="Email" onChange={formChangeHandler} />
+                    <input type="email" class="form-control" name="email" placeholder="Email" onBlur={formChangeHandler} onChange={formChangeHandler} />
                     <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-envelope"></span>
