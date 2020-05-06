@@ -1,73 +1,70 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router'
-const { login, getApiUser } = require("../../library/session/authenticate")
+import Router from 'next/router'
+import AuthLayout from '../../layouts/AuthLayout'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
 
-export default function Login() {
 
-    const router = useRouter();
-    const [ loginData, setLoginData ] = useState({
-       email: "",
-       password: ""
-    });
+const {login} = require("../../library/session/authenticate")
 
-    const formChangeHandler = e => {
-      console.log(e.target.value);
-      setLoginData({...loginData, [e.target.name]: e.target.value});
-      console.log(loginData);
-    };
-    const submitHandler = async e => {
-        e.preventDefault();
-        const response = await login(loginData);
-        if (response.status === 200) {
-            await router.push("/admin/dashboard");
+class Login extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            email: "",
+            password: ""
         }
-    };
-    return (
-            <div class="login-box">
-            <div class="login-logo">
-            <a href="../../index2.html"><b>Admin</b>LTE</a>
-            </div>
-            {/* <!-- /.login-logo --> */}
-            <div class="card">
-            <div class="card-body login-card-body">
-                <p class="login-box-msg">Sign in to start your session</p>
+        this.formChangeHandler = this.formChangeHandler.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
+    }
 
-                <form method="post" onSubmit={submitHandler}>
-                <div class="input-group mb-3">
-                    <input type="email" class="form-control" name="email" placeholder="Email" onBlur={formChangeHandler} onChange={formChangeHandler} />
-                    <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-envelope"></span>
+    formChangeHandler(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+        console.log(this.state)
+    }
+
+    async submitHandler(e) {
+        e.preventDefault();
+
+        const response = await login(this.state);
+        if (response.status === 200) {
+            console.log()
+            await Router.push("/admin/dashboard");
+        }
+    }
+
+    render() {
+        return (
+            <AuthLayout>
+                <>
+                    <div className="text-center">
+                        <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                     </div>
-                    </div>
-                </div>
-                <div class="input-group mb-3">
-                    <input type="password" class="form-control" placeholder="Password" name="password" onChange={formChangeHandler} />
-                    <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
-                    </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-8">
-                    <div class="icheck-primary">
-                        <input type="checkbox" id="remember"/>
-                        <label for="remember">
-                        Remember Me
-                        </label>
-                    </div>
-                    </div>
-                    {/* <!-- /.col --> */}
-                    <div class="col-4">
-                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                    </div>
-                    {/* <!-- /.col --> */}
-                </div>
-                </form>
-            </div>
-            {/* <!-- /.login-card-body --> */}
-            </div>
-        </div>
-    )
+                    <Form onSubmit={this.submitHandler}>
+                        <Form.Group controlId="formBasicEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Form.Control type="email" placeholder="Enter email" name="email" onChange={this.formChangeHandler}/>
+                            <Form.Text className="text-muted">
+                                We'll never share your email with anyone else.
+                            </Form.Text>
+                        </Form.Group>
+
+                        <Form.Group controlId="formBasicPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control type="password" placeholder="Password" name="password" onChange={this.formChangeHandler}/>
+                        </Form.Group>
+                        <Form.Group controlId="formBasicCheckbox">
+                            <Form.Check type="checkbox" label="Check me out"/>
+                        </Form.Group>
+                        <Button variant="primary" type="submit">
+                            Submit
+                        </Button>
+                    </Form>
+                </>
+            </AuthLayout>
+        )
+    }
 }
+
+export default Login;

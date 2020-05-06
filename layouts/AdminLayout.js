@@ -2,6 +2,8 @@ import AdminHeader from '../components/Headers/AdminHeader'
 import AdminSidebar from '../components/Sidebars/AdminSidebar'
 import AdminFooter from '../components/Footers/AdminFooter'
 import Breadcrumbs from "../components/Headers/Breadcrumbs";
+import {isAuthenticated} from "../library/session/authenticate";
+import Router from "next/router";
 
 class AdminLayout extends React.Component {
     constructor(props) {
@@ -10,6 +12,9 @@ class AdminLayout extends React.Component {
     }
 
     componentDidMount() {
+        if (!isAuthenticated()) {
+            Router.push("/auth/login");
+        }
     }
 
 

@@ -1,7 +1,7 @@
 
 import AdminLayout from '../../../layouts/AdminLayout'
 
-export default class Users extends React.Component {
+export default class ManageUsers extends React.Component {
     constructor(props) {
         super(props)
         this.props = props;

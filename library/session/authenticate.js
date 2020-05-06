@@ -5,7 +5,7 @@ import { sendData } from '../api/middleware';
 import React from 'react'
 
 export const login = async (data) => {
-    let response = sendData(apiConfig.endpoints.login, data);
+    let response = await sendData(apiConfig.endpoints.login, data);
         if (response.status === 200) {
             setSession(response.data);
         }
@@ -15,7 +15,6 @@ export const login = async (data) => {
 
 // Sets user details in localStorage
 const setSession = (authResult) => {
-    console.log(authResult)
     // Set the time that the access token will expire at
     let expiresAt = JSON.stringify((authResult.session.expires_at * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.session.access_token);

@@ -28,7 +28,7 @@ class Sidebar extends React.Component {
                                               href={subItem.route}>{subItem.label}</NavDropdown.Item>)
                 })
                 return (
-                    <NavDropdown title={item.label} href={item.route} id="nav-dropdown">
+                    <NavDropdown title={item.label} href={item.route} id="nav-dropdown" drop="right">
                         {subitems}
                     </NavDropdown>
                 )

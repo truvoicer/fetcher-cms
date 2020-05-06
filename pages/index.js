@@ -7,11 +7,13 @@ export default class App extends React.Component {
     this.loggedIn = false;
   }
 
-  componentDidMount() {      
-      if (!isAuthenticated) {
+  componentDidMount() {
+      console.log(isAuthenticated())
+      if (!isAuthenticated()) {
           Router.push("/auth/login");
+      } else {
+          Router.push('/admin/dashboard')
       }
-      Router.push('/admin/dashboard')
   }
 
   render() {

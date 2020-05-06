@@ -1,5 +1,6 @@
 import axios from 'axios';
 import apiConfig from "../../config/api";
+import { getSessionObject } from "../session/authenticate";
 
 export const sendData = async (endpoint, data) => {
     try {
@@ -31,8 +32,10 @@ const responseHandler = (response) => {
 }
 
 const buildHttpQuery = (queryObject) => {
+    queryObject.access_token = getSessionObject().access_token;
+    // console.log(queryObject);
     let esc = encodeURIComponent;
-    return  Object.keys(queryObject)
+    return  "?" + Object.keys(queryObject)
         .map(k => esc(k) + '=' + esc(queryObject[k]))
         .join('&');
 }
