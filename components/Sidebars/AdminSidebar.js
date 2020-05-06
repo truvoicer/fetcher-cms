@@ -11,8 +11,11 @@ class Sidebar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            session: {}
+            session: {},
+            subMenu: ""
         }
+        this.menuClick = this.menuClick.bind(this)
+        this.ListItems = this.ListItems.bind(this)
     }
 
     componentDidMount() {
@@ -21,52 +24,82 @@ class Sidebar extends React.Component {
         })
     }
 
+    menuClick(e) {
+        e.preventDefault();
+        if (this.state.subMenu === e.target.id) {
+            this.setState({
+                subMenu: ""
+            })
+        } else {
+            this.setState({
+                subMenu: e.target.id
+            })
+        }
+    }
+
     ListItems() {
         return SidebarConfig.items.map(function (item, index) {
             let subItems;
             if (typeof item.subs != "undefined") {
                 subItems = item.subs.map((subItem, subIndex) => {
+                    let itemKey = index + "." + subIndex;
                     return (
                         <Link href={subItem.route} as={subItem.route}>
-                            <a className={"collapse-item"}>{subItem.label}</a>
+                            <a className={"collapse-item"} key={itemKey}>{subItem.label}</a>
                         </Link>
                     )
                 })
             }
             return (
-                <li className={"nav-item"}>
-                    <Link href={item.route} as={item.route}>
-                        <a className={"nav-link collapsed"}>{item.label}</a>
-                    </Link>
-                    {subItems &&
-                    <div className={"bg-white py-2 collapse-inner rounded"}>
-                        {subItems}
+                <div>
+                    {item.heading &&
+                    <div className="sidebar-heading">
+                        {item.heading}
                     </div>
                     }
-                </li>
+                    <li className={"nav-item"} key={index}>
+                        <Link href={item.route} as={item.route}>
+                            <a className="nav-link collapsed"
+                               href="#"
+                               id={item.name}
+
+                               onClick={this.menuClick}>
+                                <i className={item.icon}></i>
+                                <span>{item.label}</span>
+                            </a>
+                        </Link>
+                        {subItems &&
+
+                        <div className={this.state.subMenu === item.name ? "collapse show" : "collapse"}>
+                            <div className="bg-white py-2 collapse-inner rounded"
+                                 aria-labelledby="headingTwo"
+                                 data-parent={item.name}>
+                                {subItems}
+                            </div>
+                        </div>
+                        }
+                    </li>
+                </div>
             )
-        })
+        }.bind(this))
     }
 
     render() {
         return (
-            <Nav defaultActiveKey="/admin/dashboard" className="flex-column"
-                 bsPrefix="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion">
+            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+                <Link href={SiteConfig.adminHome} as={SiteConfig.adminHome}>
+                    <a className="sidebar-brand d-flex align-items-center justify-content-center">
+                        <div className="sidebar-brand-icon rotate-n-15">
+                            <i className="fas fa-laugh-wink"></i>
+                        </div>
+                        <div className="sidebar-brand-text mx-3">{SiteConfig.siteName}</div>
+                    </a>
+                </Link>
 
-                <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/dashboard">
-                    <div className="sidebar-brand-icon rotate-n-15">
-                        <i className="fas fa-laugh-wink"></i>
-                    </div>
-                    <div className="sidebar-brand-text mx-3">{SiteConfig.siteName}</div>
-                </a>
+                <hr className="sidebar-divider my-0"/>
 
-                <div className="sidebar-heading">
-                    {this.state.session.username}
-                </div>
-                <ul>
-                    <this.ListItems></this.ListItems>
-                </ul>
-            </Nav>
+                <this.ListItems></this.ListItems>
+            </ul>
         )
     }
 }

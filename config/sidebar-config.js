@@ -5,11 +5,13 @@ export const SidebarConfig =
             label: "Dashboard",
             name: "dashboard",
             route: "/admin/dashboard",
+            icon: "fas fa-fw fa-cog",
         },
         {
             label: "Providers",
             name: "providers",
             route: "/admin/providers",
+            icon: "fas fa-fw fa-folder",
             subs: [
                 {
                     label: "Manage Providers",
@@ -24,9 +26,11 @@ export const SidebarConfig =
             ]
         },
         {
+            heading: "Admin",
             label: "Users",
             name: "users",
             route: "/admin/users",
+            icon: "fas fa-fw fa-wrench",
             subs: [
                 {
                     label: "Manage Users",

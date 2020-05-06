@@ -1,3 +1,4 @@
 export const SiteConfig = {
-    siteName: "Fetcher CMS"
+    siteName: "Fetcher CMS",
+    adminHome: "/admin/dashboard"
 }

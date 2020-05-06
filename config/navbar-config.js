@@ -2,26 +2,22 @@ export const NavbarConfig =
 {
     items: [
         {
-            label: "Dashboard",
-            name: "dashboard",
-            route: "/admin/dashboard",
+            label: "Profile",
+            name: "profile",
+            route: "/admin/profile",
+            icon: "fas fa-user fa-sm fa-fw mr-2 text-gray-400"
         },
         {
-            label: "Providers",
-            name: "providers",
-            route: "/admin/providers",
-            subs: [
-                {
-                    label: "Create Provider",
-                    name: "create_provider",
-                    route: "/admin/providers/create"
-                }
-            ]
+            label: "Settings",
+            name: "settings",
+            route: "/admin/settings",
+            icon: "fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"
         },
         {
-            label: "Users",
-            name: "users",
-            route: "/admin/users",
+            label: "Logout",
+            name: "logout",
+            route: "/admin/logout",
+            icon: "fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
         }
     ]
 }
