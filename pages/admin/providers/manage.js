@@ -15,8 +15,14 @@ export default class ManageProviders extends React.Component {
         this.state = {
             columns: [],
             data: [],
-            showModal: false,
-            modalTitle: "Create Provider"
+            modal: {
+                showModal: false,
+                modalTitle: "Create Provider",
+                form: {
+                    endpoint: ApiConfig.endpoints.createProvider
+                }
+            }
+
         }
         this.setTableColumns = this.setTableColumns.bind(this);
         this.setProviderData = this.setProviderData.bind(this);
@@ -30,7 +36,7 @@ export default class ManageProviders extends React.Component {
 
     setProviderData() {
         let query = {
-            count: 5,
+            count: 10,
             order: "asc",
             sort: "provider_name"
         };
@@ -67,9 +73,18 @@ export default class ManageProviders extends React.Component {
                     sortable: true,
                     right: true,
                 },
+                {
+                    name: 'Controls',
+                    right: true,
+                    cell: row =>
+                        <Button variant="primary" size={"sm"} onClick={this.handleShow}>
+                            Edit
+                        </Button>,
+                },
             ]
         });
     }
+
     handleShow() {
         this.setState({
             showModal: true
@@ -80,12 +95,14 @@ export default class ManageProviders extends React.Component {
         return (
             <AdminLayout>
                 <>
-                    <Button variant="primary" onClick={this.handleShow}>
-                        Launch demo modal
+                    <Button variant="primary" size={"sm"} onClick={this.handleShow}>
+                        Add Provider
                     </Button>
-                    <FormModal showModal={this.state.showModal} modalTitle={this.state.modalTitle} />
+                    <FormModal showModal={this.state.showModal}
+                               formEndpoint={this.state.modal.form.endpoint}
+                               modalTitle={this.state.modal.modalTitle}/>
                     <DataTable
-                        title="Arnold Movies"
+                        title="Providers"
                         columns={this.state.columns}
                         data={this.state.data}
                     />

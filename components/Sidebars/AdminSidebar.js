@@ -5,37 +5,47 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {Router} from 'next/router'
+import Link from "next/link";
 
 class Sidebar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            session: getSessionObject()
+            session: {}
         }
+    }
+
+    componentDidMount() {
+        this.setState({
+            session: getSessionObject()
+        })
     }
 
     ListItems() {
         return SidebarConfig.items.map(function (item, index) {
-            if (typeof item.subs == "undefined") {
-                return (
-                    <Nav.Item eventkey={index} key={index}>
-                        <Nav.Link href={item.route}>{item.label}</Nav.Link>
-                    </Nav.Item>
-                )
-            } else {
-                const subitems = item.subs.map((subItem, subIndex) => {
-                    return (<NavDropdown.Item key={index + "." + subIndex}
-                                              href={subItem.route}>{subItem.label}</NavDropdown.Item>)
+            let subItems;
+            if (typeof item.subs != "undefined") {
+                subItems = item.subs.map((subItem, subIndex) => {
+                    return (
+                        <Link href={subItem.route} as={subItem.route}>
+                            <a className={"collapse-item"}>{subItem.label}</a>
+                        </Link>
+                    )
                 })
-                return (
-                    <NavDropdown title={item.label} href={item.route} id="nav-dropdown" drop="right">
-                        {subitems}
-                    </NavDropdown>
-                )
             }
-
-
-        }.bind(this))
+            return (
+                <li className={"nav-item"}>
+                    <Link href={item.route} as={item.route}>
+                        <a className={"nav-link collapsed"}>{item.label}</a>
+                    </Link>
+                    {subItems &&
+                    <div className={"bg-white py-2 collapse-inner rounded"}>
+                        {subItems}
+                    </div>
+                    }
+                </li>
+            )
+        })
     }
 
     render() {
@@ -53,8 +63,9 @@ class Sidebar extends React.Component {
                 <div className="sidebar-heading">
                     {this.state.session.username}
                 </div>
-
-                <this.ListItems></this.ListItems>
+                <ul>
+                    <this.ListItems></this.ListItems>
+                </ul>
             </Nav>
         )
     }

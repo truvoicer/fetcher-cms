@@ -4,6 +4,7 @@ import { getSessionObject } from "../session/authenticate";
 
 export const sendData = async (endpoint, data) => {
     try {
+        data.access_token = getSessionObject().access_token;
         return responseHandler(await axios.post(apiConfig.apiUrl + endpoint, data));
     } catch (e) {
         console.error(e)

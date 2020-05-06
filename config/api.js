@@ -6,5 +6,6 @@ export default
         "getUser": "/api/get-user",
         "createUser": "/api/admin/create-user",
         "providers": "/api/providers",
+        "createProvider": "/api/provider/create",
     }
 }
