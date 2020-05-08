@@ -26,6 +26,24 @@ export const SidebarConfig =
             ]
         },
         {
+            label: "Properties",
+            name: "properties",
+            route: "/admin/properties",
+            icon: "fas fa-fw fa-folder",
+            subs: [
+                {
+                    label: "Manage Properties",
+                    name: "manage_properties",
+                    route: "/admin/properties/manage"
+                },
+                {
+                    label: "Create Property",
+                    name: "create_properties",
+                    route: "/admin/properties/create"
+                }
+            ]
+        },
+        {
             heading: "Admin",
             label: "Users",
             name: "users",

@@ -5,10 +5,10 @@ import ApiConfig from '../../../config/api'
 import Button from "react-bootstrap/Button";
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import ProviderForm from "../../../components/Forms/ProviderForm";
+import PropertyForm from "../../../components/Forms/PropertyForm";
 import Alert from "react-bootstrap/Alert";
 
-export default class ManageProviders extends React.Component {
+export default class ManageProperties extends React.Component {
     constructor(props) {
         super(props)
         this.props = props;
@@ -26,29 +26,29 @@ export default class ManageProviders extends React.Component {
                 responseMessage: ""
             }
         }
-        this.newProviderTitle = "New Provider";
-        this.updateProviderTitle = "Update Provider";
+        this.newPropertyTitle = "New Property";
+        this.updatePropertyTitle = "Update Property";
 
         this.setTableColumns = this.setTableColumns.bind(this);
-        this.setProviderData = this.setProviderData.bind(this);
+        this.setPropertyData = this.setPropertyData.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
-        this.providerModal = this.providerModal.bind(this);
+        this.propertyModal = this.propertyModal.bind(this);
         this.formResponse = this.formResponse.bind(this);
     }
 
     componentDidMount() {
         this.setTableColumns()
-        this.setProviderData()
+        this.setPropertyData()
     }
 
-    setProviderData() {
+    setPropertyData() {
         let query = {
             count: 10,
             order: "asc",
-            sort: "provider_name"
+            sort: "property_name"
         };
-        fetchData(ApiConfig.endpoints.providers, query).then((response) => {
+        fetchData(ApiConfig.endpoints.properties, query).then((response) => {
             this.setState({
                 data: response.data.data
             })
@@ -59,27 +59,14 @@ export default class ManageProviders extends React.Component {
         this.setState({
             columns: [
                 {
-                    name: 'Provider Name',
-                    selector: 'provider_name',
+                    name: 'Property Name',
+                    selector: 'property_name',
                     sortable: true,
                 },
                 {
-                    name: 'Api Base Url',
-                    selector: 'provider_api_base_url',
+                    name: 'Property label',
+                    selector: 'property_label',
                     sortable: true,
-                    right: true,
-                },
-                {
-                    name: 'Access key',
-                    selector: 'provider_access_key',
-                    sortable: true,
-                    right: true,
-                },
-                {
-                    name: 'Secret key',
-                    selector: 'provider_secret_key',
-                    sortable: true,
-                    right: true,
                 },
                 {
                     name: 'Controls',
@@ -120,9 +107,9 @@ export default class ManageProviders extends React.Component {
         let modalTitle;
         let action = e.target.getAttribute("data-modal-action");
         if(action === "new") {
-            modalTitle = this.newProviderTitle;
+            modalTitle = this.newPropertyTitle;
         } else if (action === "update") {
-            modalTitle = this.updateProviderTitle;
+            modalTitle = this.updatePropertyTitle;
         }
         this.setState({
             modal: {
@@ -133,14 +120,14 @@ export default class ManageProviders extends React.Component {
         });
     }
 
-    providerModal() {
+    propertyModal() {
         return (
             <Modal show={this.state.modal.showModal} onHide={this.handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{this.state.modal.modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <ProviderForm formAction={this.state.modal.action} formResponse={this.formResponse}/>
+                    <PropertyForm formAction={this.state.modal.action} formResponse={this.formResponse}/>
                 </Modal.Body>
             </Modal>
         );
@@ -156,15 +143,15 @@ export default class ManageProviders extends React.Component {
                     </Alert>
                     }
                     <Button variant="primary" size={"sm"} onClick={this.handleShow} data-modal-action={"create"}>
-                        Add Provider
+                        Add Property
                     </Button>
                     <DataTable
-                        title="Providers"
+                        title="Properties"
                         columns={this.state.columns}
                         data={this.state.data}
                     />
 
-                    <this.providerModal/>
+                    <this.propertyModal/>
                 </>
             </AdminLayout>
         )

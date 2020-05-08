@@ -6,18 +6,16 @@ import Alert from "react-bootstrap/Alert";
 import Modal from "react-bootstrap/Modal";
 import ApiConfig from "../../config/api";
 
-export default class ProviderForm extends React.Component {
+export default class PropertyForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             formSubmitted: false,
-            data: {
-                action: this.props.formAction,
-                provider_name: "",
-                provider_api_base_url: "",
-                provider_access_key: "",
-                provider_secret_key: ""
-            }
+            action: this.props.formAction,
+            provider_name: "",
+            provider_api_base_url: "",
+            provider_access_key: "",
+            provider_secret_key: ""
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
@@ -37,8 +35,14 @@ export default class ProviderForm extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
-        sendData(ApiConfig.endpoints.createProvider, this.state).then((response) => {
-            this.props.formResponse(response.status, response.message);
+        let endpoint;
+        if (this.state.action === "create") {
+            endpoint = ApiConfig.endpoints.createProvider;
+        } else if (this.state.action === "update") {
+            endpoint = ApiConfig.endpoints.updateProvider;
+        }
+        sendData(endpoint, this.state).then((response) => {
+            this.props.formResponse(response.status, response.data.message);
         });
     }
 

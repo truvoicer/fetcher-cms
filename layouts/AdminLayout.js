@@ -4,11 +4,12 @@ import AdminFooter from '../components/Footers/AdminFooter'
 import Breadcrumbs from "../components/Headers/Breadcrumbs";
 import {isAuthenticated} from "../library/session/authenticate";
 import Router from "next/router";
+import Alert from "react-bootstrap/Alert";
+import React from "react";
 
 class AdminLayout extends React.Component {
     constructor(props) {
         super(props)
-
     }
 
     componentDidMount() {
@@ -17,6 +18,13 @@ class AdminLayout extends React.Component {
         }
     }
 
+    showAlertPopup(alertStatus, alertMessage) {
+        this.setState({
+            showAlert: true,
+            alertStatus: alertStatus,
+            alertMessage: alertMessage
+        });
+    }
 
     render() {
         return (
