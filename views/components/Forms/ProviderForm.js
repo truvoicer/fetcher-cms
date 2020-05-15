@@ -17,6 +17,7 @@ export default class PropertyForm extends React.Component {
             provider_access_key: "",
             provider_secret_key: ""
         }
+        console.log("provider form")
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
     }

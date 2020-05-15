@@ -94,7 +94,7 @@ export default class ManageProperties extends React.Component {
         });
     }
 
-    formResponse(status, message) {
+    formResponse(status, message, data = null) {
         let alertStatus;
         if (status === 200) {
             alertStatus = "success"

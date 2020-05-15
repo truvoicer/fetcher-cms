@@ -7,6 +7,8 @@ export default
         "createUser": "/api/admin/create-user",
         "provider": "/api/provider/%d",
         "providers": "/api/providers",
+        "providerProperties": "/api/provider/%d/properties",
+        "createProviderProperties": "/api/provider/properties/create",
         "property": "/api/property/%d",
         "properties": "/api/properties",
         "createProvider": "/api/provider/create",

@@ -20,7 +20,7 @@ export const fetchData = async (endpoint, queryObj) => {
 export const responseHandler = (promise, callback) => {
     promise.then((response) => {
         if (response.status === 200) {
-           callback(response.status, response.data.message);
+           callback(response.status, response.data.message, response.data);
         }
     })
     .catch((error) => {

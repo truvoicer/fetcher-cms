@@ -11,6 +11,7 @@ import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Container from "react-bootstrap/Container";
+import ProviderPropertiesForm from "../../../views/components/Forms/ProviderPropertiesForm";
 
 export default class ManageProviders extends React.Component {
     constructor(props) {
@@ -30,16 +31,21 @@ export default class ManageProviders extends React.Component {
             form: {
                 submitted: false,
                 alertStatus: "",
-                responseMessage: ""
+                responseMessage: "",
             }
         }
+        this.formTemplate = "";
         this.newProviderTitle = "New Provider";
         this.updateProviderTitle = "Update Provider";
         this.deleteProviderTitle = "Delete Provider";
+        this.propertiesTitle = "Provider Properties";
 
         this.setTableColumns = this.setTableColumns.bind(this);
         this.setProviderData = this.setProviderData.bind(this);
-        this.handleShow = this.handleShow.bind(this);
+        this.createProvider = this.createProvider.bind(this);
+        this.updateProvider = this.updateProvider.bind(this);
+        this.deleteProvider = this.deleteProvider.bind(this);
+        this.showProperties = this.showProperties.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.providerModal = this.providerModal.bind(this);
         this.formResponse = this.formResponse.bind(this);
@@ -97,12 +103,16 @@ export default class ManageProviders extends React.Component {
                     right: true,
                     cell: row => (
                         <div>
-                            <Button variant="primary" size={"sm"} onClick={this.handleShow} data-provider-id={row.id}
-                                    data-modal-action={"update"}>
+                            <Button variant="primary" size={"sm"} onClick={this.showProperties}
+                                    data-provider-id={row.id}>
+                                Properties
+                            </Button>
+                            <Button variant="primary" size={"sm"} onClick={this.updateProvider}
+                                    data-provider-id={row.id}>
                                 Edit
                             </Button>
-                            <Button variant="danger" size={"sm"} onClick={this.handleShow} data-provider-id={row.id}
-                                    data-modal-action={"delete"}>
+                            <Button variant="danger" size={"sm"} onClick={this.deleteProvider}
+                                    data-provider-id={row.id}>
                                 Delete
                             </Button>
                         </div>
@@ -113,8 +123,7 @@ export default class ManageProviders extends React.Component {
         });
     }
 
-    formResponse(status, message) {
-        console.log(status, message);
+    formResponse(status, message, data = null) {
         let alertStatus;
         if (status === 200) {
             alertStatus = "success"
@@ -140,56 +149,86 @@ export default class ManageProviders extends React.Component {
         })
     }
 
-    handleShow(e) {
-        let modalTitle;
-        let action = e.target.getAttribute("data-modal-action");
-        let providerId = e.target.getAttribute("data-provider-id");
-        if (action === "create") {
-            modalTitle = this.newProviderTitle;
-        } else if (action === "update") {
-            modalTitle = this.updateProviderTitle;
-        } else if (action === "delete") {
-            modalTitle = this.deleteProviderTitle;
-        }
+    showProperties(e) {
+        let data = {
+            provider_id: e.target.getAttribute("data-provider-id"),
+            endpoint: ApiConfig.endpoints.deleteProvider
+        };
         this.setState({
             modal: {
                 showModal: true,
-                modalTitle: modalTitle,
-                action: action,
-                providerId: providerId
+                modalTitle: this.propertiesTitle,
+                action: 'update',
             }
         });
+        this.formTemplate = (<ProviderPropertiesForm data={data} formResponse={this.formResponse}/>)
+    }
+
+    deleteProvider(e) {
+        let data = {
+            provider_id: e.target.getAttribute("data-provider-id"),
+            endpoint: ApiConfig.endpoints.deleteProvider
+        };
+        this.setState({
+            modal: {
+                showModal: true,
+                modalTitle: this.deleteProviderTitle,
+                action: 'delete',
+                providerId: e.target.getAttribute("data-provider-id"),
+            }
+        });
+        this.formTemplate = (<DeleteForm data={data} formResponse={this.formResponse}/>)
+    }
+
+    updateProvider(e) {
+        this.setState({
+            modal: {
+                showModal: true,
+                modalTitle: this.updateProviderTitle,
+                action: 'update',
+            }
+        });
+        this.formTemplate = (
+            <ProviderForm formAction={"update"} providerId={e.target.getAttribute("data-provider-id")}
+                          formResponse={this.formResponse}/>
+        );
+    }
+
+    createProvider(e) {
+        this.setState({
+            modal: {
+                showModal: true,
+                modalTitle: this.newProviderTitle,
+                action: 'create',
+            }
+        });
+        this.formTemplate = (
+            <ProviderForm formAction={"create"} providerId={this.state.modal.providerId}
+                          formResponse={this.formResponse}/>
+        );
     }
 
     providerModal() {
-        let form = <ProviderForm formAction={this.state.modal.action} providerId={this.state.modal.providerId}
-                                 formResponse={this.formResponse}/>
-        if (this.state.modal.action === "delete") {
-            let data = {
-                provider_id: this.state.modal.providerId,
-                endpoint: ApiConfig.endpoints.deleteProvider
-            };
-            form = <DeleteForm data={data} formResponse={this.formResponse}/>
-        }
         return (
             <Modal show={this.state.modal.showModal} onHide={this.handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{this.state.modal.modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {form}
+                    {this.formTemplate}
                 </Modal.Body>
             </Modal>
         );
     }
+
     newProviderButton() {
         return (
-            <Button variant="primary" size={"sm"} onClick={this.handleShow}
-                    data-modal-action={"create"}>
+            <Button variant="primary" size={"sm"} onClick={this.createProvider}>
                 Add Provider
             </Button>
         );
     }
+
     render() {
         return (
             <Admin>
