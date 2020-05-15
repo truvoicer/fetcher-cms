@@ -1,5 +1,5 @@
-import {NavbarConfig} from '../../config/navbar-config'
-import {getSessionObject} from '../../library/session/authenticate';
+import {NavbarConfig} from '../../../config/navbar-config'
+import {getSessionObject} from '../../../library/session/authenticate';
 import Link from "next/link";
 
 class AdminHeader extends React.Component {

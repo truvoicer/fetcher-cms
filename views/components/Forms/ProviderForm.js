@@ -1,10 +1,9 @@
 import Form from "react-bootstrap/Form";
 import React from "react";
-import {sendData} from '../../library/api/middleware'
+import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
 import Button from "react-bootstrap/Button";
-import Alert from "react-bootstrap/Alert";
-import Modal from "react-bootstrap/Modal";
-import ApiConfig from "../../config/api";
+import ApiConfig from "../../../config/api-config";
+const sprintf = require("sprintf-js").sprintf;
 
 export default class PropertyForm extends React.Component {
     constructor(props) {
@@ -12,6 +11,7 @@ export default class PropertyForm extends React.Component {
         this.state = {
             formSubmitted: false,
             action: this.props.formAction,
+            provider_id: "",
             provider_name: "",
             provider_api_base_url: "",
             provider_access_key: "",
@@ -25,6 +25,18 @@ export default class PropertyForm extends React.Component {
         this.setState({
             formSubmitted: false
         })
+        if (this.state.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.provider, this.props.providerId)).then((response) => {
+                console.log(response);
+                this.setState({
+                    provider_id: response.data.data.id,
+                    provider_name: response.data.data.provider_name,
+                    provider_api_base_url: response.data.data.provider_api_base_url,
+                    provider_access_key: response.data.data.provider_access_key,
+                    provider_secret_key: response.data.data.provider_secret_key
+                })
+            })
+        }
     }
 
     formChangeHandler(e) {
@@ -39,11 +51,9 @@ export default class PropertyForm extends React.Component {
         if (this.state.action === "create") {
             endpoint = ApiConfig.endpoints.createProvider;
         } else if (this.state.action === "update") {
-            endpoint = ApiConfig.endpoints.updateProvider;
+            endpoint = sprintf(ApiConfig.endpoints.updateProvider, this.state.provider_id);
         }
-        sendData(endpoint, this.state).then((response) => {
-            this.props.formResponse(response.status, response.data.message);
-        });
+        responseHandler(sendData(endpoint, this.state),  this.props.formResponse);
     }
 
     render() {

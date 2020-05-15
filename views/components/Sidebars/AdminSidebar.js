@@ -1,6 +1,6 @@
-import {SidebarConfig} from '../../config/sidebar-config'
-import {SiteConfig} from '../../config/site-config'
-import {getSessionObject} from '../../library/session/authenticate'
+import {SidebarConfig} from '../../../config/sidebar-config'
+import {SiteConfig} from '../../../config/site-config'
+import {getSessionObject} from '../../../library/session/authenticate'
 import Dropdown from "react-bootstrap/Dropdown";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
@@ -44,7 +44,7 @@ class Sidebar extends React.Component {
                 subItems = item.subs.map((subItem, subIndex) => {
                     let itemKey = index + "." + subIndex;
                     return (
-                        <Link href={subItem.route} as={subItem.route}>
+                        <Link href={subItem.route} as={subItem.route} key={itemKey}>
                             <a className={"collapse-item"} key={itemKey}>{subItem.label}</a>
                         </Link>
                     )
@@ -88,7 +88,7 @@ class Sidebar extends React.Component {
         return (
             <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
                 <Link href={SiteConfig.adminHome} as={SiteConfig.adminHome}>
-                    <a className="sidebar-brand d-flex align-items-center justify-content-center">
+                    <a className="sidebar-brand d-flex align-items-center justify-content-center" key={50}>
                         <div className="sidebar-brand-icon rotate-n-15">
                             <i className="fas fa-laugh-wink"></i>
                         </div>

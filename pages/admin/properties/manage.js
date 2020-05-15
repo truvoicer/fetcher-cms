@@ -1,12 +1,14 @@
-import AdminLayout from '../../../layouts/AdminLayout'
+import Admin from '../../../views/layouts/Admin'
 import DataTable from 'react-data-table-component';
 import {fetchData} from '../../../library/api/middleware'
-import ApiConfig from '../../../config/api'
+import ApiConfig from '../../../config/api-config'
 import Button from "react-bootstrap/Button";
 import React from "react";
 import Modal from "react-bootstrap/Modal";
-import PropertyForm from "../../../components/Forms/PropertyForm";
+import PropertyForm from "../../../views/components/Forms/PropertyForm";
 import Alert from "react-bootstrap/Alert";
+import ProviderForm from "../../../views/components/Forms/ProviderForm";
+import DeleteForm from "../../../views/components/Forms/DeleteForm";
 
 export default class ManageProperties extends React.Component {
     constructor(props) {
@@ -14,6 +16,7 @@ export default class ManageProperties extends React.Component {
         this.props = props;
         this.state = {
             columns: [],
+            query: {},
             data: [],
             modal: {
                 showModal: false,
@@ -28,6 +31,7 @@ export default class ManageProperties extends React.Component {
         }
         this.newPropertyTitle = "New Property";
         this.updatePropertyTitle = "Update Property";
+        this.deletePropertyTitle = "Delete Property";
 
         this.setTableColumns = this.setTableColumns.bind(this);
         this.setPropertyData = this.setPropertyData.bind(this);
@@ -38,17 +42,19 @@ export default class ManageProperties extends React.Component {
     }
 
     componentDidMount() {
+        this.setState({
+            query: {
+                count: 10,
+                order: "asc",
+                sort: "property_name"
+            }
+        })
         this.setTableColumns()
         this.setPropertyData()
     }
 
     setPropertyData() {
-        let query = {
-            count: 10,
-            order: "asc",
-            sort: "property_name"
-        };
-        fetchData(ApiConfig.endpoints.properties, query).then((response) => {
+        fetchData(ApiConfig.endpoints.properties, this.state.query).then((response) => {
             this.setState({
                 data: response.data.data
             })
@@ -71,14 +77,23 @@ export default class ManageProperties extends React.Component {
                 {
                     name: 'Controls',
                     right: true,
-                    cell: row =>
-                        <Button variant="primary" size={"sm"} onClick={this.handleShow} data-modal-action={"update"}>
-                            Edit
-                        </Button>,
+                    cell: row => (
+                        <div className={"controls"}>
+                            <Button variant="outline-primary" size={"sm"} onClick={this.handleShow} data-property-id={row.id}
+                                    data-modal-action={"update"}>
+                                Edit
+                            </Button>
+                            <Button variant="outline-danger" size={"sm"} onClick={this.handleShow} data-property-id={row.id}
+                                    data-modal-action={"delete"}>
+                                Delete
+                            </Button>
+                        </div>
+                    ),
                 },
             ]
         });
     }
+
     formResponse(status, message) {
         let alertStatus;
         if (status === 200) {
@@ -86,6 +101,7 @@ export default class ManageProperties extends React.Component {
         } else {
             alertStatus = "danger"
         }
+        this.setPropertyData();
         this.setState({
             form: {
                 submitted: true,
@@ -95,6 +111,7 @@ export default class ManageProperties extends React.Component {
         })
         this.handleClose();
     }
+
     handleClose() {
         this.setState({
             modal: {
@@ -106,54 +123,73 @@ export default class ManageProperties extends React.Component {
     handleShow(e) {
         let modalTitle;
         let action = e.target.getAttribute("data-modal-action");
-        if(action === "new") {
+        let propertyId = e.target.getAttribute("data-property-id");
+        if (action === "create") {
             modalTitle = this.newPropertyTitle;
         } else if (action === "update") {
             modalTitle = this.updatePropertyTitle;
+        } else if (action === "delete") {
+            modalTitle = this.deletePropertyTitle;
         }
         this.setState({
             modal: {
                 showModal: true,
                 modalTitle: modalTitle,
-                action: action
+                action: action,
+                propertyId: propertyId
             }
         });
     }
 
     propertyModal() {
+        let form = <PropertyForm formAction={this.state.modal.action} propertyId={this.state.modal.propertyId}
+                                 formResponse={this.formResponse}/>
+        if (this.state.modal.action === "delete") {
+            let data = {
+                property_id: this.state.modal.propertyId,
+                endpoint: ApiConfig.endpoints.deleteProperty
+            };
+            form = <DeleteForm data={data} formResponse={this.formResponse}/>
+        }
         return (
             <Modal show={this.state.modal.showModal} onHide={this.handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{this.state.modal.modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <PropertyForm formAction={this.state.modal.action} formResponse={this.formResponse}/>
+                    {form}
                 </Modal.Body>
             </Modal>
         );
     }
+
+    createPropertyButton() {
+        return (
+            <Button variant="primary" size={"sm"} onClick={this.handleShow} data-modal-action={"create"}>
+                Add Property
+            </Button>
+        );
+    }
+
     render() {
 
         return (
-            <AdminLayout>
+            <Admin>
                 <>
                     {this.state.form.submitted &&
                     <Alert variant={this.state.form.alertStatus}>
                         {this.state.form.responseMessage}
                     </Alert>
                     }
-                    <Button variant="primary" size={"sm"} onClick={this.handleShow} data-modal-action={"create"}>
-                        Add Property
-                    </Button>
                     <DataTable
-                        title="Properties"
+                        title={this.createPropertyButton()}
                         columns={this.state.columns}
                         data={this.state.data}
                     />
 
                     <this.propertyModal/>
                 </>
-            </AdminLayout>
+            </Admin>
         )
     }
 }

@@ -1,42 +1,48 @@
 import axios from 'axios';
-import apiConfig from "../../config/api";
-import { getSessionObject } from "../session/authenticate";
+import apiConfig from "../../config/api-config";
+import {getSessionObject} from "../session/authenticate";
 
 export const sendData = async (endpoint, data) => {
-    try {
-        data.access_token = getSessionObject().access_token;
-        return responseHandler(await axios.post(apiConfig.apiUrl + endpoint, data));
-    } catch (e) {
-        console.error(e)
-        return false;
-    }
+    data.access_token = getSessionObject().access_token;
+    return await axios.post(apiConfig.apiUrl + endpoint, data);
 }
 
 export const fetchData = async (endpoint, queryObj) => {
     try {
-        return responseHandler(await axios.get(apiConfig.apiUrl + endpoint + buildHttpQuery(queryObj)));
+        let apiUrl = apiConfig.apiUrl + endpoint + buildHttpQuery(queryObj);
+        return await axios.get(apiUrl);
     } catch (e) {
         console.error(e)
         return false;
     }
 }
 
-const responseHandler = (response) => {
-    switch (response.status) {
-        case 200:
-            return response;
-        case 400:
-        default:
-            console.error(response)
-            return false;
-    }
+export const responseHandler = (promise, callback) => {
+    promise.then((response) => {
+        if (response.status === 200) {
+           callback(response.status, response.data.message);
+        }
+    })
+    .catch((error) => {
+        console.log(error)
+        if (error.response) {
+            callback(error.response.status, error.response.data.message);
+        }
+    });
 }
 
-const buildHttpQuery = (queryObject) => {
-    queryObject.access_token = getSessionObject().access_token;
+const buildHttpQuery = (queryObject = false) => {
+    if (!queryObject) {
+        queryObject = {
+            access_token: getSessionObject().access_token
+        }
+    } else {
+        queryObject.access_token = getSessionObject().access_token;
+    }
+
     // console.log(queryObject);
     let esc = encodeURIComponent;
-    return  "?" + Object.keys(queryObject)
+    return "?" + Object.keys(queryObject)
         .map(k => esc(k) + '=' + esc(queryObject[k]))
         .join('&');
 }

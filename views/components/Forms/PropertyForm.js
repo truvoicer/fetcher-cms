@@ -1,8 +1,9 @@
 import Form from "react-bootstrap/Form";
 import React from "react";
-import {sendData} from '../../library/api/middleware'
+import {sendData, responseHandler, fetchData} from '../../../library/api/middleware'
 import Button from "react-bootstrap/Button";
-import ApiConfig from "../../config/api";
+import ApiConfig from "../../../config/api-config";
+const sprintf = require("sprintf-js").sprintf;
 
 export default class ProviderForm extends React.Component {
     constructor(props) {
@@ -10,6 +11,7 @@ export default class ProviderForm extends React.Component {
         this.state = {
             formSubmitted: false,
             action: this.props.formAction,
+            property_id: "",
             property_name: "",
             property_label: "",
         }
@@ -21,6 +23,16 @@ export default class ProviderForm extends React.Component {
         this.setState({
             formSubmitted: false
         })
+
+        if (this.state.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.property, this.props.propertyId)).then((response) => {
+                this.setState({
+                    property_id: response.data.data.id,
+                    property_name: response.data.data.property_name ,
+                    property_label: response.data.data.property_label ,
+                })
+            })
+        }
     }
 
     formChangeHandler(e) {
@@ -37,9 +49,8 @@ export default class ProviderForm extends React.Component {
         } else if (this.state.action === "update") {
             endpoint = ApiConfig.endpoints.updateProperty;
         }
-        sendData(endpoint, this.state).then((response) => {
-            this.props.formResponse(response.status, response.data.message);
-        });
+        console.log(this.state)
+        responseHandler(sendData(endpoint, this.state), this.props.formResponse)
     }
 
     render() {

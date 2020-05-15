@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { getSessionObject } from '../../library/session/authenticate'
+import { getSessionObject } from '../../../library/session/authenticate'
 
 
 export const session = getSessionObject();

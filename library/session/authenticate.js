@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import apiConfig from '../../config/api';
+import apiConfig from '../../config/api-config';
 import { sendData } from '../api/middleware';
 import React from 'react'
 

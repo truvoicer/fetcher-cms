@@ -1,5 +1,5 @@
 
-import AdminLayout from '../../../layouts/AdminLayout'
+import Admin from '../../../views/layouts/Admin'
 
 export default class ManageUsers extends React.Component {
     constructor(props) {
@@ -12,11 +12,11 @@ export default class ManageUsers extends React.Component {
     }
     render() {
         return (
-            <AdminLayout>
+            <Admin>
                 <>
                     <h1>Users</h1>
                 </>
-            </AdminLayout>
+            </Admin>
         )
     }
 }

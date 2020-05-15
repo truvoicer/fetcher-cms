@@ -1,6 +1,6 @@
 
 import {withRouter} from "next/router";
-import AdminLayout from '../../../layouts/AdminLayout'
+import Admin from '../../../views/layouts/Admin'
 
 export default class Dashboard extends React.Component {
     constructor(props) {
@@ -13,11 +13,11 @@ export default class Dashboard extends React.Component {
     }
     render() {
         return (
-            <AdminLayout>
+            <Admin>
                 <>
                     <h1>Dashboard</h1>
                 </>
-            </AdminLayout>
+            </Admin>
         )
     }
 }

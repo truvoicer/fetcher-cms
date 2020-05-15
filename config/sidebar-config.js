@@ -17,11 +17,6 @@ export const SidebarConfig =
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers/manage"
-                },
-                {
-                    label: "Create Provider",
-                    name: "create_provider",
-                    route: "/admin/providers/create"
                 }
             ]
         },
@@ -35,11 +30,6 @@ export const SidebarConfig =
                     label: "Manage Properties",
                     name: "manage_properties",
                     route: "/admin/properties/manage"
-                },
-                {
-                    label: "Create Property",
-                    name: "create_properties",
-                    route: "/admin/properties/create"
                 }
             ]
         },
@@ -54,11 +44,6 @@ export const SidebarConfig =
                     label: "Manage Users",
                     name: "manage_users",
                     route: "/admin/users/manage"
-                },
-                {
-                    label: "Create User",
-                    name: "create_user",
-                    route: "/admin/users/create"
                 }
             ]
         }

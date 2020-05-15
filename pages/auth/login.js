@@ -1,5 +1,5 @@
 import Router from 'next/router'
-import AuthLayout from '../../layouts/AuthLayout'
+import Auth from '../../views/layouts/Auth'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 
@@ -36,7 +36,7 @@ class Login extends React.Component {
 
     render() {
         return (
-            <AuthLayout>
+            <Auth>
                 <>
                     <div className="text-center">
                         <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
@@ -62,7 +62,7 @@ class Login extends React.Component {
                         </Button>
                     </Form>
                 </>
-            </AuthLayout>
+            </Auth>
         )
     }
 }
