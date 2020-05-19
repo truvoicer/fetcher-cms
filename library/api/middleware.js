@@ -11,6 +11,7 @@ export const sendData = async (operation, endpoint, data) => {
 export const fetchData = async (endpoint, queryObj) => {
     try {
         let apiUrl = apiConfig.apiUrl + endpoint + buildHttpQuery(queryObj);
+        console.log(apiUrl)
         return await axios.get(apiUrl);
     } catch (e) {
         console.error(e)

@@ -1,14 +1,15 @@
-import Admin from "../../../views/layouts/Admin";
+import Admin from "../../../../views/layouts/Admin";
 import Alert from "react-bootstrap/Alert";
 import DataTable from "react-data-table-component";
 import React from "react";
-import {fetchData} from "../../../library/api/middleware";
-import ApiConfig from "../../../config/api-config";
+import {fetchData} from "../../../../library/api/middleware";
+import ApiConfig from "../../../../config/api-config";
 import Button from "react-bootstrap/Button";
-import PropertyForm from "../../../views/components/Forms/PropertyForm";
-import DeleteForm from "../../../views/components/Forms/DeleteForm";
+import PropertyForm from "../../../../views/components/Forms/PropertyForm";
+import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import Modal from "react-bootstrap/Modal";
-import RequestParamsForm from "../../../views/components/Forms/RequestParamsForm";
+import RequestParamsForm from "../../../../views/components/Forms/RequestParamsForm";
+import Link from "next/link";
 
 
 export default class ApiRequests extends React.Component {
@@ -53,6 +54,7 @@ export default class ApiRequests extends React.Component {
 
     setPropertyData() {
         fetchData(ApiConfig.endpoints.apiRequests, this.state.query).then((response) => {
+            console.log(response)
             this.setState({
                 data: response.data.data
             })
@@ -82,12 +84,11 @@ export default class ApiRequests extends React.Component {
                     right: true,
                     cell: row => (
                         <div className={"controls"}>
-                            <Button variant="outline-primary" size={"sm"} onClick={this.modifyParams}
-                                    data-provider-id={row.provider.id}
-                                    data-api-request-id={row.id}
-                                    data-modal-action={"update"}>
-                                Modify Parameters
-                            </Button>
+                            <Link href={"/admin/providers/api-requests/" + row.id}>
+                                <a className={"btn btn-outline-primary btn-sm"}>
+                                    Modify Parameters
+                                </a>
+                            </Link>
                             <Button variant="outline-danger" size={"sm"} onClick={this.deleteApiRequest}
                                     data-api-request-id={row.id}
                                     data-modal-action={"delete"}>
@@ -154,9 +155,9 @@ export default class ApiRequests extends React.Component {
     }
 
     render() {
-        return (
-            <Admin>
-                <>
+            return (
+                <Admin>
+                    <>
                     {this.state.form.submitted &&
                     <Alert variant={this.state.form.alertStatus}>
                         {this.state.form.responseMessage}
