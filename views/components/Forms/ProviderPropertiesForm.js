@@ -28,7 +28,7 @@ class ProviderPropertiesForm extends React.Component {
 
     componentDidMount() {
         responseHandler(fetchData(ApiConfig.endpoints.properties), this.fetchPropertiesResponse);
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.providerProperties, this.props.data.provider_id)),
+        responseHandler(fetchData(sprintf(ApiConfig.endpoints.providerProperties, this.props.data.itemId)),
             this.fetchProviderPropertiesResponse);
     }
 

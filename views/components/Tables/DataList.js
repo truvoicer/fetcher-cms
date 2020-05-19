@@ -30,6 +30,7 @@ export default class DataList extends React.Component {
             }
         }
         this.modalTitle = "";
+        this.modalform = "";
         // this.getTableColumns = this.getTableColumns.bind(this);
         this.setTableData = this.setTableData.bind(this);
         this.showModal = this.showModal.bind(this);
@@ -83,6 +84,7 @@ export default class DataList extends React.Component {
                     data-action={item.action}
                     data-delete-endpoint={modal && modal.endpoint  ? modal.endpoint : null}
                     data-modal-title={modal && modal.modalTitle  ? modal.modalTitle : null}
+                    data-modal-form-name={modal && modal.modalFormName  ? modal.modalFormName : null}
                     onClick={modal && modal.showModal  ? this.showModal : null} >
                 {item.text}
             </Button>
@@ -105,9 +107,28 @@ export default class DataList extends React.Component {
                     modalTitle: e.target.getAttribute("data-modal-title"),
                     endpoint: e.target.getAttribute("data-delete-endpoint"),
                     action: e.target.getAttribute("data-action"),
-                    itemId: e.target.getAttribute("data-item-id")
+                    itemId: e.target.getAttribute("data-item-id"),
+                    modalFormName: e.target.getAttribute("data-modal-form-name")
                 }
             });
+    }
+    getModalForm(modalFormName) {
+        if (typeof modalFormName != "undefined") {
+            const ModalForm = this.props.modalConfig[modalFormName].modalForm
+            let data;
+            if (modalFormName === "delete") {
+                data = {
+                    itemId: this.state.modal.itemId,
+                    endpoint: sprintf(ApiConfig.endpoints.delete, this.state.modal.endpoint)
+                };
+            } else {
+                data = this.state.modal;
+            }
+            return (
+                <ModalForm data={data} formResponse={this.formResponse}/>
+            )
+        }
+        return null;
     }
     formResponse(status, message, data = null) {
         let alertStatus;
@@ -136,24 +157,13 @@ export default class DataList extends React.Component {
     }
 
     getModal() {
-        let form;
-        if (this.state.modal.action === "delete") {
-            let data = {
-                item_id: this.state.modal.itemId,
-                endpoint: sprintf(ApiConfig.endpoints.delete, this.state.modal.endpoint)
-            };
-            form = <DeleteForm data={data} formResponse={this.formResponse}/>
-        }
-         else {
-            form = <this.props.modalConfig.modalForm data={this.state.modal} formResponse={this.formResponse} />;
-        }
         return (
             <Modal show={this.state.modal.showModal} onHide={this.handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>{this.state.modal.modalTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {form}
+                    {this.getModalForm(this.state.modal.modalFormName)}
                 </Modal.Body>
             </Modal>
         );

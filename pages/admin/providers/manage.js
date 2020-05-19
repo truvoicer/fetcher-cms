@@ -105,6 +105,7 @@ export default class ManageProviders extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Edit Properties",
+                    modalFormName: "providerProperties"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -116,6 +117,7 @@ export default class ManageProviders extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Edit Provider",
+                    modalFormName: "provider"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -127,6 +129,7 @@ export default class ManageProviders extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Provider",
+                    modalFormName: "delete",
                     endpoint: "provider"
                 },
                 size: "sm",
@@ -136,23 +139,16 @@ export default class ManageProviders extends React.Component {
     }
     getModalConfig() {
         return {
-            modalForm: ProviderForm
-        };
-    }
-
-    showProperties(e) {
-        let data = {
-            provider_id: e.target.getAttribute("data-provider-id"),
-            endpoint: ApiConfig.endpoints.deleteProvider
-        };
-        this.setState({
-            modal: {
-                showModal: true,
-                modalTitle: this.propertiesTitle,
-                action: 'update',
+            provider: {
+                modalForm: ProviderForm
+            },
+            providerProperties: {
+                modalForm: ProviderPropertiesForm
+            },
+            delete: {
+                modalForm: DeleteForm
             }
-        });
-        this.formTemplate = (<ProviderPropertiesForm data={data} formResponse={this.formResponse}/>)
+        };
     }
 
     render() {
