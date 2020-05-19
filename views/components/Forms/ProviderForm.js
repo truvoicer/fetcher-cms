@@ -48,13 +48,7 @@ export default class PropertyForm extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
-        let endpoint;
-        if (this.state.action === "create") {
-            endpoint = ApiConfig.endpoints.createProvider;
-        } else if (this.state.action === "update") {
-            endpoint = sprintf(ApiConfig.endpoints.updateProvider, this.state.provider_id);
-        }
-        responseHandler(sendData(endpoint, this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "provider", this.state),  this.props.formResponse);
     }
 
     render() {

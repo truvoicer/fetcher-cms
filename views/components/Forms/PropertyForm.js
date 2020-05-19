@@ -43,14 +43,7 @@ export default class ProviderForm extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
-        let endpoint;
-        if (this.state.action === "create") {
-            endpoint = ApiConfig.endpoints.createProperty;
-        } else if (this.state.action === "update") {
-            endpoint = ApiConfig.endpoints.updateProperty;
-        }
-        console.log(this.state)
-        responseHandler(sendData(endpoint, this.state), this.props.formResponse)
+        responseHandler(sendData(this.state.action, "property", this.state), this.props.formResponse)
     }
 
     render() {

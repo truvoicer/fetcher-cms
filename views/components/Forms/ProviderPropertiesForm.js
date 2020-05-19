@@ -77,7 +77,7 @@ class ProviderPropertiesForm extends React.Component {
                 }
             ]
         }
-        responseHandler(sendData(ApiConfig.endpoints.createProviderProperties, data), this.props.formResponse);
+        responseHandler(sendData("create", "provider/properties", data), this.props.formResponse);
     }
 
     getProviderProperty(providerId, propertyId, providerProperties) {

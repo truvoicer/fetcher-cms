@@ -1,10 +1,11 @@
 import axios from 'axios';
 import apiConfig from "../../config/api-config";
 import {getSessionObject} from "../session/authenticate";
+const sprintf = require("sprintf-js").sprintf;
 
-export const sendData = async (endpoint, data) => {
+export const sendData = async (operation, endpoint, data) => {
     data.access_token = getSessionObject().access_token;
-    return await axios.post(apiConfig.apiUrl + endpoint, data);
+    return await axios.post(apiConfig.apiUrl + sprintf(apiConfig.endpoints[operation], endpoint), data);
 }
 
 export const fetchData = async (endpoint, queryObj) => {

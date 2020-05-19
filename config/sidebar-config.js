@@ -17,19 +17,16 @@ export const SidebarConfig =
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers/manage"
-                }
-            ]
-        },
-        {
-            label: "Properties",
-            name: "properties",
-            route: "/admin/properties",
-            icon: "fas fa-fw fa-folder",
-            subs: [
+                },
                 {
                     label: "Manage Properties",
                     name: "manage_properties",
-                    route: "/admin/properties/manage"
+                    route: "/admin/providers/properties"
+                },
+                {
+                    label: "Manage API Requests",
+                    name: "manage_api_requests",
+                    route: "/admin/providers/api-requests"
                 }
             ]
         },
