@@ -53,7 +53,7 @@ export default class ApiRequests extends React.Component {
     }
 
     setPropertyData() {
-        fetchData(ApiConfig.endpoints.apiRequests, this.state.query).then((response) => {
+        fetchData(ApiConfig.endpoints.apiRequestList, this.state.query).then((response) => {
             console.log(response)
             this.setState({
                 data: response.data.data

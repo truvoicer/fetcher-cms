@@ -9,12 +9,12 @@ export default
         "update": "/api/%s/update",
         "delete": "/api/%s/delete",
         "provider": "/api/provider/%d",
-        "providers": "/api/providers",
+        "providerList": "/api/providers",
         "providerProperties": "/api/provider/%d/properties",
         "property": "/api/property/%d",
-        "properties": "/api/properties",
-        "apiRequests": "/api/requests",
-        "apiRequestParams": "/api/request/params",
-        "apiProviderRequestParams": "/api/provider/request/parameters"
+        "propertyList": "/api/properties",
+        "apiRequestList": "/api/requests",
+        "apiRequestParameter": "/api/request/parameter/%d",
+        "apiProviderRequestParameterList": "/api/provider/request/parameters"
     }
 }

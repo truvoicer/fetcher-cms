@@ -12,29 +12,21 @@ class RequestParamsForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            requestParams: {},
             form: {
-                parameterGroups: "",
-                paramText: 0,
                 data: {}
             }
         };
 
-        this.paramNum = 0;
-        this.paramFormGroups = [];
         // this.formSubmitHandler = this.formSubmitHandler.bind(this);
         // this.formResponseHandler = this.formResponseHandler.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.fetchRequestParamsResponse = this.fetchRequestParamsResponse.bind(this);
-        this.buildFields = this.buildFields.bind(this);
-        this.newParamFormGroup = this.newParamFormGroup.bind(this);
     }
 
     componentDidMount() {
-        responseHandler(fetchData(ApiConfig.endpoints.apiProviderRequestParams,
-            {
-                provider_id: this.props.providerId,
-                api_request_id: this.props.requestId
-            }),
+        console.log(this.props.parameterId)
+        responseHandler(fetchData(sprintf(ApiConfig.endpoints.apiRequestParameter, this.props.parameterId)),
             this.fetchRequestParamsResponse);
     }
 
@@ -62,15 +54,16 @@ class RequestParamsForm extends React.Component {
         responseHandler(sendData("create", "provider/properties", data), this.props.formResponse);
     }
 
-    paramFormGroup(item = null) {
+    render() {
         return (
-            <div>
+            <Form onSubmit={this.formSubmitHandler}>
+
                 <Form.Group as={Row}>
                     <Form.Label column sm="12" md="4">{"Parameter Name"}</Form.Label>
                     <Col column sm={"12"} md={"8"}>
                         <Form.Control
-                            value={item ? item.parameter_name : ""}
-                            data-parameter-id={item ? item.id : ""}
+                            value={this.state.requestParams.parameter_name}
+                            name={"parameter_name"}
                             onChange={this.formChangeHandler}/>
                     </Col>
                 </Form.Group>
@@ -79,55 +72,13 @@ class RequestParamsForm extends React.Component {
                     <Form.Label column sm="12" md="4">{"Parameter Value"}</Form.Label>
                     <Col column sm={"12"} md={"8"}>
                         <Form.Control
-                            value={item ? item.parameter_value : ""}
-                            data-parameter-id={item ? item.id : ""}
+                            value={this.state.requestParams ? this.state.requestParams.parameter_value : ""}
+                            data-parameter-id={"parameter_value"}
                             onChange={this.formChangeHandler}/>
                     </Col>
                 </Form.Group>
-            </div>
-        );
-    }
-
-    newParamFormGroup() {
-        this.paramFormGroups.push(this.paramFormGroup());
-        this.setState({
-            form: {
-                parameterGroups: this.paramFormGroups
-            }
-        })
-    }
-
-    buildFields() {
-        if (this.state.requestParams) {
-            let requestParams = this.state.requestParams;
-            return requestParams.map((item, index) => {
-                return (
-                    this.paramFormGroup(item)
-                );
-            })
-        } else {
-            return (
-                <p>No items found</p>
-            )
-        }
-    }
-
-
-    render() {
-        return (
-            <Form onSubmit={this.formSubmitHandler}>
-                {this.state.form.paramText}
-                <div id={"parameter-form-groups"}>
-                    <this.buildFields/>
-                    {this.state.form.parameterGroups}
-                </div>
 
                 <Form.Group as={Row}>
-                    <Col colums sm={"12"} md={"5"}>
-                        <Button variant="primary" type="button" onClick={this.newParamFormGroup}>
-                            New Parameter
-                        </Button>
-                    </Col>
                     <Col colums sm={"12"} md={"3"}>
                         <Button variant="primary" type="submit">
                             Update

@@ -10,14 +10,13 @@ export default class PropertyForm extends React.Component {
         super(props);
         this.state = {
             formSubmitted: false,
-            action: this.props.formAction,
+            action: this.props.data.action,
             provider_id: "",
             provider_name: "",
             provider_api_base_url: "",
             provider_access_key: "",
             provider_secret_key: ""
         }
-        console.log("provider form")
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
     }
@@ -27,7 +26,7 @@ export default class PropertyForm extends React.Component {
             formSubmitted: false
         })
         if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.provider, this.props.providerId)).then((response) => {
+            fetchData(sprintf(ApiConfig.endpoints.provider, this.props.data.itemId)).then((response) => {
                 console.log(response);
                 this.setState({
                     provider_id: response.data.data.id,
