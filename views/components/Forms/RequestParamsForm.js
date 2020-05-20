@@ -25,13 +25,14 @@ class RequestParamsForm extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.parameterId)
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.apiRequestParameter, this.props.parameterId)),
+        console.log(this.props.data.itemId)
+        responseHandler(fetchData(sprintf(ApiConfig.endpoints.apiRequestParameter, this.props.data.itemId)),
             this.fetchRequestParamsResponse);
     }
 
     fetchRequestParamsResponse(status, message, data) {
         if (status === 200) {
+            console.log(data.data)
             this.setState({
                 requestParams: data.data
             })

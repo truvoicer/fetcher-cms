@@ -137,8 +137,12 @@ export default class ManageProviders extends React.Component {
             }
         ];
     }
+
     getModalConfig() {
         return {
+            default: {
+                modalForm: ProviderForm
+            },
             provider: {
                 modalForm: ProviderForm
             },

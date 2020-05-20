@@ -27,7 +27,7 @@ class ProviderPropertiesForm extends React.Component {
     }
 
     componentDidMount() {
-        responseHandler(fetchData(ApiConfig.endpoints.properties), this.fetchPropertiesResponse);
+        responseHandler(fetchData(ApiConfig.endpoints.propertyList), this.fetchPropertiesResponse);
         responseHandler(fetchData(sprintf(ApiConfig.endpoints.providerProperties, this.props.data.itemId)),
             this.fetchProviderPropertiesResponse);
     }
@@ -42,6 +42,7 @@ class ProviderPropertiesForm extends React.Component {
 
     fetchProviderPropertiesResponse(status, message, data) {
         if (status === 200) {
+            console.log(data.data)
             this.setState({
                 providerProperties: data.data
             })

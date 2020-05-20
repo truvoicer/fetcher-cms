@@ -44,7 +44,7 @@ export default class DataList extends React.Component {
     }
 
     setTableData(endpoint, query) {
-        fetchData(endpoint, query).then((response) => {
+        fetchData(this.props.tableData.endpoint, this.props.tableData.query).then((response) => {
             this.setState({
                 data: response.data.data
             })
@@ -92,7 +92,7 @@ export default class DataList extends React.Component {
     }
     getLink(item, item_id) {
         return (
-            <Link href={item.href}>
+            <Link href={item.href + item_id}>
                 <a className={item.classes}>
                     {item.text}
                 </a>
@@ -115,17 +115,8 @@ export default class DataList extends React.Component {
     getModalForm(modalFormName) {
         if (typeof modalFormName != "undefined") {
             const ModalForm = this.props.modalConfig[modalFormName].modalForm
-            let data;
-            if (modalFormName === "delete") {
-                data = {
-                    itemId: this.state.modal.itemId,
-                    endpoint: sprintf(ApiConfig.endpoints.delete, this.state.modal.endpoint)
-                };
-            } else {
-                data = this.state.modal;
-            }
             return (
-                <ModalForm data={data} formResponse={this.formResponse}/>
+                <ModalForm data={this.state.modal} formResponse={this.formResponse}/>
             )
         }
         return null;
@@ -137,7 +128,7 @@ export default class DataList extends React.Component {
         } else {
             alertStatus = "danger"
         }
-        this.setPropertyData();
+        this.setTableData();
         this.setState({
             form: {
                 submitted: true,
@@ -170,7 +161,12 @@ export default class DataList extends React.Component {
     }
     createButton() {
         return (
-            <Button variant="primary" size={"sm"} onClick={this.showModal} data-modal-action={"create"} data-modal-title={"New"}>
+            <Button variant="primary"
+                    size={"sm"}
+                    onClick={this.showModal}
+                    data-action={"create"}
+                    data-modal-title={"New"}
+                    data-modal-form-name={"default"}>
                 New
             </Button>
         );

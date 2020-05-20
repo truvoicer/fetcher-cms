@@ -5,6 +5,7 @@ const sprintf = require("sprintf-js").sprintf;
 
 export const sendData = async (operation, endpoint, data) => {
     data.access_token = getSessionObject().access_token;
+    console.log(apiConfig.endpoints[operation])
     return await axios.post(apiConfig.apiUrl + sprintf(apiConfig.endpoints[operation], endpoint), data);
 }
 

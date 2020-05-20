@@ -15,7 +15,11 @@ class DeleteForm extends React.Component {
     }
 
     deleteItem() {
-        responseHandler(sendData("delete", this.props.data.endpoint, this.props.data), this.props.formResponse);
+        let itemIdName = this.props.data.endpoint + "_id";
+        let data = this.props.data;
+        data[itemIdName] = this.props.data.itemId;
+        console.log(data)
+        responseHandler(sendData("delete", this.props.data.endpoint, data), this.props.formResponse);
     }
     render() {
         return (

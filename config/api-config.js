@@ -13,8 +13,9 @@ export default
         "providerProperties": "/api/provider/%d/properties",
         "property": "/api/property/%d",
         "propertyList": "/api/properties",
+        "apiRequest": "/api/request/%d",
         "apiRequestList": "/api/requests",
-        "apiRequestParameter": "/api/request/parameter/%d",
+        "apiRequestParameter": "/api/parameter/%d",
         "apiProviderRequestParameterList": "/api/provider/request/parameters"
     }
 }

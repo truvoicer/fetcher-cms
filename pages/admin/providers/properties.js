@@ -2,6 +2,9 @@ import ApiConfig from '../../../config/api-config'
 import React from "react";
 import PropertyForm from "../../../views/components/Forms/PropertyForm";
 import DataList from "../../../views/components/Tables/DataList";
+import ProviderForm from "../../../views/components/Forms/ProviderForm";
+import ProviderPropertiesForm from "../../../views/components/Forms/ProviderPropertiesForm";
+import DeleteForm from "../../../views/components/Forms/DeleteForm";
 
 export default class Properties extends React.Component {
     constructor(props) {
@@ -51,6 +54,7 @@ export default class Properties extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Edit Property",
+                    modalFormName: "property"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -62,18 +66,29 @@ export default class Properties extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Property",
-                    endpoint: "property"
+                    endpoint: "property",
+                    modalFormName: "delete"
                 },
                 size: "sm",
                 classes: "outline-danger"
             }
         ];
     }
+
     getModalConfig() {
         return {
-          modalForm: PropertyForm
+            default: {
+                modalForm: PropertyForm
+            },
+            property: {
+                modalForm: PropertyForm
+            },
+            delete: {
+                modalForm: DeleteForm
+            }
         };
     }
+
 
 
     render() {

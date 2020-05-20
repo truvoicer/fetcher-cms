@@ -13,6 +13,7 @@ export default class PropertyForm extends React.Component {
             action: this.props.data.action,
             provider_id: "",
             provider_name: "",
+            customer_id: "",
             provider_api_base_url: "",
             provider_access_key: "",
             provider_secret_key: ""
@@ -31,6 +32,7 @@ export default class PropertyForm extends React.Component {
                 this.setState({
                     provider_id: response.data.data.id,
                     provider_name: response.data.data.provider_name,
+                    customer_id: response.data.data.customer_id,
                     provider_api_base_url: response.data.data.provider_api_base_url,
                     provider_access_key: response.data.data.provider_access_key,
                     provider_secret_key: response.data.data.provider_secret_key
@@ -77,6 +79,14 @@ export default class PropertyForm extends React.Component {
                                   onChange={this.formChangeHandler}
                                   name="provider_access_key"
                                   value={this.state.provider_access_key}/>
+                </Form.Group>
+                <Form.Group controlId="formProviderCustomerId">
+                    <Form.Label>Customer Id</Form.Label>
+                    <Form.Control type="text"
+                                  placeholder="Enter the providers customer id."
+                                  onChange={this.formChangeHandler}
+                                  name="customer_id"
+                                  value={this.state.customer_id}/>
                 </Form.Group>
                 <Form.Group controlId="formProviderSecretKey">
                     <Form.Label>Provider Api Secret Key</Form.Label>
