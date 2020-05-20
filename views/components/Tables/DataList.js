@@ -122,6 +122,7 @@ export default class DataList extends React.Component {
         return null;
     }
     formResponse(status, message, data = null) {
+        console.log(status, message, data)
         let alertStatus;
         if (status === 200) {
             alertStatus = "success"

@@ -24,9 +24,9 @@ export const SidebarConfig =
                     route: "/admin/providers/properties"
                 },
                 {
-                    label: "Manage API Requests",
-                    name: "manage_api_requests",
-                    route: "/admin/providers/api-requests"
+                    label: "Manage Services",
+                    name: "manage_services",
+                    route: "/admin/providers/services"
                 }
             ]
         },

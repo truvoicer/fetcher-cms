@@ -1,19 +1,12 @@
-import Router from "next/router";
-import {fetchData, responseHandler} from "../../../../library/api/middleware";
-import ApiConfig from "../../../../config/api-config";
 import React from "react";
-import Admin from "../../../../views/layouts/Admin";
-import DataTable from "react-data-table-component";
-import Link from "next/link";
-import Button from "react-bootstrap/Button";
-import RequestParamsForm from "../../../../views/components/Forms/RequestParamsForm";
+import ApiConfig from "../../../../config/api-config";
+import PropertyForm from "../../../../views/components/Forms/PropertyForm";
 import DeleteForm from "../../../../views/components/Forms/DeleteForm";
-import Modal from "react-bootstrap/Modal";
-import ApiRequestForm from "../../../../views/components/Forms/ApiRequestForm";
 import DataList from "../../../../views/components/Tables/DataList";
+import ServiceForm from "../../../../views/components/Forms/ServiceForm";
 
-class ApiRequestParameters extends React.Component {
 
+export default class Services extends React.Component {
     constructor(props) {
         super(props);
 
@@ -25,13 +18,11 @@ class ApiRequestParameters extends React.Component {
     getTableData() {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.apiProviderRequestParameterList,
+            endpoint: ApiConfig.endpoints.serviceList,
             query: {
                 count: 10,
                 order: "asc",
-                sort: "parameter_name",
-                provider_id: 11,
-                api_request_id: 3
+                sort: "service_name"
             }
         };
     }
@@ -39,13 +30,18 @@ class ApiRequestParameters extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Parameter Name',
-                selector: 'parameter_name',
+                name: 'Service Name',
+                selector: 'service_name',
                 sortable: true,
             },
             {
-                name: 'Parameter Value',
-                selector: 'parameter_value',
+                name: 'Service Label',
+                selector: 'service_label',
+                sortable: true,
+            },
+            {
+                name: 'Provider',
+                selector: 'provider.provider_name',
                 sortable: true,
             },
         ];
@@ -54,13 +50,21 @@ class ApiRequestParameters extends React.Component {
     getTableColumnControls() {
         return [
             {
+                control: "link",
+                text: "Modify Parameters",
+                action: "update",
+                href: "/admin/providers/services/",
+                size: "sm",
+                classes: "btn btn-outline-primary btn-sm"
+            },
+            {
                 control: "button",
                 text: "Edit",
                 action: "update",
                 modal: {
                     showModal: true,
-                    modalTitle: "Edit Parameter",
-                    modalFormName: "requestParams"
+                    modalTitle: "Edit Service",
+                    modalFormName: "service"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -71,8 +75,8 @@ class ApiRequestParameters extends React.Component {
                 action: "delete",
                 modal: {
                     showModal: true,
-                    modalTitle: "Delete Request",
-                    endpoint: "request/parameter",
+                    modalTitle: "Delete Service",
+                    endpoint: "service",
                     modalFormName: "delete"
                 },
                 size: "sm",
@@ -84,10 +88,10 @@ class ApiRequestParameters extends React.Component {
     getModalConfig() {
         return {
             default: {
-                modalForm: RequestParamsForm
+                modalForm: ServiceForm
             },
-            requestParams: {
-                modalForm: RequestParamsForm
+            service: {
+                modalForm: ServiceForm
             },
             delete: {
                 modalForm: DeleteForm
@@ -97,15 +101,13 @@ class ApiRequestParameters extends React.Component {
 
 
     render() {
-        return (
-            <DataList
-                tableData={this.getTableData()}
-                tableColumns={this.getTableColumns()}
-                tableColumnControls={this.getTableColumnControls()}
-                modalConfig={this.getModalConfig()}
-            />
+            return (
+                <DataList
+                    tableData={this.getTableData()}
+                    tableColumns={this.getTableColumns()}
+                    tableColumnControls={this.getTableColumnControls()}
+                    modalConfig={this.getModalConfig()}
+                />
         )
     }
 }
-
-export default ApiRequestParameters;

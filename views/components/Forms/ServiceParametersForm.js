@@ -8,7 +8,7 @@ import Col from "react-bootstrap/Col";
 
 const sprintf = require("sprintf-js").sprintf;
 
-class RequestParamsForm extends React.Component {
+class ServiceParametersForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +26,7 @@ class RequestParamsForm extends React.Component {
 
     componentDidMount() {
         console.log(this.props.data.itemId)
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.apiRequestParameter, this.props.data.itemId)),
+        responseHandler(fetchData(sprintf(ApiConfig.endpoints.serviceParameter, this.props.data.itemId)),
             this.fetchRequestParamsResponse);
     }
 
@@ -52,7 +52,7 @@ class RequestParamsForm extends React.Component {
     formSubmitHandler(e) {
         e.preventDefault();
 
-        responseHandler(sendData("create", "provider/properties", data), this.props.formResponse);
+        // responseHandler(sendData("create", "provider/properties", data), this.props.formResponse);
     }
 
     render() {
@@ -91,4 +91,4 @@ class RequestParamsForm extends React.Component {
     }
 }
 
-export default RequestParamsForm;
+export default ServiceParametersForm;
