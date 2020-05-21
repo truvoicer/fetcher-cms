@@ -28,7 +28,7 @@ class Admin extends React.Component {
     }
 
     getApiUserResponse(status, message, data) {
-        if(status !== 200) {
+        if (status !== 200) {
             Router.replace('/auth/login')
         }
         this.setState(state => ({
@@ -42,24 +42,26 @@ class Admin extends React.Component {
     render() {
         return (
             <App>
-
                 <UserContext.Provider value={this.state.session}>
-                <div id="wrapper">
                     <AdminSidebar/>
-                    <div id="content-wrapper" className="d-flex flex-column">
-                        <div id="content">
-                            <AdminHeader/>
-                            <Container fluid={true}>
-                                {this.props.children}
-                            </Container>
+                    <div className="c-wrapper c-fixed-components">
+                        <AdminHeader/>
+                        <div className="c-body">
+                            <main className="c-main">
+                                <Container fluid={true}>
+                                    <div className="fade-in">
+                                        {this.props.children}
+                                    </div>
+                                </Container>
+                            </main>
+                            <AdminFooter/>
                         </div>
-                        <AdminFooter/>
                     </div>
-                </div>
                 </UserContext.Provider>
             </App>
         )
     }
 }
+
 Admin.contextType = UserContext;
 export default Admin;

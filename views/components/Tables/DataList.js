@@ -45,6 +45,7 @@ export default class DataList extends React.Component {
     }
 
     setTableData() {
+        console.log(this.props.tableData);
         responseHandler(fetchData(this.props.tableData.endpoint, this.props.tableData.query),
             this.getTableDataResponseHandler);
     }
@@ -216,11 +217,7 @@ export default class DataList extends React.Component {
 
     render() {
         return (
-            <Admin>
-                <>
-                    {this.props.tableData.breadcrumbs &&
-                    <Breadcrumbs config={this.props.tableData.breadcrumbs}/>
-                    }
+            <div>
                     {this.state.form.submitted &&
                     <Alert variant={this.state.form.alertStatus}>
                         {this.state.form.responseMessage}
@@ -232,8 +229,7 @@ export default class DataList extends React.Component {
                         data={this.state.data}
                     />
                     <this.getModal/>
-                </>
-            </Admin>
+            </div>
         )
     }
 }

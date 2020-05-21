@@ -1,4 +1,4 @@
-import {NavbarConfig} from '../../../config/navbar-config'
+import {Routes} from '../../../config/routes'
 import {getSessionObject} from '../../../library/session/authenticate';
 import Link from "next/link";
 import {useContext} from "react";
@@ -7,11 +7,6 @@ import {UserContext} from "../Context/UserContext";
 class AdminHeader extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            session: getSessionObject(),
-            userDropdownClass: ""
-        }
-        this.getUsername = this.getUsername.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +14,7 @@ class AdminHeader extends React.Component {
 
     showUserDropdown(e) {
         e.preventDefault();
-        let ele = document.getElementById("userDropdownList")
+        let ele = document.getElementById("userDropdownMenu")
         if (ele.classList.contains("show")) {
             ele.classList.remove("show")
         } else {
@@ -28,86 +23,60 @@ class AdminHeader extends React.Component {
     }
 
     ListItems() {
-        return NavbarConfig.items.map(function (item, index) {
-            return (
-                <Link href={item.route} as={item.route}  key={index.toString()}>
-                    <a className="dropdown-item">
-                        <i className={item.icon}></i>
-                        {item.label}
-                    </a>
-                </Link>
-            )
-        }.bind(this))
-    }
+        return Routes.items.map(function (item, index) {
+            if (item.header) {
+                return (
+                    <li className="c-header-nav-item px-3">
+                        <Link href={item.route} as={item.route} key={index.toString()}>
+                            <a className="c-header-nav-link">{item.label}</a>
+                        </Link>
+                    </li>
+                )
+            } else {
+                return null;
+            }
 
-    getUsername() {
-        if (this.context.authenticated) {
-            return this.context.user.username;
-        }
+        }.bind(this))
     }
     render() {
         return (
-            <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
-                    <i className="fa fa-bars"></i>
-                </button>
-
-                <form
-                    className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                    <div className="input-group">
-                        <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..."
-                               aria-label="Search" aria-describedby="basic-addon2"/>
-                        <div className="input-group-append">
-                            <button className="btn btn-primary" type="button">
-                                <i className="fas fa-search fa-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-
-                <ul className="navbar-nav ml-auto">
-
-                    <li className="nav-item dropdown no-arrow d-sm-none">
-                        <a className="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i className="fas fa-search fa-fw"></i>
-                        </a>
-                        <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                             aria-labelledby="searchDropdown">
-                            <form className="form-inline mr-auto w-100 navbar-search">
-                                <div className="input-group">
-                                    <input type="text" className="form-control bg-light border-0 small"
-                                           placeholder="Search for..." aria-label="Search"
-                                           aria-describedby="basic-addon2"/>
-                                    <div className="input-group-append">
-                                        <button className="btn btn-primary" type="button">
-                                            <i className="fas fa-search fa-sm"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </li>
-                    <div className="topbar-divider d-none d-sm-block"></div>
-                    <li className="nav-item dropdown no-arrow">
-                        <a className="nav-link dropdown-toggle" href="#" id="userDropdown"
-                           onClick={this.showUserDropdown}>
-                            <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.getUsername()}</span>
-                            <img className="img-profile rounded-circle"
-                                 src="https://source.unsplash.com/QAB-WJcbgJk/60x60"/>
-                        </a>
-                        <div id={"userDropdownList"} className={"dropdown-menu dropdown-menu-right shadow animated--grow-in"}
-                             aria-labelledby="userDropdown">
-                            <this.ListItems/>
-                        </div>
-                    </li>
-
+            <header className="c-header c-header-light c-header-fixed c-header-with-subheader">
+                <ul className="c-header-nav d-md-down-none">
+                    <this.ListItems/>
                 </ul>
-
-            </nav>
+                <ul className="c-header-nav ml-auto mr-4">
+                    <li className="c-header-nav-item dropdown">
+                        <a className="c-header-nav-link"
+                           data-toggle="dropdown"
+                           href="#"
+                           role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false"
+                            onClick={this.showUserDropdown}>
+                            {this.context.user.username}
+                        </a>
+                        <div id={"userDropdownMenu"} className="dropdown-menu dropdown-menu-right pt-0">
+                            <div className="dropdown-header bg-light py-2"><strong>Account</strong></div>
+                            <a className="dropdown-item" href="#">
+                                <svg className="c-icon mr-2">
+                                    {/*<use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>*/}
+                                </svg>
+                                Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <div className="c-subheader px-3">
+                    <ol className="breadcrumb border-0 m-0">
+                        <li className="breadcrumb-item">Home</li>
+                        <li className="breadcrumb-item"><a href="#">Admin</a></li>
+                        <li className="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div>
+            </header>
         )
     }
 }
+
 AdminHeader.contextType = UserContext;
 export default AdminHeader;

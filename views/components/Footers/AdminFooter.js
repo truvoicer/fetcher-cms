@@ -11,13 +11,10 @@ class AdminFooter extends React.Component {
 
   render() {
     return (
-      <footer className="sticky-footer bg-white">
-        <div className="container my-auto">
-          <div className="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2019</span>
-          </div>
-        </div>
-      </footer>
+        <footer className="c-footer">
+          <div><a href="https://coreui.io">CoreUI</a> © 2020 creativeLabs.</div>
+          <div className="ml-auto">Powered by&nbsp;<a href="https://coreui.io/">CoreUI</a></div>
+        </footer>
     )
   }
 }

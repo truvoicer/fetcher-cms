@@ -6,6 +6,7 @@ import ServiceForm from "../../../views/components/Forms/ServiceForm";
 import Link from "next/link";
 import Breadcrumbs from "../../../views/components/Headers/Breadcrumbs";
 import Container from "react-bootstrap/Container";
+import Admin from "../../../views/layouts/Admin";
 
 class ManageServices extends React.Component {
     constructor(props) {
@@ -58,10 +59,10 @@ class ManageServices extends React.Component {
                 control: "link",
                 text: "Modify Parameters",
                 action: "update",
-                href: "/admin/services/",
+                href: "/admin/services/parameters/",
                 query: {
                     dynamic: {
-                        name: "sid"
+                        name: "service_id"
                     }
                 },
                 size: "sm",
@@ -112,14 +113,16 @@ class ManageServices extends React.Component {
 
     render() {
             return (
-                <div>
-                <DataList
-                    tableData={this.getTableData()}
-                    tableColumns={this.getTableColumns()}
-                    tableColumnControls={this.getTableColumnControls()}
-                    modalConfig={this.getModalConfig()}
-                />
-                </div>
+                <Admin>
+                    <>
+                        <DataList
+                            tableData={this.getTableData()}
+                            tableColumns={this.getTableColumns()}
+                            tableColumnControls={this.getTableColumnControls()}
+                            modalConfig={this.getModalConfig()}
+                        />
+                    </>
+                </Admin>
         )
     }
 }

@@ -8,12 +8,12 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-      console.log(isAuthenticated())
-      if (!isAuthenticated()) {
-          Router.push("/auth/login");
-      } else {
-          Router.push('/admin/dashboard')
-      }
+      // console.log(isAuthenticated())
+      // if (!isAuthenticated()) {
+      //     Router.push("/auth/login");
+      // } else {
+      //     Router.push('/admin/dashboard')
+      // }
   }
 
   render() {

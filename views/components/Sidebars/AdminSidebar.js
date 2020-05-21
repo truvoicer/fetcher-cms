@@ -16,6 +16,7 @@ class Sidebar extends React.Component {
         }
         this.menuClick = this.menuClick.bind(this)
         this.ListItems = this.ListItems.bind(this)
+        this.getSidebarNav = this.getSidebarNav.bind(this)
     }
 
     componentDidMount() {
@@ -25,18 +26,25 @@ class Sidebar extends React.Component {
     }
 
     menuClick(e) {
+        if (e.target.classList.contains("c-linkable")) {
+            return null;
+        }
         e.preventDefault();
-        if (this.state.subMenu === e.target.id) {
-            this.setState({
-                subMenu: ""
-            })
+        let parent = e.target.parentNode;
+        if (parent.classList.contains("c-show")) {
+            parent.classList.remove("c-show");
         } else {
-            this.setState({
-                subMenu: e.target.id
-            })
+            parent.classList.add("c-show");
         }
     }
 
+    getSidebarNav() {
+        return (
+            <ul className="c-sidebar-nav">
+                <this.ListItems/>
+            </ul>
+        )
+    }
     ListItems() {
         return Routes.items.map(function (item, index) {
             let subItems;
@@ -45,7 +53,10 @@ class Sidebar extends React.Component {
                     let itemKey = index + "." + subIndex;
                     return (
                         <Link href={subItem.route} as={subItem.route} key={itemKey}>
-                            <a className={"collapse-item"} key={itemKey}>{subItem.label}</a>
+                        <a className="c-sidebar-nav-link">
+                            <span className="c-sidebar-nav-icon"></span>
+                            {subItem.label}
+                        </a>
                         </Link>
                     )
                 })
@@ -53,30 +64,28 @@ class Sidebar extends React.Component {
             return (
                 <div key={index.toString()}>
                     {item.heading &&
-                    <div className="sidebar-heading">
-                        {item.heading}
-                    </div>
+                    <li className="c-sidebar-nav-title">{item.heading}</li>
                     }
-                    <li className={"nav-item"} key={index.toString()}>
+                    <li className="c-sidebar-nav-item c-sidebar-nav-dropdown" >
                         <Link href={item.route} as={item.route}>
-                            <a className="nav-link collapsed"
-                               href="#"
-                               id={item.name}
-
-                               onClick={this.menuClick}>
-                                <i className={item.icon}></i>
-                                <span>{item.label}</span>
-                            </a>
+                        <a className={subItems
+                            ? "c-sidebar-nav-link c-sidebar-nav-dropdown-toggle"
+                            : "c-sidebar-nav-link c-linkable"
+                        }
+                           id={item.name}
+                           onClick={this.menuClick}>
+                            <svg className="c-sidebar-nav-icon">
+                                {/*<use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-puzzle"></use>*/}
+                            </svg>
+                            {item.label}
+                        </a>
                         </Link>
                         {subItems &&
-
-                        <div className={this.state.subMenu === item.name ? "collapse show" : "collapse"}>
-                            <div className="bg-white py-2 collapse-inner rounded"
-                                 aria-labelledby="headingTwo"
-                                 data-parent={item.name}>
+                        <ul className="c-sidebar-nav-dropdown-items">
+                            <li className="c-sidebar-nav-item">
                                 {subItems}
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
                         }
                     </li>
                 </div>
@@ -86,20 +95,12 @@ class Sidebar extends React.Component {
 
     render() {
         return (
-            <ul className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-                <Link href={SiteConfig.adminHome} as={SiteConfig.adminHome}>
-                    <a className="sidebar-brand d-flex align-items-center justify-content-center" key={50}>
-                        <div className="sidebar-brand-icon rotate-n-15">
-                            <i className="fas fa-laugh-wink"></i>
-                        </div>
-                        <div className="sidebar-brand-text mx-3">{SiteConfig.siteName}</div>
-                    </a>
-                </Link>
-
-                <hr className="sidebar-divider my-0"/>
-
-                <this.ListItems></this.ListItems>
-            </ul>
+            <div className="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
+                <div className="c-sidebar-brand d-lg-down-none">
+                    {SiteConfig.siteName}
+                </div>
+                <this.getSidebarNav/>
+            </div>
         )
     }
 }

@@ -1,12 +1,13 @@
-
-import Admin from '../../../views/layouts/Admin'
-import ApiConfig from "../../../config/api-config";
-import PropertyForm from "../../../views/components/Forms/PropertyForm";
-import DeleteForm from "../../../views/components/Forms/DeleteForm";
-import DataList from "../../../views/components/Tables/DataList";
+import ApiConfig from '../../../config/api-config'
 import React from "react";
+import PropertyForm from "../../../views/components/Forms/PropertyForm";
+import DataList from "../../../views/components/Tables/DataList";
+import ProviderForm from "../../../views/components/Forms/ProviderForm";
+import ProviderPropertiesForm from "../../../views/components/Forms/ProviderPropertiesForm";
+import DeleteForm from "../../../views/components/Forms/DeleteForm";
+import Admin from "../../../views/layouts/Admin";
 
-export default class ManageUsers extends React.Component {
+export default class Index extends React.Component {
     constructor(props) {
         super(props)
 
@@ -20,12 +21,12 @@ export default class ManageUsers extends React.Component {
 
     getTableData() {
         return {
-            title: "Users",
-            endpoint: ApiConfig.endpoints.getUserList,
+            title: ApiConfig.endpoints.propertyList,
+            endpoint: ApiConfig.endpoints.propertyList,
             query: {
                 count: 10,
                 order: "asc",
-                sort: "id"
+                sort: "property_name"
             }
         };
     }
@@ -33,28 +34,13 @@ export default class ManageUsers extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Username',
-                selector: 'username',
+                name: 'Property Name',
+                selector: 'property_name',
                 sortable: true,
             },
             {
-                name: 'Email',
-                selector: 'email',
-                sortable: true,
-            },
-            {
-                name: 'Roles',
-                selector: 'roles',
-                sortable: true,
-            },
-            {
-                name: 'Date Updated',
-                selector: 'date_updated',
-                sortable: true,
-            },
-            {
-                name: 'Date Added',
-                selector: 'date_added',
+                name: 'Property label',
+                selector: 'property_label',
                 sortable: true,
             }
         ];
@@ -68,8 +54,8 @@ export default class ManageUsers extends React.Component {
                 action: "update",
                 modal: {
                     showModal: true,
-                    modalTitle: "Edit User",
-                    modalFormName: "user"
+                    modalTitle: "Edit Property",
+                    modalFormName: "property"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -80,8 +66,8 @@ export default class ManageUsers extends React.Component {
                 action: "delete",
                 modal: {
                     showModal: true,
-                    modalTitle: "Delete User",
-                    endpoint: "user",
+                    modalTitle: "Delete Property",
+                    endpoint: "property",
                     modalFormName: "delete"
                 },
                 size: "sm",
@@ -93,10 +79,10 @@ export default class ManageUsers extends React.Component {
     getModalConfig() {
         return {
             default: {
-                modalForm: UserForm
+                modalForm: PropertyForm
             },
             property: {
-                modalForm: UserForm
+                modalForm: PropertyForm
             },
             delete: {
                 modalForm: DeleteForm
