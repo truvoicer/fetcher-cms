@@ -1,4 +1,4 @@
-import {SidebarConfig} from '../../../config/sidebar-config'
+import {Routes} from '../../../config/routes'
 import {SiteConfig} from '../../../config/site-config'
 import {getSessionObject} from '../../../library/session/authenticate'
 import Dropdown from "react-bootstrap/Dropdown";
@@ -38,7 +38,7 @@ class Sidebar extends React.Component {
     }
 
     ListItems() {
-        return SidebarConfig.items.map(function (item, index) {
+        return Routes.items.map(function (item, index) {
             let subItems;
             if (typeof item.subs != "undefined") {
                 subItems = item.subs.map((subItem, subIndex) => {

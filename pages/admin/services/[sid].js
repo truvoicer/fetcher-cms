@@ -7,13 +7,13 @@ import Router from "next/router";
 
 const sprintf = require("sprintf-js").sprintf
 
-class Parameters extends React.Component {
+class Sid extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            provider_id: "",
-            service_id: ""
+            showTable: false,
+            tableData: [],
         }
         this.service_id = ""
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
@@ -22,19 +22,15 @@ class Parameters extends React.Component {
     }
 
     componentDidMount() {
-        // const {service_id, provider_id} = Router.query;
-        // console.log(service_id, provider_id)
-        // console.log(Router.query)
-        // this.setState({
-        //     provider_id: provider_id,
-        //     service_id: service_id
-        // })
+        const {sid} = Router.query;
+        console.log(Router.query)
+        this.setState({
+            showTable: true,
+            tableData: this.getTableData(sid)
+        })
     }
 
-    getTableData() {
-
-        const {service_id} = Router.query;
-        this.service_id = service_id;
+    getTableData(sid) {
         return {
             title: "",
             endpoint: ApiConfig.endpoints.serviceParameterList,
@@ -44,7 +40,7 @@ class Parameters extends React.Component {
                 count: 10,
                 order: "asc",
                 sort: "parameter_name",
-                service_id: service_id
+                service_id: sid
             }
         };
     }
@@ -117,14 +113,18 @@ class Parameters extends React.Component {
 
     render() {
         return (
-            <DataList
-                tableData={this.getTableData()}
+            <div>
+            {this.state.showTable &&
+                <DataList
+                tableData={this.state.tableData}
                 tableColumns={this.getTableColumns()}
                 tableColumnControls={this.getTableColumnControls()}
                 modalConfig={this.getModalConfig()}
             />
+            }
+            </div>
         )
     }
 }
 
-export default Parameters;
+export default Sid;

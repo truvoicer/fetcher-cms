@@ -7,6 +7,7 @@ import {fetchData, responseHandler} from "../../../library/api/middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import Router from "next/router";
+import Breadcrumbs from "../Headers/Breadcrumbs";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -111,12 +112,18 @@ export default class DataList extends React.Component {
             }).join('&');
     }
     getLink(item, row) {
-        let queryString = "";
-        if (typeof item.query !== "undefined") {
-            queryString = this.getQuery(item.query, row);
+        let href = item.href;
+        let linkAs = item.href;
+        if (typeof item.query.params !== "undefined") {
+            href += this.getQuery(item.query.params, row);
+            linkAs = href;
+        }
+        else if(typeof item.query.dynamic !== "undefined") {
+            linkAs += row.id;
+            href += sprintf("[%s]", item.query.dynamic.name);
         }
         return (
-            <Link href={item.href + queryString}>
+            <Link href={href} as={linkAs}>
                 <a className={item.classes}>
                     {item.text}
                 </a>
@@ -211,6 +218,9 @@ export default class DataList extends React.Component {
         return (
             <Admin>
                 <>
+                    {this.props.tableData.breadcrumbs &&
+                    <Breadcrumbs config={this.props.tableData.breadcrumbs}/>
+                    }
                     {this.state.form.submitted &&
                     <Alert variant={this.state.form.alertStatus}>
                         {this.state.form.responseMessage}

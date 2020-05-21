@@ -49,9 +49,7 @@ class Admin extends React.Component {
                     <div id="content-wrapper" className="d-flex flex-column">
                         <div id="content">
                             <AdminHeader/>
-
                             <Container fluid={true}>
-                                <Breadcrumbs/>
                                 {this.props.children}
                             </Container>
                         </div>

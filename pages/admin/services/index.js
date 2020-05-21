@@ -4,9 +4,10 @@ import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import ServiceForm from "../../../views/components/Forms/ServiceForm";
 import Link from "next/link";
+import Breadcrumbs from "../../../views/components/Headers/Breadcrumbs";
+import Container from "react-bootstrap/Container";
 
-
-export default class ManageServices extends React.Component {
+class ManageServices extends React.Component {
     constructor(props) {
         super(props);
 
@@ -14,7 +15,6 @@ export default class ManageServices extends React.Component {
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
-
     getTableData() {
         return {
             title: "",
@@ -25,6 +25,9 @@ export default class ManageServices extends React.Component {
                 count: 10,
                 order: "asc",
                 sort: "service_name"
+            },
+            breadcrumbs: {
+                pageName: "manage_services"
             }
         };
     }
@@ -55,9 +58,11 @@ export default class ManageServices extends React.Component {
                 control: "link",
                 text: "Modify Parameters",
                 action: "update",
-                href: "/admin/services/parameters/",
+                href: "/admin/services/",
                 query: {
-                  service_id: "id",
+                    dynamic: {
+                        name: "sid"
+                    }
                 },
                 size: "sm",
                 classes: "btn btn-outline-primary btn-sm"
@@ -118,3 +123,4 @@ export default class ManageServices extends React.Component {
         )
     }
 }
+export default ManageServices

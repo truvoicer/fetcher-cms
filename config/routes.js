@@ -1,4 +1,4 @@
-export const SidebarConfig =
+export const Routes =
 {
     items: [
         {
