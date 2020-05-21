@@ -1,6 +1,8 @@
 import {NavbarConfig} from '../../../config/navbar-config'
 import {getSessionObject} from '../../../library/session/authenticate';
 import Link from "next/link";
+import {useContext} from "react";
+import {UserContext} from "../Context/UserContext";
 
 class AdminHeader extends React.Component {
     constructor(props) {
@@ -9,10 +11,10 @@ class AdminHeader extends React.Component {
             session: getSessionObject(),
             userDropdownClass: ""
         }
+        this.getUsername = this.getUsername.bind(this);
     }
 
     componentDidMount() {
-
     }
 
     showUserDropdown(e) {
@@ -28,7 +30,7 @@ class AdminHeader extends React.Component {
     ListItems() {
         return NavbarConfig.items.map(function (item, index) {
             return (
-                <Link href={item.route} as={item.route}>
+                <Link href={item.route} as={item.route}  key={index.toString()}>
                     <a className="dropdown-item">
                         <i className={item.icon}></i>
                         {item.label}
@@ -38,6 +40,11 @@ class AdminHeader extends React.Component {
         }.bind(this))
     }
 
+    getUsername() {
+        if (this.context.authenticated) {
+            return this.context.user.username;
+        }
+    }
     render() {
         return (
             <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -86,7 +93,7 @@ class AdminHeader extends React.Component {
                     <li className="nav-item dropdown no-arrow">
                         <a className="nav-link dropdown-toggle" href="#" id="userDropdown"
                            onClick={this.showUserDropdown}>
-                            <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.state.session.username}</span>
+                            <span className="mr-2 d-none d-lg-inline text-gray-600 small">{this.getUsername()}</span>
                             <img className="img-profile rounded-circle"
                                  src="https://source.unsplash.com/QAB-WJcbgJk/60x60"/>
                         </a>
@@ -102,5 +109,5 @@ class AdminHeader extends React.Component {
         )
     }
 }
-
+AdminHeader.contextType = UserContext;
 export default AdminHeader;

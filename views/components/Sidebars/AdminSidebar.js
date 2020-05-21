@@ -51,13 +51,13 @@ class Sidebar extends React.Component {
                 })
             }
             return (
-                <div>
+                <div key={index.toString()}>
                     {item.heading &&
                     <div className="sidebar-heading">
                         {item.heading}
                     </div>
                     }
-                    <li className={"nav-item"} key={index}>
+                    <li className={"nav-item"} key={index.toString()}>
                         <Link href={item.route} as={item.route}>
                             <a className="nav-link collapsed"
                                href="#"

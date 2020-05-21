@@ -26,7 +26,7 @@ export const SidebarConfig =
                 {
                     label: "Manage Services",
                     name: "manage_services",
-                    route: "/admin/providers/services"
+                    route: "/admin/services"
                 }
             ]
         },

@@ -1,18 +1,13 @@
-import {isAuthenticated} from "../library/session/authenticate";
+import {authenticateUser, getApiUser, setSession} from "../library/session/authenticate";
 import Router from "next/router";
 import React from "react";
+import {responseHandler} from "../library/api/middleware";
+// import {UserContext} from "./components/Context/UserContext";
 
-export default class App extends React.Component {
+class App extends React.Component {
     constructor(props) {
         super(props);
     }
-
-    componentDidMount() {
-        if (!isAuthenticated()) {
-            Router.replace("/auth/login");
-        }
-    }
-
     render() {
         return (
             <div id={"app"}>
@@ -20,5 +15,5 @@ export default class App extends React.Component {
             </div>
         )
     }
-
 }
+export default App;

@@ -2,38 +2,60 @@ import Router from 'next/router'
 import Auth from '../../views/layouts/Auth'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
+import {responseHandler} from "../../library/api/middleware";
+import Alert from "react-bootstrap/Alert";
+import {setSession} from "../../library/session/authenticate";
 
 
-const {login} = require("../../library/session/authenticate")
+const {getToken} = require("../../library/session/authenticate")
 
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            remember_me: "",
+            response: {
+                submitted: false,
+                alertStatus: "",
+                message: ""
+            }
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
+        this.responseHandler = this.responseHandler.bind(this);
     }
 
     formChangeHandler(e) {
         this.setState({
             [e.target.name]: e.target.value
         });
-        console.log(this.state)
     }
 
-    async submitHandler(e) {
+    submitHandler(e) {
         e.preventDefault();
+        responseHandler(getToken(this.state), this.responseHandler);
+    }
 
-        const response = await login(this.state);
-        if (response.status === 200) {
-            console.log()
-            await Router.push("/admin/dashboard");
+    responseHandler(status, message, data = null) {
+        let alertStatus = "danger";
+        if(status === 200) {
+            alertStatus = "success";
+            setSession(data)
+        }
+        this.setState({
+            response: {
+                submitted: true,
+                alertStatus: alertStatus,
+                message: message
+            }
+        });
+        if(status === 200) {
+            console.log("admin")
+            Router.replace('/admin/dashboard')
         }
     }
-
     render() {
         return (
             <Auth>
@@ -41,6 +63,12 @@ class Login extends React.Component {
                     <div className="text-center">
                         <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
                     </div>
+
+                    {this.state.response.submitted &&
+                    <Alert variant={this.state.response.alertStatus}>
+                        {this.state.response.message}
+                    </Alert>
+                    }
                     <Form onSubmit={this.submitHandler}>
                         <Form.Group controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
@@ -53,9 +81,6 @@ class Login extends React.Component {
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" name="password" onChange={this.formChangeHandler}/>
-                        </Form.Group>
-                        <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="Check me out"/>
                         </Form.Group>
                         <Button variant="primary" type="submit">
                             Submit

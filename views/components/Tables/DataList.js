@@ -1,14 +1,12 @@
 import Admin from '../../../views/layouts/Admin'
-import ApiConfig from '../../../config/api-config'
 import DataTable from 'react-data-table-component';
 import Button from "react-bootstrap/Button";
 import React from "react";
 import Link from "next/link";
-import {fetchData} from "../../../library/api/middleware";
-import DeleteForm from "../Forms/DeleteForm";
+import {fetchData, responseHandler} from "../../../library/api/middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
-const sprintf = require("sprintf-js").sprintf
+import Router from "next/router";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -37,20 +35,25 @@ export default class DataList extends React.Component {
         this.handleClose = this.handleClose.bind(this);
         this.getModal = this.getModal.bind(this);
         this.formResponse = this.formResponse.bind(this);
+        this.getTableDataResponseHandler = this.getTableDataResponseHandler.bind(this);
+        this.redirectHandler = this.redirectHandler.bind(this);
     }
 
     componentDidMount() {
-        this.setTableData(this.props.tableData.endpoint, this.props.tableData.query)
+        this.setTableData()
     }
 
-    setTableData(endpoint, query) {
-        fetchData(this.props.tableData.endpoint, this.props.tableData.query).then((response) => {
+    setTableData() {
+        responseHandler(fetchData(this.props.tableData.endpoint, this.props.tableData.query),
+            this.getTableDataResponseHandler);
+    }
+    getTableDataResponseHandler(status, message, data = null) {
+        if (status === 200) {
             this.setState({
-                data: response.data.data
+                data: data.data
             })
-        })
+        }
     }
-
     getTableColumns(columns, controls) {
         const controlObject = {
             name: 'Controls',
@@ -65,14 +68,14 @@ export default class DataList extends React.Component {
         return controls.map((item, index) => {
             switch (item.control) {
                 case "button":
-                    return this.getButton(item, row.id)
+                    return this.getButton(item, row)
                 case "link":
-                    return this.getLink(item, row.id)
+                    return this.getLink(item, row)
             }
         });
     }
 
-    getButton(item, item_id) {
+    getButton(item, row) {
         let modal = false;
         if (typeof item.modal != "undefined") {
             modal = item.modal;
@@ -80,7 +83,9 @@ export default class DataList extends React.Component {
         return (
             <Button variant={item.classes}
                     size={item.size}
-                    data-item-id={item_id}
+                    data-item-id={row.id}
+                    data-item-name={row[this.props.tableData.defaultColumnName]}
+                    data-item-label={row[this.props.tableData.defaultColumnLabel]}
                     data-action={item.action}
                     data-delete-endpoint={modal && modal.endpoint  ? modal.endpoint : null}
                     data-modal-title={modal && modal.modalTitle  ? modal.modalTitle : null}
@@ -90,16 +95,40 @@ export default class DataList extends React.Component {
             </Button>
         );
     }
-    getLink(item, item_id) {
+    getQuery(queryObject, row) {
+        let esc = encodeURIComponent;
+        return "?" + Object.keys(queryObject)
+            .map(k => {
+                let value = queryObject[k];
+                if (typeof value === 'object')
+                {
+                    return Object.keys(value)
+                        .map(l => esc(l) + '=' + esc(row[k][value[l]]))
+                        .join('&');
+                } else {
+                    return esc(k) + '=' + esc(row[queryObject[k]])
+                }
+            }).join('&');
+    }
+    getLink(item, row) {
+        let queryString = "";
+        if (typeof item.query !== "undefined") {
+            queryString = this.getQuery(item.query, row);
+        }
         return (
-            <Link href={item.href + item_id}>
+            <Link href={item.href + queryString}>
                 <a className={item.classes}>
                     {item.text}
                 </a>
             </Link>
         );
     }
-
+    redirectHandler(e) {
+        e.preventDefault();
+        console.log(e.target.getAttribute("href"))
+        console.log(e.target.href)
+        Router.push(e.target.getAttribute("href"))
+    }
     showModal(e) {
             this.setState({
                 modal: {
@@ -107,16 +136,21 @@ export default class DataList extends React.Component {
                     modalTitle: e.target.getAttribute("data-modal-title"),
                     endpoint: e.target.getAttribute("data-delete-endpoint"),
                     action: e.target.getAttribute("data-action"),
+                    itemName: e.target.getAttribute("data-item-name"),
+                    itemLabel: e.target.getAttribute("data-item-label"),
                     itemId: e.target.getAttribute("data-item-id"),
-                    modalFormName: e.target.getAttribute("data-modal-form-name")
+                    item_id: e.target.getAttribute("data-item-id"),
+                    modalFormName: e.target.getAttribute("data-modal-form-name"),
                 }
             });
     }
     getModalForm(modalFormName) {
         if (typeof modalFormName != "undefined") {
             const ModalForm = this.props.modalConfig[modalFormName].modalForm
+            const modalConfig = this.props.modalConfig[modalFormName].config
+            console.log(modalConfig)
             return (
-                <ModalForm data={this.state.modal} formResponse={this.formResponse}/>
+                <ModalForm data={this.state.modal} config={modalConfig} formResponse={this.formResponse}/>
             )
         }
         return null;

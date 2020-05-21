@@ -5,6 +5,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Select from "react-select";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -12,83 +13,71 @@ class ServiceParametersForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            requestParams: {},
-            form: {
-                data: {}
-            }
-        };
-
-        // this.formSubmitHandler = this.formSubmitHandler.bind(this);
-        // this.formResponseHandler = this.formResponseHandler.bind(this);
+            action: this.props.data.action,
+            id: "",
+            service_id: this.props.config.service_id,
+            parameter_name: "",
+            parameter_value: ""
+        }
         this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.fetchRequestParamsResponse = this.fetchRequestParamsResponse.bind(this);
+        this.submitHandler = this.submitHandler.bind(this);
+        console.log(this.state)
     }
 
     componentDidMount() {
-        console.log(this.props.data.itemId)
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.serviceParameter, this.props.data.itemId)),
-            this.fetchRequestParamsResponse);
-    }
-
-    fetchRequestParamsResponse(status, message, data) {
-        if (status === 200) {
-            console.log(data.data)
-            this.setState({
-                requestParams: data.data
+        if (this.state.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.serviceParameter, this.props.data.itemId)).then((response) => {
+                this.setState({
+                    id: response.data.data.id,
+                    parameter_name: response.data.data.parameter_name,
+                    parameter_value: response.data.data.parameter_value,
+                })
             })
         }
     }
 
-    formResponseHandler(status, message, data) {
-        console.log(status, message, data);
-    }
 
     formChangeHandler(e) {
-        console.log(e.target.name)
-        console.log(e.target.value)
-        // e.target.name = e.target.value;
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
-    formSubmitHandler(e) {
+    submitHandler(e) {
         e.preventDefault();
+        console.log(this.state)
 
-        // responseHandler(sendData("create", "provider/properties", data), this.props.formResponse);
+        responseHandler(sendData(this.state.action, "service/parameters", this.state),  this.props.formResponse);
     }
 
     render() {
         return (
-            <Form onSubmit={this.formSubmitHandler}>
+            <Form onSubmit={this.submitHandler}>
 
-                <Form.Group as={Row}>
-                    <Form.Label column sm="12" md="4">{"Parameter Name"}</Form.Label>
-                    <Col column sm={"12"} md={"8"}>
-                        <Form.Control
-                            value={this.state.requestParams.parameter_name}
-                            name={"parameter_name"}
-                            onChange={this.formChangeHandler}/>
-                    </Col>
+                <Form.Group controlId="formParameterName">
+                    <Form.Label>Parameter Name</Form.Label>
+                    <Form.Control type="text"
+                                  placeholder="Enter the parameter name."
+                                  onChange={this.formChangeHandler}
+                                  name="parameter_name"
+                                  value={this.state.parameter_name}/>
                 </Form.Group>
-
-                <Form.Group as={Row}>
-                    <Form.Label column sm="12" md="4">{"Parameter Value"}</Form.Label>
-                    <Col column sm={"12"} md={"8"}>
-                        <Form.Control
-                            value={this.state.requestParams ? this.state.requestParams.parameter_value : ""}
-                            data-parameter-id={"parameter_value"}
-                            onChange={this.formChangeHandler}/>
-                    </Col>
+                <Form.Group controlId="formParameterValue">
+                    <Form.Label>Parameter Value</Form.Label>
+                    <Form.Control type="text"
+                                  placeholder="Enter the parameter value."
+                                  onChange={this.formChangeHandler}
+                                  name="parameter_value"
+                                  value={this.state.parameter_value}/>
                 </Form.Group>
-
-                <Form.Group as={Row}>
-                    <Col colums sm={"12"} md={"3"}>
-                        <Button variant="primary" type="submit">
-                            Update
-                        </Button>
-                    </Col>
-                </Form.Group>
+                <Button variant="primary" type="submit">
+                    Submit
+                </Button>
             </Form>
-        )
+        );
     }
+
+
 }
 
 export default ServiceParametersForm;

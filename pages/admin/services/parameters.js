@@ -1,37 +1,50 @@
-import Router from "next/router";
-import {fetchData, responseHandler} from "../../../../library/api/middleware";
-import ApiConfig from "../../../../config/api-config";
+import ApiConfig from "../../../config/api-config";
 import React from "react";
-import Admin from "../../../../views/layouts/Admin";
-import DataTable from "react-data-table-component";
-import Link from "next/link";
-import Button from "react-bootstrap/Button";
-import ServiceParametersForm from "../../../../views/components/Forms/ServiceParametersForm";
-import DeleteForm from "../../../../views/components/Forms/DeleteForm";
-import Modal from "react-bootstrap/Modal";
-import ServiceForm from "../../../../views/components/Forms/ServiceForm";
-import DataList from "../../../../views/components/Tables/DataList";
+import ServiceParametersForm from "../../../views/components/Forms/ServiceParametersForm";
+import DeleteForm from "../../../views/components/Forms/DeleteForm";
+import DataList from "../../../views/components/Tables/DataList";
+import Router from "next/router";
 
-class ServiceParameters extends React.Component {
+const sprintf = require("sprintf-js").sprintf
+
+class Parameters extends React.Component {
 
     constructor(props) {
         super(props);
-
+        this.state = {
+            provider_id: "",
+            service_id: ""
+        }
+        this.service_id = ""
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
 
+    componentDidMount() {
+        // const {service_id, provider_id} = Router.query;
+        // console.log(service_id, provider_id)
+        // console.log(Router.query)
+        // this.setState({
+        //     provider_id: provider_id,
+        //     service_id: service_id
+        // })
+    }
+
     getTableData() {
+
+        const {service_id} = Router.query;
+        this.service_id = service_id;
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.providerServiceParameterList,
+            endpoint: ApiConfig.endpoints.serviceParameterList,
+            defaultColumnName: "parameter_name",
+            defaultColumnLabel: "parameter_value",
             query: {
                 count: 10,
                 order: "asc",
                 sort: "parameter_name",
-                provider_id: 11,
-                service_id: 1
+                service_id: service_id
             }
         };
     }
@@ -60,7 +73,7 @@ class ServiceParameters extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Edit Parameter",
-                    modalFormName: "parameter"
+                    modalFormName: "requestParams"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -84,10 +97,16 @@ class ServiceParameters extends React.Component {
     getModalConfig() {
         return {
             default: {
-                modalForm: ServiceParametersForm
+                modalForm: ServiceParametersForm,
+                config: {
+                    service_id: this.service_id
+                }
             },
             requestParams: {
-                modalForm: ServiceParametersForm
+                modalForm: ServiceParametersForm,
+                config: {
+                    service_id: this.service_id
+                }
             },
             delete: {
                 modalForm: DeleteForm
@@ -108,4 +127,4 @@ class ServiceParameters extends React.Component {
     }
 }
 
-export default ServiceParameters;
+export default Parameters;

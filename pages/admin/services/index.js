@@ -1,12 +1,12 @@
 import React from "react";
-import ApiConfig from "../../../../config/api-config";
-import PropertyForm from "../../../../views/components/Forms/PropertyForm";
-import DeleteForm from "../../../../views/components/Forms/DeleteForm";
-import DataList from "../../../../views/components/Tables/DataList";
-import ServiceForm from "../../../../views/components/Forms/ServiceForm";
+import ApiConfig from "../../../config/api-config";
+import DeleteForm from "../../../views/components/Forms/DeleteForm";
+import DataList from "../../../views/components/Tables/DataList";
+import ServiceForm from "../../../views/components/Forms/ServiceForm";
+import Link from "next/link";
 
 
-export default class Services extends React.Component {
+export default class ManageServices extends React.Component {
     constructor(props) {
         super(props);
 
@@ -19,6 +19,8 @@ export default class Services extends React.Component {
         return {
             title: "",
             endpoint: ApiConfig.endpoints.serviceList,
+            defaultColumnName: "service_name",
+            defaultColumnLabel: "service_label",
             query: {
                 count: 10,
                 order: "asc",
@@ -53,7 +55,10 @@ export default class Services extends React.Component {
                 control: "link",
                 text: "Modify Parameters",
                 action: "update",
-                href: "/admin/providers/services/",
+                href: "/admin/services/parameters/",
+                query: {
+                  service_id: "id",
+                },
                 size: "sm",
                 classes: "btn btn-outline-primary btn-sm"
             },
@@ -102,12 +107,14 @@ export default class Services extends React.Component {
 
     render() {
             return (
+                <div>
                 <DataList
                     tableData={this.getTableData()}
                     tableColumns={this.getTableColumns()}
                     tableColumnControls={this.getTableColumnControls()}
                     modalConfig={this.getModalConfig()}
                 />
+                </div>
         )
     }
 }
