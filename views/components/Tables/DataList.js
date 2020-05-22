@@ -20,7 +20,7 @@ export default class DataList extends React.Component {
             modal: {
                 showModal: false,
                 modalTitle: "",
-                action: ""
+                action: "",
             },
             form: {
                 submitted: false,
@@ -30,6 +30,7 @@ export default class DataList extends React.Component {
         }
         this.modalTitle = "";
         this.modalform = "";
+        this.modalDynamic = {};
         this.setTableData = this.setTableData.bind(this);
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -76,6 +77,7 @@ export default class DataList extends React.Component {
 
     getButton(item, row) {
         let modal = false;
+
         if (typeof item.modal != "undefined") {
             modal = item.modal;
         }

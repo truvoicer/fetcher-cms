@@ -5,45 +5,45 @@ import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../views/layouts/Admin";
+import ProviderPropertiesForm from "../../../../views/components/Forms/ProviderPropertiesForm";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ParameterService extends React.Component {
+class ProviderProperties extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             showTable: false,
-            service_id: false
+            provider_id: false
         }
-        this.service_id = ""
+        this.provider_id = ""
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
 
     componentDidMount() {
-        const {service_id} = Router.query;
-        console.log(service_id);
-        if (!isNaN(service_id)) {
+        const {provider_id} = Router.query;
+        if (!isNaN(provider_id)) {
             this.setState({
                 showTable: true,
-                service_id: service_id
+                provider_id: provider_id
             })
         }
     }
 
-    getTableData(service_id) {
+    getTableData() {
             return {
                 title: "",
-                endpoint: ApiConfig.endpoints.serviceParameterList,
-                defaultColumnName: "parameter_name",
-                defaultColumnLabel: "parameter_value",
+                endpoint: sprintf(ApiConfig.endpoints.providerPropertyList, this.state.provider_id),
+                defaultColumnName: "property_value",
+                defaultColumnLabel: "property_value",
                 query: {
                     count: 10,
                     order: "asc",
-                    sort: "parameter_name",
-                    service_id: this.state.service_id
+                    sort: "property_name",
+                    service_id: this.state.provider_id
                 }
             };
     }
@@ -51,13 +51,13 @@ class ParameterService extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Parameter Name',
-                selector: 'parameter_name',
+                name: 'Property Name',
+                selector: 'property_name',
                 sortable: true,
             },
             {
-                name: 'Parameter Value',
-                selector: 'parameter_value',
+                name: 'Property Value',
+                selector: 'property_value',
                 sortable: true,
             },
         ];
@@ -71,8 +71,8 @@ class ParameterService extends React.Component {
                 action: "update",
                 modal: {
                     showModal: true,
-                    modalTitle: "Edit Parameter",
-                    modalFormName: "requestParams"
+                    modalTitle: "Edit Property Value",
+                    modalFormName: "providerProperty",
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -83,8 +83,8 @@ class ParameterService extends React.Component {
                 action: "delete",
                 modal: {
                     showModal: true,
-                    modalTitle: "Delete Parameter",
-                    endpoint: "parameter",
+                    modalTitle: "Delete Property",
+                    endpoint: "provider/property",
                     modalFormName: "delete"
                 },
                 size: "sm",
@@ -96,19 +96,22 @@ class ParameterService extends React.Component {
     getModalConfig() {
         return {
             default: {
-                modalForm: ServiceParametersForm,
+                modalForm: ProviderPropertiesForm,
                 config: {
-                    service_id: this.state.service_id
+                    provider_id: this.state.provider_id
                 }
             },
-            requestParams: {
-                modalForm: ServiceParametersForm,
+            providerProperty: {
+                modalForm: ProviderPropertiesForm,
                 config: {
-                    service_id: this.state.service_id
+                    provider_id: this.state.provider_id
                 }
             },
             delete: {
-                modalForm: DeleteForm
+                modalForm: DeleteForm,
+                config: {
+                    provider_id: this.state.provider_id
+                }
             }
         };
     }
@@ -131,4 +134,4 @@ class ParameterService extends React.Component {
     }
 }
 
-export default ParameterService;
+export default ProviderProperties;

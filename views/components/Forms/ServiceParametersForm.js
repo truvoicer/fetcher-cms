@@ -21,7 +21,7 @@ class ServiceParametersForm extends React.Component {
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
-        console.log(this.state)
+        console.log(this.props)
     }
 
     componentDidMount() {
@@ -47,7 +47,7 @@ class ServiceParametersForm extends React.Component {
         e.preventDefault();
         console.log(this.state)
 
-        responseHandler(sendData(this.state.action, "service/parameters", this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "parameter", this.state),  this.props.formResponse);
     }
 
     render() {

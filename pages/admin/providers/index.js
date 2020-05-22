@@ -46,16 +46,6 @@ export default class ManageProviders extends React.Component {
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
 
-        // this.setTableColumns = this.setTableColumns.bind(this);
-        // this.setProviderData = this.setProviderData.bind(this);
-        // this.createProvider = this.createProvider.bind(this);
-        // this.updateProvider = this.updateProvider.bind(this);
-        // this.deleteProvider = this.deleteProvider.bind(this);
-        // this.showProperties = this.showProperties.bind(this);
-        // this.handleClose = this.handleClose.bind(this);
-        // this.providerModal = this.providerModal.bind(this);
-        // this.formResponse = this.formResponse.bind(this);
-        // this.newProviderButton = this.newProviderButton.bind(this);
     }
 
     getTableData() {
@@ -83,6 +73,12 @@ export default class ManageProviders extends React.Component {
                 right: true,
             },
             {
+                name: 'Provider User Id',
+                selector: 'provider_user_id',
+                sortable: true,
+                right: true,
+            },
+            {
                 name: 'Access key',
                 selector: 'provider_access_key',
                 sortable: true,
@@ -100,16 +96,17 @@ export default class ManageProviders extends React.Component {
     getTableColumnControls() {
         return [
             {
-                control: "button",
-                text: "Properties",
+                control: "link",
+                text: "Modify Properties",
                 action: "update",
-                modal: {
-                    showModal: true,
-                    modalTitle: "Edit Properties",
-                    modalFormName: "providerProperties"
+                href: "/admin/providers/properties/",
+                query: {
+                    dynamic: {
+                        name: "provider_id"
+                    }
                 },
                 size: "sm",
-                classes: "outline-primary"
+                classes: "btn btn-outline-primary btn-sm"
             },
             {
                 control: "button",
@@ -146,9 +143,6 @@ export default class ManageProviders extends React.Component {
             },
             provider: {
                 modalForm: ProviderForm
-            },
-            providerProperties: {
-                modalForm: ProviderPropertiesForm
             },
             delete: {
                 modalForm: DeleteForm

@@ -10,117 +10,60 @@ class ProviderPropertiesForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            properties: [],
-            providerProperties: [],
-            propertyData: [],
-            form: {
-                data: {}
-            }
+            action: this.props.data.action,
+            id: "",
+            property_id: "",
+            property_name: "",
+            property_label: "",
+            property_value: "",
+            provider_id: this.props.config.provider_id
         };
 
-        this.propertyData = [];
         this.formSubmitHandler = this.formSubmitHandler.bind(this);
-        this.formResponseHandler = this.formResponseHandler.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.fetchPropertiesResponse = this.fetchPropertiesResponse.bind(this);
         this.fetchProviderPropertiesResponse = this.fetchProviderPropertiesResponse.bind(this);
     }
 
     componentDidMount() {
-        responseHandler(fetchData(ApiConfig.endpoints.propertyList), this.fetchPropertiesResponse);
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.providerProperties, this.props.data.itemId)),
+        responseHandler(fetchData(
+            sprintf(ApiConfig.endpoints.providerProperty, this.props.config.provider_id, this.props.data.itemId)),
             this.fetchProviderPropertiesResponse);
-    }
-
-    fetchPropertiesResponse(status, message, data) {
-        if (status === 200) {
-            this.setState({
-                properties: data.data
-            })
-        }
     }
 
     fetchProviderPropertiesResponse(status, message, data) {
         if (status === 200) {
-            console.log(data.data)
             this.setState({
-                providerProperties: data.data
+                id: data.data.property_id,
+                property_id: data.data.property_id,
+                property_name: data.data.property_name,
+                property_label: data.data.property_label,
+                property_value: data.data.property_value,
             })
         }
     }
 
-    formResponseHandler(status, message, data) {
-        console.log(status, message, data);
-    }
-
     formChangeHandler(e) {
-        console.log(e.target.name)
-        console.log(e.target.value)
-        // e.target.name = e.target.value;
+        this.setState({
+            [e.target.name]: e.target.value
+        })
     }
 
     formSubmitHandler(e) {
         e.preventDefault();
-        let allProperties = this.state.properties;
-        let propertyDataArray = allProperties.map((property, index) => {
-            let input = document.getElementById(property.property_name)
-            return {
-                property_id: parseInt(input.getAttribute("data-property-id")),
-                property_value: input.value
-            }
-        });
-
-        let data = {
-            data: [
-                {
-                    provider_id: parseInt(this.props.data.provider_id),
-                    property_data: propertyDataArray
-                }
-            ]
-        }
-        responseHandler(sendData("create", "provider/properties", data), this.props.formResponse);
-    }
-
-    getProviderProperty(providerId, propertyId, providerProperties) {
-        let formData = this.state.form.data;
-        for (let i = 0; i < providerProperties.length; i++) {
-            if (parseInt(providerId) === providerProperties[i].provider.id &&
-                propertyId === providerProperties[i].property.id) {
-                return providerProperties[i];
-            }
-        }
-        return false;
-    }
-
-    buildFormItems() {
-        let properties = this.state.properties;
-        if (properties.length > 0) {
-            return properties.map((item, index) => {
-                let label = item.property_label + " (" + item.property_name + ")";
-                let placeholderText = "Enter " + item.property_label;
-                let providerProperties = this.getProviderProperty(
-                    this.props.data.provider_id, item.id,
-                    this.state.providerProperties);
-                return (
-                    <Form.Group>
-                        <Form.Label>{label}</Form.Label>
-                        <Form.Control
-                            placeholder={placeholderText}
-                            id={item.property_name}
-                            name={item.property_name}
-                            value={providerProperties.property_value}
-                            data-property-id={item.id}
-                            onChange={this.formChangeHandler}/>
-                    </Form.Group>
-                );
-            });
-        }
+        responseHandler(sendData(this.state.action, "provider/property", this.state), this.props.formResponse);
     }
 
     render() {
+        let label = sprintf("%s (%s)", this.state.property_label, this.state.property_name)
         return (
             <Form onSubmit={this.formSubmitHandler}>
-                {this.buildFormItems()}
+                <Form.Group>
+                    <Form.Label>{label}</Form.Label>
+                    <Form.Control
+                        name={"property_value"}
+                        value={this.state.property_value}
+                        onChange={this.formChangeHandler}/>
+                </Form.Group>
                 <Button variant="primary" type="submit">
                     Update
                 </Button>
