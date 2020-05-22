@@ -27,9 +27,6 @@ class ManageServices extends React.Component {
                 order: "asc",
                 sort: "service_name"
             },
-            breadcrumbs: {
-                pageName: "manage_services"
-            }
         };
     }
 

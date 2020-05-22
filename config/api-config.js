@@ -5,6 +5,7 @@ export default
         "login": "/api/login",
         "getUserList": "/api/admin/users",
         "getUser": "/api/admin/user/%d",
+        "getApiUser": "/api/get-user",
         "create": "/api/%s/create",
         "update": "/api/%s/update",
         "delete": "/api/%s/delete",

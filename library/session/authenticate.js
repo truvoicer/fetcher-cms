@@ -44,6 +44,6 @@ export const getSessionObject = () => {
 }
 
 export const getApiUser = async () => {
-        return await axios.post(apiConfig.apiUrl + apiConfig.endpoints.getUser, getSessionObject("access_token") );
+        return await axios.post(apiConfig.apiUrl + apiConfig.endpoints.getApiUser, getSessionObject("access_token") );
 }
 

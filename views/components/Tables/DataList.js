@@ -30,14 +30,12 @@ export default class DataList extends React.Component {
         }
         this.modalTitle = "";
         this.modalform = "";
-        // this.getTableColumns = this.getTableColumns.bind(this);
         this.setTableData = this.setTableData.bind(this);
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.getModal = this.getModal.bind(this);
         this.formResponse = this.formResponse.bind(this);
         this.getTableDataResponseHandler = this.getTableDataResponseHandler.bind(this);
-        this.redirectHandler = this.redirectHandler.bind(this);
     }
 
     componentDidMount() {
@@ -45,7 +43,6 @@ export default class DataList extends React.Component {
     }
 
     setTableData() {
-        console.log(this.props.tableData);
         responseHandler(fetchData(this.props.tableData.endpoint, this.props.tableData.query),
             this.getTableDataResponseHandler);
     }
@@ -131,12 +128,6 @@ export default class DataList extends React.Component {
             </Link>
         );
     }
-    redirectHandler(e) {
-        e.preventDefault();
-        console.log(e.target.getAttribute("href"))
-        console.log(e.target.href)
-        Router.push(e.target.getAttribute("href"))
-    }
     showModal(e) {
             this.setState({
                 modal: {
@@ -156,7 +147,6 @@ export default class DataList extends React.Component {
         if (typeof modalFormName != "undefined") {
             const ModalForm = this.props.modalConfig[modalFormName].modalForm
             const modalConfig = this.props.modalConfig[modalFormName].config
-            console.log(modalConfig)
             return (
                 <ModalForm data={this.state.modal} config={modalConfig} formResponse={this.formResponse}/>
             )
@@ -164,7 +154,6 @@ export default class DataList extends React.Component {
         return null;
     }
     formResponse(status, message, data = null) {
-        console.log(status, message, data)
         let alertStatus;
         if (status === 200) {
             alertStatus = "success"

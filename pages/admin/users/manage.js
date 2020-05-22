@@ -1,10 +1,9 @@
-
 import Admin from '../../../views/layouts/Admin'
 import ApiConfig from "../../../config/api-config";
-import PropertyForm from "../../../views/components/Forms/PropertyForm";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import React from "react";
+import UserForm from "../../../views/components/Forms/UserForm";
 
 export default class ManageUsers extends React.Component {
     constructor(props) {
@@ -22,6 +21,8 @@ export default class ManageUsers extends React.Component {
         return {
             title: "Users",
             endpoint: ApiConfig.endpoints.getUserList,
+            defaultColumnName: "username",
+            defaultColumnLabel: "username",
             query: {
                 count: 10,
                 order: "asc",
@@ -81,7 +82,7 @@ export default class ManageUsers extends React.Component {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete User",
-                    endpoint: "user",
+                    endpoint: "admin/user",
                     modalFormName: "delete"
                 },
                 size: "sm",
@@ -95,7 +96,7 @@ export default class ManageUsers extends React.Component {
             default: {
                 modalForm: UserForm
             },
-            property: {
+            user: {
                 modalForm: UserForm
             },
             delete: {
