@@ -20,7 +20,12 @@ export const Routes =
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers"
-                }
+                },
+                {
+                    label: "Providers Properties",
+                    name: "provider_properties",
+                    route: "/admin/providers/properties"
+                },
             ]
         },
         {

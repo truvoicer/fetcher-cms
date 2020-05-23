@@ -39,10 +39,6 @@ export default class DataList extends React.Component {
         this.getTableDataResponseHandler = this.getTableDataResponseHandler.bind(this);
     }
 
-    componentDidMount() {
-        this.setTableData()
-    }
-
     setTableData() {
         responseHandler(fetchData(this.props.tableData.endpoint, this.props.tableData.query),
             this.getTableDataResponseHandler);
@@ -207,6 +203,7 @@ export default class DataList extends React.Component {
     }
 
     render() {
+        this.setTableData()
         return (
             <div>
                     {this.state.form.submitted &&
