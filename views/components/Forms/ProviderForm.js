@@ -55,7 +55,7 @@ export default class PropertyForm extends React.Component {
         return data.map((item, index) => {
             return {
                 value: item.id,
-                label: item.category_name
+                label: item.category_label
             }
         })
 
@@ -98,14 +98,6 @@ export default class PropertyForm extends React.Component {
                                   name="provider_api_base_url"
                                   value={this.state.provider_api_base_url}/>
                 </Form.Group>
-                <Form.Group controlId="formProviderAccessKey">
-                    <Form.Label>Provider Access Key</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers api access key."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_access_key"
-                                  value={this.state.provider_access_key}/>
-                </Form.Group>
                 <Form.Group controlId="formProviderUserId">
                     <Form.Label>Provider User Id</Form.Label>
                     <Form.Control type="text"
@@ -113,6 +105,14 @@ export default class PropertyForm extends React.Component {
                                   onChange={this.formChangeHandler}
                                   name="provider_user_id"
                                   value={this.state.provider_user_id}/>
+                </Form.Group>
+                <Form.Group controlId="formProviderAccessKey">
+                    <Form.Label>Provider Access Key</Form.Label>
+                    <Form.Control type="text"
+                                  placeholder="Enter the providers api access key."
+                                  onChange={this.formChangeHandler}
+                                  name="provider_access_key"
+                                  value={this.state.provider_access_key}/>
                 </Form.Group>
                 <Form.Group controlId="formProviderSecretKey">
                     <Form.Label>Provider Api Secret Key</Form.Label>

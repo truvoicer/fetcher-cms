@@ -6,6 +6,7 @@ import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import {Router} from 'next/router'
 import Link from "next/link";
+import React from "react";
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -54,7 +55,9 @@ class Sidebar extends React.Component {
                     return (
                         <Link href={subItem.route} as={subItem.route} key={itemKey}>
                         <a className="c-sidebar-nav-link">
-                            <span className="c-sidebar-nav-icon"></span>
+                            <svg className="c-sidebar-nav-icon">
+                                <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
+                            </svg>
                             {subItem.label}
                         </a>
                         </Link>
@@ -75,7 +78,7 @@ class Sidebar extends React.Component {
                            id={item.name}
                            onClick={this.menuClick}>
                             <svg className="c-sidebar-nav-icon">
-                                {/*<use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-puzzle"></use>*/}
+                                <use xlinkHref={"/images/icons/sprites/free.svg#" + item.icon}/>
                             </svg>
                             {item.label}
                         </a>

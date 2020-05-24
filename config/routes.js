@@ -6,7 +6,7 @@ export const Routes =
             label: "Dashboard",
             name: "dashboard",
             route: "/admin/dashboard",
-            icon: "fas fa-fw fa-cog",
+            icon: "cil-3d",
             header: true
         },
         {
@@ -14,11 +14,13 @@ export const Routes =
             label: "Categories",
             name: "manage_categories",
             route: "/admin/categories",
+            icon: "cil-tags",
             subs: [
                 {
                     label: "Manage Categories",
                     name: "manage_categories",
-                    route: "/admin/categories"
+                    route: "/admin/categories",
+                    icon: "cil-wc"
                 }
             ]
         },
@@ -26,17 +28,19 @@ export const Routes =
             label: "Providers",
             name: "providers",
             route: "/admin/providers",
-            icon: "fas fa-fw fa-folder",
+            icon: "cil-voice-over-record",
             subs: [
                 {
                     label: "Manage Providers",
                     name: "manage_providers",
-                    route: "/admin/providers"
+                    route: "/admin/providers",
+                    icon: "cil-wc"
                 },
                 {
                     label: "Providers Properties",
                     name: "provider_properties",
-                    route: "/admin/providers/properties"
+                    route: "/admin/providers/properties",
+                    icon: "cil-wc"
                 },
             ]
         },
@@ -44,12 +48,13 @@ export const Routes =
             label: "Properties",
             name: "properties",
             route: "/admin/properties",
-            icon: "fas fa-fw fa-cog",
+            icon: "cil-library",
             subs: [
                 {
                     label: "Manage Properties",
                     name: "manage_properties",
-                    route: "/admin/properties"
+                    route: "/admin/properties",
+                    icon: "cil-wc"
                 }
             ]
         },
@@ -57,12 +62,13 @@ export const Routes =
             label: "Services",
             name: "services",
             route: "/admin/services",
-            icon: "fas fa-fw fa-cog",
+            icon: "cil-gem",
             subs: [
                 {
                     label: "Manage Services",
                     name: "manage_services",
-                    route: "/admin/services"
+                    route: "/admin/services",
+                    icon: "cil-wc"
                 }
             ]
         },
@@ -71,12 +77,13 @@ export const Routes =
             label: "Users",
             name: "users",
             route: "/admin/users/manage",
-            icon: "fas fa-fw fa-wrench",
+            icon: "cil-wc",
             subs: [
                 {
                     label: "Manage Users",
                     name: "manage_users",
-                    route: "/admin/users/manage"
+                    route: "/admin/users/manage",
+                    icon: "cil-wc"
                 }
             ]
         }

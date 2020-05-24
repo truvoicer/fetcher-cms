@@ -62,6 +62,11 @@ export default class ManageProviders extends React.Component {
     getTableColumns() {
         return [
             {
+                name: 'Category',
+                selector: 'category.category_label',
+                sortable: true,
+            },
+            {
                 name: 'Provider Name',
                 selector: 'provider_name',
                 sortable: true,

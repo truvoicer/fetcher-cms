@@ -19,29 +19,34 @@ class Admin extends React.Component {
                 user: {}
             }
         }
-        this.getApiUserResponse = this.getApiUserResponse.bind(this);
     }
 
 
     componentDidMount() {
-        responseHandler(getApiUser(), this.getApiUserResponse);
-    }
-
-    getApiUserResponse(status, message, data) {
-        if (status !== 200) {
-            Router.replace('/auth/login')
-        }
-        this.setState(state => ({
-            session: {
-                authenticated: true,
-                user: data.data
+        getApiUser().then((response) => {
+            if (response.status !== 200) {
+                Router.replace('/auth/login')
+                return;
             }
-        }));
+            this.setState(state => ({
+                session: {
+                    authenticated: true,
+                    user: response.data.data
+                }
+            }));
+        })
+        .catch((error) => {
+            console.error(error)
+            Router.replace('/auth/login')
+
+        });
     }
 
     render() {
         return (
             <App>
+                <div className={"c-app"}>
+                {this.state.session.authenticated &&
                 <UserContext.Provider value={this.state.session}>
                     <AdminSidebar/>
                     <div className="c-wrapper c-fixed-components">
@@ -58,6 +63,8 @@ class Admin extends React.Component {
                         </div>
                     </div>
                 </UserContext.Provider>
+                }
+                </div>
             </App>
         )
     }

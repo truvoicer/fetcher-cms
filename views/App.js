@@ -10,7 +10,7 @@ class App extends React.Component {
     }
     render() {
         return (
-            <div id={"app"} className={"c-app"}>
+            <div id={"app"}>
                 {this.props.children}
             </div>
         )
