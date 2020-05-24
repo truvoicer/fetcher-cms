@@ -69,7 +69,6 @@ export default class ServiceForm extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
-        console.log(this.state)
         responseHandler(sendData(this.state.action, "service", this.state),  this.props.formResponse);
     }
 

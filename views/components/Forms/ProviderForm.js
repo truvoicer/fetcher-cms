@@ -3,6 +3,7 @@ import React from "react";
 import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
+import Select from "react-select";
 const sprintf = require("sprintf-js").sprintf;
 
 export default class PropertyForm extends React.Component {
@@ -16,15 +17,24 @@ export default class PropertyForm extends React.Component {
             provider_user_id: "",
             provider_api_base_url: "",
             provider_access_key: "",
-            provider_secret_key: ""
+            provider_secret_key: "",
+            selectedCategory: "",
+            category_id: "",
+            categories: []
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
+        this.selectChangeHandler = this.selectChangeHandler.bind(this);
     }
 
     componentDidMount() {
         this.setState({
             formSubmitted: false
+        })
+        fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
+            this.setState({
+                categories: this.getCategoriesSelect(response.data.data),
+            })
         })
         if (this.state.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.provider, this.props.data.itemId)).then((response) => {
@@ -41,6 +51,22 @@ export default class PropertyForm extends React.Component {
         }
     }
 
+    getCategoriesSelect(data) {
+        return data.map((item, index) => {
+            return {
+                value: item.id,
+                label: item.category_name
+            }
+        })
+
+    }
+
+    selectChangeHandler(e) {
+        this.setState({
+            selectedCategory: {value: e.value, label: e.label},
+            category_id: e.value
+        })
+    }
     formChangeHandler(e) {
         this.setState({
             [e.target.name]: e.target.value
@@ -95,6 +121,12 @@ export default class PropertyForm extends React.Component {
                                   onChange={this.formChangeHandler}
                                   name="provider_secret_key"
                                   value={this.state.provider_secret_key}/>
+                </Form.Group>
+                <Form.Group controlId="formCategories">
+                    <Form.Label>Categories</Form.Label>
+                    <Select
+                        value={this.state.selectedCategory}
+                        onChange={this.selectChangeHandler} name={"category_id"} options={this.state.categories} />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

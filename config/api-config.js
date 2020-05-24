@@ -16,6 +16,8 @@ export default
         "providerPropertyRelation": "/api/provider/property/relation/%d",
         "property": "/api/property/%d",
         "propertyList": "/api/properties",
+        "category": "/api/category/%d",
+        "categoryList": "/api/categories",
         "service": "/api/service/%d",
         "serviceList": "/api/services",
         "serviceParameter": "/api/parameter/%d",

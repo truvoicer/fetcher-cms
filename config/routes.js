@@ -11,6 +11,18 @@ export const Routes =
         },
         {
             heading: "Api Services",
+            label: "Categories",
+            name: "manage_categories",
+            route: "/admin/categories",
+            subs: [
+                {
+                    label: "Manage Categories",
+                    name: "manage_categories",
+                    route: "/admin/categories"
+                }
+            ]
+        },
+        {
             label: "Providers",
             name: "providers",
             route: "/admin/providers",
