@@ -1,10 +1,6 @@
 import {Routes} from '../../../config/routes'
 import {SiteConfig} from '../../../config/site-config'
 import {getSessionObject} from '../../../library/session/authenticate'
-import Dropdown from "react-bootstrap/Dropdown";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import {Router} from 'next/router'
 import Link from "next/link";
 import React from "react";
 
@@ -12,18 +8,14 @@ class Sidebar extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            session: {},
-            subMenu: ""
+            sidebarNav: []
         }
         this.menuClick = this.menuClick.bind(this)
-        this.ListItems = this.ListItems.bind(this)
         this.getSidebarNav = this.getSidebarNav.bind(this)
+        this.ListItems = this.ListItems.bind(this)
     }
 
     componentDidMount() {
-        this.setState({
-            session: getSessionObject()
-        })
     }
 
     menuClick(e) {
@@ -46,6 +38,7 @@ class Sidebar extends React.Component {
             </ul>
         )
     }
+
     ListItems() {
         return Routes.items.map(function (item, index) {
             let subItems;
@@ -54,34 +47,34 @@ class Sidebar extends React.Component {
                     let itemKey = index + "." + subIndex;
                     return (
                         <Link href={subItem.route} as={subItem.route} key={itemKey}>
-                        <a className="c-sidebar-nav-link">
-                            <svg className="c-sidebar-nav-icon">
-                                <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
-                            </svg>
-                            {subItem.label}
-                        </a>
+                            <a className="c-sidebar-nav-link">
+                                <svg className="c-sidebar-nav-icon">
+                                    <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
+                                </svg>
+                                {subItem.label}
+                            </a>
                         </Link>
                     )
                 })
             }
             return (
-                <div key={index.toString()}>
+                <>
                     {item.heading &&
                     <li className="c-sidebar-nav-title">{item.heading}</li>
                     }
-                    <li className="c-sidebar-nav-item c-sidebar-nav-dropdown" >
+                    <li className={subItems ? "c-sidebar-nav-dropdown" : "c-sidebar-nav-item"}>
                         <Link href={item.route} as={item.route}>
-                        <a className={subItems
-                            ? "c-sidebar-nav-link c-sidebar-nav-dropdown-toggle"
-                            : "c-sidebar-nav-link c-linkable"
-                        }
-                           id={item.name}
-                           onClick={this.menuClick}>
-                            <svg className="c-sidebar-nav-icon">
-                                <use xlinkHref={"/images/icons/sprites/free.svg#" + item.icon}/>
-                            </svg>
-                            {item.label}
-                        </a>
+                            <a className={subItems
+                                ? "c-sidebar-nav-dropdown-toggle"
+                                : "c-sidebar-nav-link c-linkable"
+                            }
+                               id={item.name}
+                               onClick={this.menuClick}>
+                                <svg className="c-sidebar-nav-icon">
+                                    <use xlinkHref={"/images/icons/sprites/free.svg#" + item.icon}/>
+                                </svg>
+                                {item.label}
+                            </a>
                         </Link>
                         {subItems &&
                         <ul className="c-sidebar-nav-dropdown-items">
@@ -91,7 +84,7 @@ class Sidebar extends React.Component {
                         </ul>
                         }
                     </li>
-                </div>
+                </>
             )
         }.bind(this))
     }
