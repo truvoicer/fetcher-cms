@@ -47,7 +47,7 @@ class ServiceParametersForm extends React.Component {
         e.preventDefault();
         console.log(this.state)
 
-        responseHandler(sendData(this.state.action, "parameter", this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "service/parameters", this.state),  this.props.formResponse);
     }
 
     render() {
