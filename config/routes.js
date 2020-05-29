@@ -69,6 +69,12 @@ export const Routes =
                     name: "manage_services",
                     route: "/admin/services",
                     icon: "cil-wc"
+                },
+                {
+                    label: "Response Keys",
+                    name: "manage_response_keys",
+                    route: "/admin/services/response-keys",
+                    icon: "cil-wc"
                 }
             ]
         },

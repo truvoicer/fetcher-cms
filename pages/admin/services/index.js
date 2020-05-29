@@ -43,8 +43,8 @@ class ManageServices extends React.Component {
                 sortable: true,
             },
             {
-                name: 'Provider',
-                selector: 'provider.provider_name',
+                name: 'Category',
+                selector: 'category.category_name',
                 sortable: true,
             },
         ];
@@ -54,9 +54,9 @@ class ManageServices extends React.Component {
         return [
             {
                 control: "link",
-                text: "Modify Parameters",
+                text: "Response Keys",
                 action: "update",
-                href: "/admin/services/parameters/",
+                href: "/admin/services/response-keys/",
                 query: {
                     dynamic: {
                         name: "service_id"

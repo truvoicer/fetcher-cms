@@ -11,7 +11,7 @@ export default class ServiceForm extends React.Component {
         super(props);
         this.state = {
             action: this.props.data.action,
-            provider_id: "",
+            category_id: "",
             id: "",
             service_name: "",
             service_label: "",
@@ -23,9 +23,9 @@ export default class ServiceForm extends React.Component {
     }
 
     componentDidMount() {
-        fetchData(sprintf(ApiConfig.endpoints.providerList)).then((response) => {
+        fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
             this.setState({
-                providers: this.getProvidersSelect(response.data.data),
+                categories: this.getCategoriesSelect(response.data.data),
             })
         })
         if (this.state.action === "update") {
@@ -34,21 +34,21 @@ export default class ServiceForm extends React.Component {
                     id: response.data.data.id,
                     service_name: response.data.data.service_name,
                     service_label: response.data.data.service_label,
-                    provider_id: response.data.data.provider.id,
+                    category_id: response.data.data.category.id,
                     selectValue: {
-                        value: response.data.data.provider.id,
-                        label: response.data.data.provider.provider_name
+                        value: response.data.data.category.id,
+                        label: response.data.data.category.category_name
                     }
                 })
             })
         }
     }
 
-    getProvidersSelect(providerData) {
-        return providerData.map((item, index) => {
+    getCategoriesSelect(categoryData) {
+        return categoryData.map((item, index) => {
             return {
                 value: item.id,
-                label: item.provider_name
+                label: item.category_name
             }
         })
 
@@ -57,7 +57,7 @@ export default class ServiceForm extends React.Component {
     selectChangeHandler(e) {
         this.setState({
             selectValue: {value: e.value, label: e.label},
-            provider_id: e.value
+            category_id: e.value
         })
     }
 
@@ -92,11 +92,11 @@ export default class ServiceForm extends React.Component {
                                   name="service_label"
                                   value={this.state.service_label}/>
                 </Form.Group>
-                <Form.Group controlId="formProvider">
-                    <Form.Label>Provider</Form.Label>
+                <Form.Group controlId="formCategory">
+                    <Form.Label>Category</Form.Label>
                     <Select
                         value={this.state.selectValue}
-                        onChange={this.selectChangeHandler} name={"provider_id"} options={this.state.providers} />
+                        onChange={this.selectChangeHandler} name={"category_id"} options={this.state.categories} />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

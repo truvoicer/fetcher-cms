@@ -20,8 +20,6 @@ export default
         "categoryList": "/api/categories",
         "service": "/api/service/%d",
         "serviceList": "/api/services",
-        "serviceParameter": "/api/parameter/%d",
-        "serviceParameterList": "/api/services/parameters",
-        "providerServiceParameterList": "/api/provider/service/parameters"
+        "serviceResponseKeyList": "/api/service/response/key/list"
     }
 }
