@@ -26,5 +26,7 @@ export default
         "serviceRequestList": "/api/service/request/list",
         "serviceRequestParameterList": "/api/service/request/parameter/list",
         "serviceRequestParameter": "/api/service/request/parameter/%d",
+        "serviceRequestConfigList": "/api/service/request/config/list",
+        "serviceRequestConfig": "/api/service/request/config/%d",
     }
 }

@@ -5,10 +5,11 @@ import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../../../../views/layouts/Admin";
+import ServiceConfigForm from "../../../../../../../views/components/Forms/ServiceConfigForm";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ServiceRequestParameters extends React.Component {
+class ServiceRequestConfig extends React.Component {
     static async getInitialProps(ctx) {
         return {
             props: {
@@ -23,7 +24,7 @@ class ServiceRequestParameters extends React.Component {
             service_request_id: "",
             provider_id: "",
         }
-        this.pageName = "requests_parameters";
+        this.pageName = "requests_config";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
@@ -60,13 +61,13 @@ class ServiceRequestParameters extends React.Component {
     getTableData(service_id) {
             return {
                 title: "",
-                endpoint: ApiConfig.endpoints.serviceRequestParameterList,
-                defaultColumnName: "parameter_name",
-                defaultColumnLabel: "parameter_value",
+                endpoint: ApiConfig.endpoints.serviceRequestConfigList,
+                defaultColumnName: "item_name",
+                defaultColumnLabel: "item_value",
                 query: {
                     count: 10,
                     order: "asc",
-                    sort: "parameter_name",
+                    sort: "item_name",
                     service_request_id: this.state.service_request_id
                 }
             };
@@ -75,13 +76,13 @@ class ServiceRequestParameters extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Parameter Name',
-                selector: 'parameter_name',
+                name: 'Item Name',
+                selector: 'item_name',
                 sortable: true,
             },
             {
-                name: 'Parameter Value',
-                selector: 'parameter_value',
+                name: 'item Value',
+                selector: 'item_value',
                 sortable: true,
             },
         ];
@@ -95,8 +96,8 @@ class ServiceRequestParameters extends React.Component {
                 action: "update",
                 modal: {
                     showModal: true,
-                    modalTitle: "Edit Parameter",
-                    modalFormName: "requestParams"
+                    modalTitle: "Edit Config Item",
+                    modalFormName: "requestConfig"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -107,8 +108,8 @@ class ServiceRequestParameters extends React.Component {
                 action: "delete",
                 modal: {
                     showModal: true,
-                    modalTitle: "Delete Parameter",
-                    endpoint: "service/request/parameter",
+                    modalTitle: "Delete Config Item",
+                    endpoint: "service/request/config",
                     modalFormName: "delete"
                 },
                 size: "sm",
@@ -120,13 +121,13 @@ class ServiceRequestParameters extends React.Component {
     getModalConfig() {
         return {
             default: {
-                modalForm: ServiceParametersForm,
+                modalForm: ServiceConfigForm,
                 config: {
                     service_request_id: this.state.service_request_id
                 }
             },
-            requestParams: {
-                modalForm: ServiceParametersForm,
+            requestConfig: {
+                modalForm: ServiceConfigForm,
                 config: {
                     service_request_id: this.state.service_request_id
                 }
@@ -155,4 +156,4 @@ class ServiceRequestParameters extends React.Component {
         )
     }
 }
-export default ServiceRequestParameters;
+export default ServiceRequestConfig;

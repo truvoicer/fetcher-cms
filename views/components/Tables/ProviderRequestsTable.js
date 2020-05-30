@@ -58,6 +58,19 @@ class ProviderRequestsTable extends React.Component {
         return [
             {
                 control: "link",
+                text: "Request Config",
+                action: "request_config",
+                href: basehref + "/requests/%s/config/",
+                query: {
+                    dynamic: {
+                        brackets: false,
+                    }
+                },
+                size: "sm",
+                classes: "btn btn-outline-primary btn-sm"
+            },
+            {
+                control: "link",
                 text: "Request Parameters",
                 action: "request_parameters",
                 href: basehref + "/requests/%s/parameters/",

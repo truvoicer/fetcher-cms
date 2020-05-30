@@ -69,6 +69,14 @@ export const Routes =
                             parent: "service_requests",
                             icon: "cil-wc",
                             sidebar: false,
+                        },
+                        {
+                            label: "Request Config",
+                            name: "requests_config",
+                            route: "/admin/providers/requests/config/%d",
+                            parent: "service_requests",
+                            icon: "cil-wc",
+                            sidebar: false,
                         }
                     ]
                 },
