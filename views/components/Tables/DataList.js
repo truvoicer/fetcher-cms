@@ -119,7 +119,7 @@ export default class DataList extends React.Component {
         }
         else if(typeof item.query.dynamic !== "undefined") {
             linkAs += row.id;
-            href += sprintf("[%s]", item.query.dynamic.name);
+            href += sprintf("[%s]", row.id);
         }
         return (
             <Link href={href} as={linkAs}>

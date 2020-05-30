@@ -1,16 +1,12 @@
-import ApiConfig from "../../../../config/api-config";
 import React from "react";
-import ServiceParametersForm from "../../../../views/components/Forms/ServiceParametersForm";
-import DeleteForm from "../../../../views/components/Forms/DeleteForm";
-import DataList from "../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../views/layouts/Admin";
-import ProviderPropertiesForm from "../../../../views/components/Forms/ProviderPropertiesForm";
-import ProviderPropertiesTable from "../../../../views/components/Tables/ProviderPropertiesTable";
+import ProviderRequestsTable from "../../../../views/components/Tables/ProviderRequestsTable";
+import {GetStaticProps} from 'next';
 
 const sprintf = require("sprintf-js").sprintf
 
-class ProviderProperties extends React.Component {
+class ProviderRequests extends React.Component {
     static async getInitialProps(ctx) {
         return {
             props: {
@@ -28,7 +24,9 @@ class ProviderProperties extends React.Component {
     }
 
     componentDidMount() {
+        console.log(this.props)
         const {provider_id} = Router.query;
+        console.log(provider_id);
         if (!isNaN(provider_id)) {
             this.setState({
                 showTable: true,
@@ -42,7 +40,7 @@ class ProviderProperties extends React.Component {
             <Admin>
                 <>
                     {this.state.showTable &&
-                        <ProviderPropertiesTable provider_id={this.state.provider_id}/>
+                    <ProviderRequestsTable provider_id={this.state.provider_id}/>
                     }
                 </>
             </Admin>
@@ -50,4 +48,4 @@ class ProviderProperties extends React.Component {
     }
 }
 
-export default ProviderProperties;
+export default ProviderRequests;

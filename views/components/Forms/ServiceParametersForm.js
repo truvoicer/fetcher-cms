@@ -15,7 +15,7 @@ class ServiceParametersForm extends React.Component {
         this.state = {
             action: this.props.data.action,
             id: "",
-            service_id: this.props.config.service_id,
+            service_request_id: this.props.config.service_request_id,
             parameter_name: "",
             parameter_value: ""
         }
@@ -26,11 +26,12 @@ class ServiceParametersForm extends React.Component {
 
     componentDidMount() {
         if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceParameter, this.props.data.itemId)).then((response) => {
+            fetchData(sprintf(ApiConfig.endpoints.serviceRequestParameter, this.props.data.itemId)).then((response) => {
                 this.setState({
                     id: response.data.data.id,
                     parameter_name: response.data.data.parameter_name,
                     parameter_value: response.data.data.parameter_value,
+                    service_request_id: response.data.data.service_request.id
                 })
             })
         }
@@ -47,7 +48,7 @@ class ServiceParametersForm extends React.Component {
         e.preventDefault();
         console.log(this.state)
 
-        responseHandler(sendData(this.state.action, "service/parameters", this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "service/request/parameter", this.state),  this.props.formResponse);
     }
 
     render() {

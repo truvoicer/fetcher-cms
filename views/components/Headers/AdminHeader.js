@@ -3,10 +3,13 @@ import {getSessionObject} from '../../../library/session/authenticate';
 import Link from "next/link";
 import {useContext} from "react";
 import {UserContext} from "../Context/UserContext";
+import Breadcrumbs from "./Breadcrumbs";
 
 class AdminHeader extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+        }
     }
 
     componentDidMount() {
@@ -26,7 +29,7 @@ class AdminHeader extends React.Component {
         return Routes.items.map(function (item, index) {
             if (item.header) {
                 return (
-                    <li className="c-header-nav-item px-3">
+                    <li className="c-header-nav-item px-3" key={index.toString()}>
                         <Link href={item.route} as={item.route} key={index.toString()}>
                             <a className="c-header-nav-link">{item.label}</a>
                         </Link>
@@ -66,13 +69,7 @@ class AdminHeader extends React.Component {
                         </div>
                     </li>
                 </ul>
-                <div className="c-subheader px-3">
-                    <ol className="breadcrumb border-0 m-0">
-                        <li className="breadcrumb-item">Home</li>
-                        <li className="breadcrumb-item"><a href="#">Admin</a></li>
-                        <li className="breadcrumb-item active">Dashboard</li>
-                    </ol>
-                </div>
+                <Breadcrumbs />
             </header>
         )
     }

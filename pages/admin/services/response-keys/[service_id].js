@@ -10,6 +10,13 @@ import ServiceResponseKeysForm from "../../../../views/components/Forms/ServiceR
 const sprintf = require("sprintf-js").sprintf
 
 class ServiceResponseKeys extends React.Component {
+    static async getInitialProps(ctx) {
+        return {
+            props: {
+
+            }
+        }
+    }
 
     constructor(props) {
         super(props);

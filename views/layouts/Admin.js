@@ -8,6 +8,7 @@ import React from "react";
 import App from "../App";
 import Container from "react-bootstrap/Container";
 import {UserContext} from "../components/Context/UserContext";
+import {BreadcrumbsContext} from "../components/Context/BreadcrumbsContext";
 import {responseHandler} from "../../library/api/middleware";
 
 class Admin extends React.Component {
@@ -16,8 +17,8 @@ class Admin extends React.Component {
         this.state = {
             session: {
                 authenticated: false,
-                user: {}
-            }
+                user: {},
+            },
         }
     }
 
@@ -50,7 +51,9 @@ class Admin extends React.Component {
                 <UserContext.Provider value={this.state.session}>
                     <AdminSidebar/>
                     <div className="c-wrapper c-fixed-components">
+                        <BreadcrumbsContext.Provider value={this.props.breadcrumbsConfig}>
                         <AdminHeader/>
+                        </BreadcrumbsContext.Provider>
                         <div className="c-body">
                             <main className="c-main">
                                 <Container fluid={true}>

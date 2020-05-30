@@ -102,6 +102,19 @@ export default class ManageProviders extends React.Component {
         return [
             {
                 control: "link",
+                text: "Requests",
+                action: "update",
+                href: "/admin/providers/requests/",
+                query: {
+                    dynamic: {
+                        name: "provider_id"
+                    }
+                },
+                size: "sm",
+                classes: "btn btn-outline-primary btn-sm"
+            },
+            {
+                control: "link",
                 text: "Modify Properties",
                 action: "update",
                 href: "/admin/providers/properties/",

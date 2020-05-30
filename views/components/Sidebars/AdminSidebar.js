@@ -41,30 +41,17 @@ class Sidebar extends React.Component {
 
     ListItems() {
         return Routes.items.map(function (item, index) {
-            let subItems;
-            if (typeof item.subs != "undefined") {
-                subItems = item.subs.map((subItem, subIndex) => {
-                    let itemKey = index + "." + subIndex;
-                    return (
-                        <Link href={subItem.route} as={subItem.route} key={itemKey}>
-                            <a className="c-sidebar-nav-link">
-                                <svg className="c-sidebar-nav-icon">
-                                    <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
-                                </svg>
-                                {subItem.label}
-                            </a>
-                        </Link>
-                    )
-                })
-            }
+            let i = 0;
             return (
                 <>
-                    {item.heading &&
-                    <li className="c-sidebar-nav-title">{item.heading}</li>
-                    }
-                    <li className={subItems ? "c-sidebar-nav-dropdown" : "c-sidebar-nav-item"}>
-                        <Link href={item.route} as={item.route}>
-                            <a className={subItems
+                    {/*{item.heading &&*/}
+                    {/*<li className="c-sidebar-nav-title" key={"siderbar_heading_"+i.toString()}>{item.heading}</li>*/}
+                    {/*}*/}
+                    {item.sidebar &&
+                    <li className={item.subs ? "c-sidebar-nav-dropdown" : "c-sidebar-nav-item"}
+                        key={"sidebarlist" + index.toString()}>
+                        <Link href={item.route} as={item.route} key={"sidebarlink" + index.toString()}>
+                            <a className={item.subs
                                 ? "c-sidebar-nav-dropdown-toggle"
                                 : "c-sidebar-nav-link c-linkable"
                             }
@@ -76,14 +63,29 @@ class Sidebar extends React.Component {
                                 {item.label}
                             </a>
                         </Link>
-                        {subItems &&
+                        {item.subs &&
                         <ul className="c-sidebar-nav-dropdown-items">
-                            <li className="c-sidebar-nav-item">
-                                {subItems}
+                            <li className="c-sidebar-nav-item" key={"sublist" + i.toString()}>
+                                {item.subs.map((subItem, subIndex) => (
+                                    <>
+                                        {subItem.sidebar &&
+                                        <Link href={subItem.route} as={subItem.route}
+                                              key={"sublistlink" + subIndex.toString()}>
+                                            <a className="c-sidebar-nav-link">
+                                                <svg className="c-sidebar-nav-icon">
+                                                    <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
+                                                </svg>
+                                                {subItem.label}
+                                            </a>
+                                        </Link>
+                                        }
+                                    </>
+                                ))}
                             </li>
                         </ul>
                         }
                     </li>
+                    }
                 </>
             )
         }.bind(this))
