@@ -24,7 +24,7 @@ export const Routes =
                     label: "Manage Categories",
                     name: "manage_categories",
                     route: "/admin/categories",
-                    parent: "manage_categories",
+                    parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
                 }
@@ -42,30 +42,22 @@ export const Routes =
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers",
-                    parent: "providers",
+                    parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
                 },
                 {
-                    label: "Providers Properties",
+                    label: "Properties",
                     name: "provider_properties",
                     route: "/admin/providers/properties",
                     parent: "providers",
-                    icon: "cil-wc",
-                    sidebar: true
-                },
-                {
-                    label: "Provider Property",
-                    name: "provider_property",
-                    route: "/admin/providers/properties/[%d]",
-                    parent: "provider_properties",
                     icon: "cil-wc",
                     sidebar: false
                 },
                 {
                     label: "Service Requests",
                     name: "service_requests",
-                    route: "/admin/providers/requests/[$d]",
+                    route: "/admin/providers/%d/requests/",
                     parent: "providers",
                     icon: "cil-wc",
                     sidebar: false,
@@ -73,7 +65,7 @@ export const Routes =
                         {
                             label: "Request Parameters",
                             name: "requests_parameters",
-                            route: "/admin/providers/requests/parameters/[$d]",
+                            route: "/admin/providers/requests/parameters/%d",
                             parent: "service_requests",
                             icon: "cil-wc",
                             sidebar: false,
@@ -94,7 +86,7 @@ export const Routes =
                     label: "Manage Properties",
                     name: "manage_properties",
                     route: "/admin/properties",
-                    parent: "properties",
+                    parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
                 }
@@ -112,15 +104,15 @@ export const Routes =
                     label: "Manage Services",
                     name: "manage_services",
                     route: "/admin/services",
-                    parent: "services",
+                    parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
                 },
                 {
                     label: "Response Keys",
                     name: "response_keys",
-                    route: "/admin/services/response-keys/[%d]",
-                    parent: "services",
+                    route: "/admin/services/%d/response-keys",
+                    parent: "manage_services",
                     icon: "cil-wc",
                     sidebar: false
                 }
@@ -139,7 +131,7 @@ export const Routes =
                     label: "Manage Users",
                     name: "manage_users",
                     route: "/admin/users/manage",
-                    parent: "users",
+                    parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
                 }

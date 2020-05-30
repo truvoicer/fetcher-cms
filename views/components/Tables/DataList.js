@@ -81,7 +81,8 @@ export default class DataList extends React.Component {
             modal = item.modal;
         }
         return (
-            <Button variant={item.classes}
+            <Button key={"button_"+item.action+row.id.toString()}
+                variant={item.classes}
                     size={item.size}
                     data-item-id={row.id}
                     data-item-name={row[this.props.tableData.defaultColumnName]}
@@ -95,18 +96,22 @@ export default class DataList extends React.Component {
             </Button>
         );
     }
-    getQuery(queryObject, row) {
+    getQuery(queryObject, row, type = "dynamic") {
         let esc = encodeURIComponent;
+        let operator= "/";
+        if (type === "params") {
+            operator = "=";
+        }
         return "?" + Object.keys(queryObject)
             .map(k => {
                 let value = queryObject[k];
                 if (typeof value === 'object')
                 {
                     return Object.keys(value)
-                        .map(l => esc(l) + '=' + esc(row[k][value[l]]))
+                        .map(l => esc(l) + operator + esc(row[k][value[l]]))
                         .join('&');
                 } else {
-                    return esc(k) + '=' + esc(row[queryObject[k]])
+                    return esc(k) + operator + esc(row[queryObject[k]])
                 }
             }).join('&');
     }
@@ -114,15 +119,23 @@ export default class DataList extends React.Component {
         let href = item.href;
         let linkAs = item.href;
         if (typeof item.query.params !== "undefined") {
-            href += this.getQuery(item.query.params, row);
+            href += this.getQuery(item.query.params, row, "params");
             linkAs = href;
         }
         else if(typeof item.query.dynamic !== "undefined") {
-            linkAs += row.id;
-            href += sprintf("[%s]", row.id);
+            if(typeof item.query.dynamic.data !== "undefined") {
+                href += this.getQuery(item.query.dynamic.data, row, "dynamic");
+            } else {
+                if(typeof item.query.dynamic.brackets !== "undefined" && item.query.dynamic.brackets) {
+                    href = sprintf(href, "["+row.id+"]")
+                } else {
+                     href = sprintf(href, row.id);
+                }
+                linkAs = href;
+            }
         }
         return (
-            <Link href={href} as={linkAs}>
+            <Link href={href} as={linkAs} key={"link_"+item.action+row.id.toString()}>
                 <a className={item.classes}>
                     {item.text}
                 </a>

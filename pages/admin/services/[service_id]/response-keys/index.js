@@ -1,11 +1,11 @@
-import ApiConfig from "../../../../config/api-config";
+import ApiConfig from "../../../../../config/api-config";
 import React from "react";
-import ServiceParametersForm from "../../../../views/components/Forms/ServiceParametersForm";
-import DeleteForm from "../../../../views/components/Forms/DeleteForm";
-import DataList from "../../../../views/components/Tables/DataList";
+import ServiceParametersForm from "../../../../../views/components/Forms/ServiceParametersForm";
+import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
+import DataList from "../../../../../views/components/Tables/DataList";
 import Router from "next/router";
-import Admin from "../../../../views/layouts/Admin";
-import ServiceResponseKeysForm from "../../../../views/components/Forms/ServiceResponseKeysForm";
+import Admin from "../../../../../views/layouts/Admin";
+import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -25,6 +25,8 @@ class ServiceResponseKeys extends React.Component {
             service_id: false
         }
         this.service_id = ""
+        this.pageName = "response_keys";
+        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
@@ -32,12 +34,20 @@ class ServiceResponseKeys extends React.Component {
 
     componentDidMount() {
         const {service_id} = Router.query;
-        console.log(service_id);
-        if (!isNaN(service_id)) {
-            this.setState({
-                showTable: true,
-                service_id: service_id
-            })
+        this.setState({
+            showTable: true,
+            service_id: service_id
+        })
+    }
+
+    getBreadcrumbsConfig() {
+        return {
+            pageName: this.pageName,
+            data: {
+                response_keys: [
+                    this.state.service_id
+                ]
+            }
         }
     }
 
@@ -124,7 +134,7 @@ class ServiceResponseKeys extends React.Component {
 
     render() {
         return (
-            <Admin>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
                     {this.state.showTable &&
                     <DataList

@@ -1,10 +1,10 @@
-import ApiConfig from "../../../../../config/api-config";
+import ApiConfig from "../../../../../../../config/api-config";
 import React from "react";
-import ServiceParametersForm from "../../../../../views/components/Forms/ServiceParametersForm";
-import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
-import DataList from "../../../../../views/components/Tables/DataList";
+import ServiceParametersForm from "../../../../../../../views/components/Forms/ServiceParametersForm";
+import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
+import DataList from "../../../../../../../views/components/Tables/DataList";
 import Router from "next/router";
-import Admin from "../../../../../views/layouts/Admin";
+import Admin from "../../../../../../../views/layouts/Admin";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -20,7 +20,8 @@ class ServiceRequestParameters extends React.Component {
         super(props);
         this.state = {
             showTable: false,
-            service_request_id: false
+            service_request_id: "",
+            provider_id: "",
         }
         this.pageName = "requests_parameters";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
@@ -30,14 +31,13 @@ class ServiceRequestParameters extends React.Component {
     }
 
     componentDidMount() {
-        const {service_request_id} = Router.query;
-        console.log(Router.query)
-        if (!isNaN(service_request_id)) {
-            this.setState({
-                showTable: true,
-                service_request_id: service_request_id
-            })
-        }
+        const {provider_id, service_request_id} = Router.query;
+        this.setState({
+            showTable: true,
+            service_request_id: service_request_id,
+            provider_id: provider_id
+        })
+
     }
     getStaticProps() {
 
@@ -50,7 +50,9 @@ class ServiceRequestParameters extends React.Component {
         return {
             pageName: this.pageName,
             data: {
-                id: this.state.service_request_id
+                service_requests: [
+                    this.state.provider_id
+                ]
             }
         }
     }

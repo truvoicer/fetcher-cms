@@ -1,15 +1,16 @@
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import {Routes} from '../../../config/routes'
 import {BreadcrumbsContext} from "../Context/BreadcrumbsContext";
+const vsprintf = require("sprintf-js").vsprintf;
 
 class Breadcrumbs extends React.Component {
 
     constructor(props) {
         super(props)
         this.parents = [];
-        this.buildBreadcrumbsItems = this.buildBreadcrumbsItems.bind(this);
         this.getRouteItem = this.getRouteItem.bind(this);
         this.getRouteList = this.getRouteList.bind(this);
+        this.setPageHref = this.setPageHref.bind(this);
     }
 
     componentDidMount() {
@@ -31,44 +32,40 @@ class Breadcrumbs extends React.Component {
             }
         }
     }
+    setPageHref(page) {
+        if (typeof this.context.data === "undefined") {
+            return page;
+        }
+        if (typeof this.context.data[page.name] === "undefined") {
+            return page;
+        }
+        page.route = vsprintf(page.route, this.context.data[page.name]);
+        return page;
+    }
     getRouteList() {
         let pageList = [];
         let currentPage = this.getRouteItem(Routes.items, this.context.pageName);
         if (typeof currentPage !== "undefined") {
             currentPage.active = true;
-            pageList.push(currentPage);
+            pageList.push(this.setPageHref(currentPage));
             while (currentPage.parent !== "self") {
                 currentPage = this.getRouteItem(Routes.items, currentPage.parent);
-                pageList.push(currentPage);
+                pageList.push(this.setPageHref(currentPage));
             }
             return pageList;
         }
         return [];
     }
 
-    buildBreadcrumbsItems() {
-        if (typeof this.context !== "undefined") {
-            let list = this.getRouteList();
-            return list.slice(0).reverse().map((item, index) => {
-                return (
-                    <>
-                        {item.active
-                            ? <Breadcrumb.Item active href={item.route}>{item.label}</Breadcrumb.Item>
-                            : <Breadcrumb.Item href={item.route}>{item.label}</Breadcrumb.Item>
-                        }
-
-                    </>
-                )
-            })
-        }
-        return null
-    }
-
     render() {
         return (
             <div className="c-subheader px-3">
                 <ol className="breadcrumb border-0 m-0">
-                    <this.buildBreadcrumbsItems/>
+                    {this.getRouteList().slice(0).reverse().map((item, index) => (
+                        item.active
+                            ? <Breadcrumb.Item key={index.toString()} active href={item.route}>{item.label}</Breadcrumb.Item>
+                            : <Breadcrumb.Item key={index.toString()} href={item.route}>{item.label}</Breadcrumb.Item>
+                    ))}
                 </ol>
             </div>
         )

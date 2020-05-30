@@ -12,10 +12,19 @@ class ManageServices extends React.Component {
     constructor(props) {
         super(props);
 
+        this.pageName = "manage_services";
+        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
+
+    getBreadcrumbsConfig() {
+        return {
+            pageName: this.pageName
+        }
+    }
+
     getTableData() {
         return {
             title: "",
@@ -55,11 +64,11 @@ class ManageServices extends React.Component {
             {
                 control: "link",
                 text: "Response Keys",
-                action: "update",
-                href: "/admin/services/response-keys/",
+                action: "response_keys",
+                href: "/admin/services/%s/response-keys/",
                 query: {
                     dynamic: {
-                        name: "service_id"
+                        brackets: false
                     }
                 },
                 size: "sm",
@@ -110,7 +119,7 @@ class ManageServices extends React.Component {
 
     render() {
             return (
-                <Admin>
+                <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                     <>
                         <DataList
                             tableData={this.getTableData()}

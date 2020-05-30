@@ -42,10 +42,19 @@ export default class ManageProviders extends React.Component {
         this.deleteProviderTitle = "Delete Provider";
         this.propertiesTitle = "Provider Properties";
 
+        this.pageName = "manage_providers";
+        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
+
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
 
+    }
+
+    getBreadcrumbsConfig() {
+        return {
+            pageName: this.pageName,
+        }
     }
 
     getTableData() {
@@ -103,11 +112,11 @@ export default class ManageProviders extends React.Component {
             {
                 control: "link",
                 text: "Requests",
-                action: "update",
-                href: "/admin/providers/requests/",
+                action: "requests",
+                href: "/admin/providers/%s/requests/",
                 query: {
                     dynamic: {
-                        name: "provider_id"
+                        brackets: false
                     }
                 },
                 size: "sm",
@@ -116,11 +125,11 @@ export default class ManageProviders extends React.Component {
             {
                 control: "link",
                 text: "Modify Properties",
-                action: "update",
-                href: "/admin/providers/properties/",
+                action: "properties",
+                href: "/admin/providers/%s/properties/",
                 query: {
                     dynamic: {
-                        name: "provider_id"
+                        brackets: false,
                     }
                 },
                 size: "sm",
@@ -170,7 +179,7 @@ export default class ManageProviders extends React.Component {
 
     render() {
         return (
-            <Admin>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
                     <DataList
                         tableData={this.getTableData()}

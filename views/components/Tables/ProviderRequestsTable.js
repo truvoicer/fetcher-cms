@@ -54,15 +54,16 @@ class ProviderRequestsTable extends React.Component {
     }
 
     getTableColumnControls() {
+        let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
         return [
             {
                 control: "link",
                 text: "Request Parameters",
-                action: "update",
-                href: sprintf("/admin/providers/requests/parameters/", this.props.provider_id),
+                action: "request_parameters",
+                href: basehref + "/requests/%s/parameters/",
                 query: {
                     dynamic: {
-                        parameters: "service_request.id"
+                        brackets: false,
                     }
                 },
                 size: "sm",

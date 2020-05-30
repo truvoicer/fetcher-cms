@@ -1,7 +1,7 @@
 import React from "react";
 import Router from "next/router";
-import Admin from "../../../../views/layouts/Admin";
-import ProviderRequestsTable from "../../../../views/components/Tables/ProviderRequestsTable";
+import Admin from "../../../../../views/layouts/Admin";
+import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import {GetStaticProps} from 'next';
 
 const sprintf = require("sprintf-js").sprintf
@@ -21,23 +21,32 @@ class ProviderRequests extends React.Component {
             showTable: false,
             provider_id: false
         }
+        this.pageName = "service_requests";
+        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
     }
 
     componentDidMount() {
-        console.log(this.props)
         const {provider_id} = Router.query;
-        console.log(provider_id);
-        if (!isNaN(provider_id)) {
-            this.setState({
-                showTable: true,
-                provider_id: provider_id
-            })
+        this.setState({
+            showTable: true,
+            provider_id: provider_id
+        })
+    }
+
+    getBreadcrumbsConfig() {
+        return {
+            pageName: this.pageName,
+            data: {
+                manage_provider: [
+                    this.state.provider_id
+                ]
+            }
         }
     }
 
     render() {
         return (
-            <Admin>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
                     {this.state.showTable &&
                     <ProviderRequestsTable provider_id={this.state.provider_id}/>

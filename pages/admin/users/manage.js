@@ -9,12 +9,20 @@ export default class ManageUsers extends React.Component {
     constructor(props) {
         super(props)
 
+        this.pageName = "manage_users";
+        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
 
     componentDidMount() {
+    }
+
+    getBreadcrumbsConfig() {
+        return {
+            pageName: this.pageName
+        }
     }
 
     getTableData() {
@@ -109,7 +117,7 @@ export default class ManageUsers extends React.Component {
 
     render() {
         return (
-            <Admin>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
                     <DataList
                         tableData={this.getTableData()}

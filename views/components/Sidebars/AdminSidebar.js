@@ -43,14 +43,13 @@ class Sidebar extends React.Component {
         return Routes.items.map(function (item, index) {
             let i = 0;
             return (
-                <>
+                <div key={index.toString()}>
                     {/*{item.heading &&*/}
                     {/*<li className="c-sidebar-nav-title" key={"siderbar_heading_"+i.toString()}>{item.heading}</li>*/}
                     {/*}*/}
                     {item.sidebar &&
-                    <li className={item.subs ? "c-sidebar-nav-dropdown" : "c-sidebar-nav-item"}
-                        key={"sidebarlist" + index.toString()}>
-                        <Link href={item.route} as={item.route} key={"sidebarlink" + index.toString()}>
+                    <li className={item.subs ? "c-sidebar-nav-dropdown" : "c-sidebar-nav-item"}>
+                        <Link href={item.route} as={item.route}>
                             <a className={item.subs
                                 ? "c-sidebar-nav-dropdown-toggle"
                                 : "c-sidebar-nav-link c-linkable"
@@ -65,28 +64,26 @@ class Sidebar extends React.Component {
                         </Link>
                         {item.subs &&
                         <ul className="c-sidebar-nav-dropdown-items">
-                            <li className="c-sidebar-nav-item" key={"sublist" + i.toString()}>
+                            <li className="c-sidebar-nav-item">
                                 {item.subs.map((subItem, subIndex) => (
-                                    <>
-                                        {subItem.sidebar &&
-                                        <Link href={subItem.route} as={subItem.route}
-                                              key={"sublistlink" + subIndex.toString()}>
-                                            <a className="c-sidebar-nav-link">
-                                                <svg className="c-sidebar-nav-icon">
-                                                    <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
-                                                </svg>
-                                                {subItem.label}
-                                            </a>
-                                        </Link>
-                                        }
-                                    </>
+                                    subItem.sidebar &&
+                                    <Link href={subItem.route} as={subItem.route}
+                                          key={"sublistlink" + subIndex.toString()}>
+                                        <a className="c-sidebar-nav-link">
+                                            <svg className="c-sidebar-nav-icon">
+                                                <use xlinkHref={"/images/icons/sprites/free.svg#" + subItem.icon}/>
+                                            </svg>
+                                            {subItem.label}
+                                        </a>
+                                    </Link>
+
                                 ))}
                             </li>
                         </ul>
                         }
                     </li>
                     }
-                </>
+                </div>
             )
         }.bind(this))
     }
