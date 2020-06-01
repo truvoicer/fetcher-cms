@@ -31,12 +31,10 @@ class ProviderProperties extends React.Component {
 
     componentDidMount() {
         const {provider_id} = Router.query;
-        if (!isNaN(provider_id)) {
-            this.setState({
-                showTable: true,
-                provider_id: provider_id
-            })
-        }
+        this.setState({
+            showTable: true,
+            provider_id: provider_id
+        })
     }
 
     getBreadcrumbsConfig() {

@@ -28,5 +28,8 @@ export default
         "serviceRequestParameter": "/api/service/request/parameter/%d",
         "serviceRequestConfigList": "/api/service/request/config/list",
         "serviceRequestConfig": "/api/service/request/config/%d",
+        "requestResponseKey": "/api/service/request/%d/response/key/%d",
+        "requestResponseKeyList": "/api/service/request/%d/response/key/list",
+        "requestResponseKeyRelation": "/api/service/request/response/key/relation/%d",
     }
 }

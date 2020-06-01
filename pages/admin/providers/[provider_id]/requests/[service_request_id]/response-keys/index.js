@@ -5,11 +5,11 @@ import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../../../../views/layouts/Admin";
-import ServiceConfigForm from "../../../../../../../views/components/Forms/ServiceConfigForm";
+import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ServiceRequestConfig extends React.Component {
+class ServiceRequestResponseKeys extends React.Component {
     static async getInitialProps(ctx) {
         return {
             props: {
@@ -22,9 +22,9 @@ class ServiceRequestConfig extends React.Component {
         this.state = {
             showTable: false,
             service_request_id: "",
-            provider_id: "",
+            provider_id: ""
         }
-        this.pageName = "requests_config";
+        this.pageName = "requests_response_keys";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableColumnControls = this.getTableColumnControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
@@ -61,13 +61,13 @@ class ServiceRequestConfig extends React.Component {
     getTableData(service_id) {
             return {
                 title: "",
-                endpoint: ApiConfig.endpoints.serviceRequestConfigList,
-                defaultColumnName: "item_name",
-                defaultColumnLabel: "item_value",
+                endpoint: sprintf(ApiConfig.endpoints.requestResponseKeyList, this.state.service_request_id),
+                defaultColumnName: "key_name",
+                defaultColumnLabel: "key_value",
                 query: {
                     count: 10,
                     order: "asc",
-                    sort: "item_name",
+                    sort: "key_name",
                     service_request_id: this.state.service_request_id,
                     provider_id: this.state.provider_id
                 }
@@ -77,13 +77,13 @@ class ServiceRequestConfig extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Item Name',
-                selector: 'item_name',
+                name: 'Key Name',
+                selector: 'key_name',
                 sortable: true,
             },
             {
-                name: 'item Value',
-                selector: 'item_value',
+                name: 'Key Value',
+                selector: 'key_value',
                 sortable: true,
             },
         ];
@@ -97,8 +97,8 @@ class ServiceRequestConfig extends React.Component {
                 action: "update",
                 modal: {
                     showModal: true,
-                    modalTitle: "Edit Config Item",
-                    modalFormName: "requestConfig"
+                    modalTitle: "Edit Response Keys",
+                    modalFormName: "requestResponseKeys"
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -109,8 +109,8 @@ class ServiceRequestConfig extends React.Component {
                 action: "delete",
                 modal: {
                     showModal: true,
-                    modalTitle: "Delete Config Item",
-                    endpoint: "service/request/config",
+                    modalTitle: "Delete Response Key",
+                    endpoint: "service/request/response/key",
                     modalFormName: "delete"
                 },
                 size: "sm",
@@ -122,26 +122,28 @@ class ServiceRequestConfig extends React.Component {
     getModalConfig() {
         return {
             default: {
-                modalForm: ServiceConfigForm,
+                modalForm: RequestResponseKeysForm,
                 config: {
                     service_request_id: this.state.service_request_id
                 }
             },
-            requestConfig: {
-                modalForm: ServiceConfigForm,
+            requestResponseKeys: {
+                modalForm: RequestResponseKeysForm,
                 config: {
                     service_request_id: this.state.service_request_id
                 }
             },
             delete: {
-                modalForm: DeleteForm
+                modalForm: DeleteForm,
+                config: {
+                    service_request_id: this.state.service_request_id
+                }
             }
         };
     }
 
 
     render() {
-        console.log(this.context)
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
@@ -157,4 +159,4 @@ class ServiceRequestConfig extends React.Component {
         )
     }
 }
-export default ServiceRequestConfig;
+export default ServiceRequestResponseKeys;

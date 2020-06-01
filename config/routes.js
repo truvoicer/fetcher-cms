@@ -77,6 +77,14 @@ export const Routes =
                             parent: "service_requests",
                             icon: "cil-wc",
                             sidebar: false,
+                        },
+                        {
+                            label: "Response Keys",
+                            name: "requests_response_keys",
+                            route: "/admin/providers/requests/response-keys/%d",
+                            parent: "service_requests",
+                            icon: "cil-wc",
+                            sidebar: false,
                         }
                     ]
                 },
