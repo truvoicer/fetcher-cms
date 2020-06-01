@@ -6,6 +6,7 @@ import ProviderForm from "../../../views/components/Forms/ProviderForm";
 import ProviderPropertiesForm from "../../../views/components/Forms/ProviderPropertiesForm";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import Admin from "../../../views/layouts/Admin";
+import Col from "react-bootstrap/Col";
 
 export default class Index extends React.Component {
     constructor(props) {
@@ -104,12 +105,14 @@ export default class Index extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
+                    <Col sm={12} md={6} lg={6}>
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
                         tableColumnControls={this.getTableColumnControls()}
                         modalConfig={this.getModalConfig()}
                     />
+                    </Col>
                 </>
             </Admin>
         )

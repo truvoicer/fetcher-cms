@@ -7,6 +7,7 @@ import Link from "next/link";
 import Breadcrumbs from "../../../views/components/Headers/Breadcrumbs";
 import Container from "react-bootstrap/Container";
 import Admin from "../../../views/layouts/Admin";
+import Col from "react-bootstrap/Col";
 
 class ManageServices extends React.Component {
     constructor(props) {
@@ -121,12 +122,14 @@ class ManageServices extends React.Component {
             return (
                 <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                     <>
+                        <Col sm={12} md={6} lg={6}>
                         <DataList
                             tableData={this.getTableData()}
                             tableColumns={this.getTableColumns()}
                             tableColumnControls={this.getTableColumnControls()}
                             modalConfig={this.getModalConfig()}
                         />
+                        </Col>
                     </>
                 </Admin>
         )

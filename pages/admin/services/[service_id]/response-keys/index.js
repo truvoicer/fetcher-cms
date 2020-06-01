@@ -6,6 +6,7 @@ import DataList from "../../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../../views/layouts/Admin";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
+import Col from "react-bootstrap/Col";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -136,6 +137,7 @@ class ServiceResponseKeys extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
+                    <Col sm={12} md={6} lg={6}>
                     {this.state.showTable &&
                     <DataList
                         tableData={this.getTableData()}
@@ -143,6 +145,7 @@ class ServiceResponseKeys extends React.Component {
                         tableColumnControls={this.getTableColumnControls()}
                         modalConfig={this.getModalConfig()}
                     />}
+                    </Col>
                 </>
             </Admin>
         )

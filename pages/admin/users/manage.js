@@ -4,6 +4,7 @@ import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import React from "react";
 import UserForm from "../../../views/components/Forms/UserForm";
+import Col from "react-bootstrap/Col";
 
 export default class ManageUsers extends React.Component {
     constructor(props) {
@@ -119,12 +120,14 @@ export default class ManageUsers extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
+                    <Col sm={12} md={12} lg={12}>
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
                         tableColumnControls={this.getTableColumnControls()}
                         modalConfig={this.getModalConfig()}
                     />
+                    </Col>
                 </>
             </Admin>
         )

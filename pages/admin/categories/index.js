@@ -4,6 +4,7 @@ import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import CategoryForm from "../../../views/components/Forms/CategoryForm";
 import Admin from "../../../views/layouts/Admin";
+import Col from "react-bootstrap/Col";
 
 class Categories extends React.Component {
     constructor(props) {
@@ -99,12 +100,14 @@ class Categories extends React.Component {
             return (
                 <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                     <>
+                        <Col sm={12} md={6} lg={6}>
                         <DataList
                             tableData={this.getTableData()}
                             tableColumns={this.getTableColumns()}
                             tableColumnControls={this.getTableColumnControls()}
                             modalConfig={this.getModalConfig()}
                         />
+                        </Col>
                     </>
                 </Admin>
         )

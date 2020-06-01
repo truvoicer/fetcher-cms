@@ -181,12 +181,14 @@ export default class ManageProviders extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
+                    <Col sm={12} md={12} lg={12}>
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
                         tableColumnControls={this.getTableColumnControls()}
                         modalConfig={this.getModalConfig()}
                     />
+                    </Col>
                 </>
             </Admin>
         )

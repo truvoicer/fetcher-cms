@@ -3,6 +3,7 @@ import Router from "next/router";
 import Admin from "../../../../../views/layouts/Admin";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import {GetStaticProps} from 'next';
+import Col from "react-bootstrap/Col";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -48,9 +49,11 @@ class ProviderRequests extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
+                    <Col sm={12} md={12} lg={8}>
                     {this.state.showTable &&
                     <ProviderRequestsTable provider_id={this.state.provider_id}/>
                     }
+                    </Col>
                 </>
             </Admin>
         )

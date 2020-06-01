@@ -57,6 +57,8 @@ export default class DataList extends React.Component {
         const controlObject = {
             name: 'Controls',
             right: true,
+            grow: 2,
+            button: false,
             cell: row => this.getColumnControls(controls, row)
         }
         columns.push(controlObject);

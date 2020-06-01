@@ -5,6 +5,7 @@ import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../../../../views/layouts/Admin";
+import Col from "react-bootstrap/Col";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -143,6 +144,7 @@ class ServiceRequestParameters extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
                 <>
+                    <Col sm={12} md={6} lg={5}>
                     {this.state.showTable &&
                     <DataList
                         tableData={this.getTableData()}
@@ -150,6 +152,7 @@ class ServiceRequestParameters extends React.Component {
                         tableColumnControls={this.getTableColumnControls()}
                         modalConfig={this.getModalConfig()}
                     />}
+                    </Col>
                 </>
             </Admin>
         )
