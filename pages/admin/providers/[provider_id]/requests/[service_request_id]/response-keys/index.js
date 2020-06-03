@@ -87,6 +87,11 @@ class ServiceRequestResponseKeys extends React.Component {
                 selector: 'key_value',
                 sortable: true,
             },
+            {
+                name: 'Show in Response',
+                selector: 'show_in_response',
+                sortable: true,
+            },
         ];
     }
 

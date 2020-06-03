@@ -15,6 +15,7 @@ class RequestResponseKeysForm extends React.Component {
             key_id: "",
             key_name: "",
             key_value: "",
+            show_in_response: false,
             service_request_id: this.props.config.service_request_id
         };
 
@@ -31,23 +32,32 @@ class RequestResponseKeysForm extends React.Component {
 
     fetchRequestResponseResponse(status, message, data) {
         if (status === 200) {
+            console.log(data.data.show_in_response)
             this.setState({
                 id: data.data.key_id,
                 key_id: data.data.key_id,
                 key_name: data.data.key_name,
                 key_value: data.data.key_value,
+                show_in_response: data.data.show_in_response
             })
         }
     }
 
     formChangeHandler(e) {
+        let value = e.target.value;
+        if (e.target.id === "show_in_response" && e.target.checked) {
+            value = true;
+        } else if (e.target.id === "show_in_response" && !e.target.checked) {
+            value = false;
+        }
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         })
     }
 
     formSubmitHandler(e) {
         e.preventDefault();
+        console.log(this.state)
         responseHandler(sendData(this.state.action, "service/request/response/key", this.state), this.props.formResponse);
     }
 
@@ -60,6 +70,17 @@ class RequestResponseKeysForm extends React.Component {
                         name={"key_value"}
                         value={this.state.key_value}
                         onChange={this.formChangeHandler}/>
+                </Form.Group>
+                <Form.Group controlId="formShowInResponseCheckbox">
+                    {/*<Form.Label>Show in Response?</Form.Label>*/}
+                    <Form.Check
+                        checked={this.state.show_in_response ? "checked" : ""}
+                        type={"checkbox"}
+                        id={"show_in_response"}
+                        label={"Show in Response?"}
+                        name="show_in_response"
+                        onChange={this.formChangeHandler}
+                    />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Update

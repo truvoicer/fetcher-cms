@@ -17,11 +17,11 @@ class ServiceResponseKeysForm extends React.Component {
             id: "",
             service_id: this.props.config.service_id,
             key_name: "",
-            key_value: ""
+            key_value: "",
+            show_in_response: false
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
-        console.log(this.props)
     }
 
     componentDidMount() {
@@ -31,7 +31,7 @@ class ServiceResponseKeysForm extends React.Component {
                     id: response.data.data.id,
                     service_id: response.data.data.service.id,
                     key_name: response.data.data.key_name,
-                    key_value: response.data.data.key_value,
+                    key_value: response.data.data.key_value
                 })
             })
         }
@@ -39,14 +39,15 @@ class ServiceResponseKeysForm extends React.Component {
 
 
     formChangeHandler(e) {
+        let value = e.target.value;
         this.setState({
-            [e.target.name]: e.target.value
+            [e.target.name]: value
         })
     }
 
     submitHandler(e) {
         e.preventDefault();
-        console.log(this.state)
+        // console.log(this.state)
 
         responseHandler(sendData(this.state.action, "service/response/key", this.state),  this.props.formResponse);
     }
