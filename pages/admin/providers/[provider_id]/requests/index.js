@@ -4,6 +4,8 @@ import Admin from "../../../../../views/layouts/Admin";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import {GetStaticProps} from 'next';
 import Col from "react-bootstrap/Col";
+import {fetchData} from "../../../../../library/api/middleware";
+import ApiConfig from "../../../../../config/api-config";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -20,7 +22,8 @@ class ProviderRequests extends React.Component {
         super(props);
         this.state = {
             showTable: false,
-            provider_id: false
+            provider_id: "",
+            provider_name: ""
         }
         this.pageName = "service_requests";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
@@ -32,15 +35,22 @@ class ProviderRequests extends React.Component {
             showTable: true,
             provider_id: provider_id
         })
+        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
+            this.setState({
+                provider_id: response.data.data.id,
+                provider_name: response.data.data.provider_name
+            })
+        })
     }
 
     getBreadcrumbsConfig() {
         return {
             pageName: this.pageName,
             data: {
-                manage_provider: [
-                    this.state.provider_id
-                ]
+                service_requests: {
+                    id: this.state.provider_id,
+                    name: this.state.provider_name
+                }
             }
         }
     }

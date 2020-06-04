@@ -45,7 +45,11 @@ export default class PropertyForm extends React.Component {
                     provider_user_id: response.data.data.provider_user_id,
                     provider_api_base_url: response.data.data.provider_api_base_url,
                     provider_access_key: response.data.data.provider_access_key,
-                    provider_secret_key: response.data.data.provider_secret_key
+                    provider_secret_key: response.data.data.provider_secret_key,
+                    selectValue: {
+                        value: response.data.data.category.id,
+                        label: response.data.data.category.category_label
+                    }
                 })
             })
         }
@@ -125,7 +129,7 @@ export default class PropertyForm extends React.Component {
                 <Form.Group controlId="formCategories">
                     <Form.Label>Categories</Form.Label>
                     <Select
-                        value={this.state.selectedCategory}
+                        value={this.state.selectValue}
                         onChange={this.selectChangeHandler} name={"category_id"} options={this.state.categories} />
                 </Form.Group>
                 <Button variant="primary" type="submit">

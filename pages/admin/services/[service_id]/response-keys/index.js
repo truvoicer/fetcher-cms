@@ -7,6 +7,7 @@ import Router from "next/router";
 import Admin from "../../../../../views/layouts/Admin";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 import Col from "react-bootstrap/Col";
+import {fetchData} from "../../../../../library/api/middleware";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -23,7 +24,8 @@ class ServiceResponseKeys extends React.Component {
         super(props);
         this.state = {
             showTable: false,
-            service_id: false
+            service_id: "",
+            service_name: ""
         }
         this.service_id = ""
         this.pageName = "response_keys";
@@ -39,15 +41,21 @@ class ServiceResponseKeys extends React.Component {
             showTable: true,
             service_id: service_id
         })
+        fetchData(sprintf(ApiConfig.endpoints.service, service_id)).then((response) => {
+            this.setState({
+                service_name: response.data.data.service_name,
+            })
+        })
     }
 
     getBreadcrumbsConfig() {
         return {
             pageName: this.pageName,
             data: {
-                response_keys: [
-                    this.state.service_id
-                ]
+                manage_services: {
+                    id: this.state.service_id,
+                    name: this.state.service_name
+                }
             }
         }
     }

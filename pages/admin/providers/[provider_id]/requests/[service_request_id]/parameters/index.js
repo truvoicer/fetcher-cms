@@ -6,6 +6,7 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import Router from "next/router";
 import Admin from "../../../../../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
+import {fetchData} from "../../../../../../../library/api/middleware";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -22,7 +23,9 @@ class ServiceRequestParameters extends React.Component {
         this.state = {
             showTable: false,
             service_request_id: "",
+            service_request_name: "",
             provider_id: "",
+            provider_name: "",
         }
         this.pageName = "requests_parameters";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
@@ -38,7 +41,17 @@ class ServiceRequestParameters extends React.Component {
             service_request_id: service_request_id,
             provider_id: provider_id
         })
-
+        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
+            this.setState({
+                provider_id: response.data.data.id,
+                provider_name: response.data.data.provider_name
+            })
+        })
+        fetchData(sprintf(ApiConfig.endpoints.serviceRequest, service_request_id)).then((response) => {
+            this.setState({
+                service_request_name: response.data.data.service_request_name
+            })
+        })
     }
     getStaticProps() {
 
@@ -51,9 +64,14 @@ class ServiceRequestParameters extends React.Component {
         return {
             pageName: this.pageName,
             data: {
-                service_requests: [
-                    this.state.provider_id
-                ]
+                requests_parameters: {
+                    id: this.state.service_request_id,
+                    name: this.state.service_request_name
+                },
+                service_requests: {
+                    id: this.state.provider_id,
+                    name: this.state.provider_name
+                }
             }
         }
     }

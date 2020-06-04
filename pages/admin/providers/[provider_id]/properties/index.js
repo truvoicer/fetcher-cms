@@ -8,6 +8,7 @@ import Admin from "../../../../../views/layouts/Admin";
 import ProviderPropertiesForm from "../../../../../views/components/Forms/ProviderPropertiesForm";
 import ProviderPropertiesTable from "../../../../../views/components/Tables/ProviderPropertiesTable";
 import Col from "react-bootstrap/Col";
+import {fetchData} from "../../../../../library/api/middleware";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -36,15 +37,22 @@ class ProviderProperties extends React.Component {
             showTable: true,
             provider_id: provider_id
         })
+        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
+            this.setState({
+                provider_id: response.data.data.id,
+                provider_name: response.data.data.provider_name
+            })
+        })
     }
 
     getBreadcrumbsConfig() {
         return {
             pageName: this.pageName,
             data: {
-                provider_property: [
-                    this.state.provider_id
-                ]
+                provider_properties: {
+                    id: this.state.provider_id,
+                    name: this.state.provider_name
+                }
             }
         }
     }

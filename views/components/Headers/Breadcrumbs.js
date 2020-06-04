@@ -1,6 +1,7 @@
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import {Routes} from '../../../config/routes'
 import {BreadcrumbsContext} from "../Context/BreadcrumbsContext";
+
 const vsprintf = require("sprintf-js").vsprintf;
 
 class Breadcrumbs extends React.Component {
@@ -32,6 +33,7 @@ class Breadcrumbs extends React.Component {
             }
         }
     }
+
     setPageHref(page) {
         if (typeof this.context.data === "undefined") {
             return page;
@@ -39,9 +41,11 @@ class Breadcrumbs extends React.Component {
         if (typeof this.context.data[page.name] === "undefined") {
             return page;
         }
-        page.route = vsprintf(page.route, this.context.data[page.name]);
+        page.route = vsprintf(page.route, this.context.data[page.name].id);
+        page.itemName = this.context.data[page.name].name;
         return page;
     }
+
     getRouteList() {
         let pageList = [];
         let currentPage = this.getRouteItem(Routes.items, this.context.pageName);
@@ -62,9 +66,16 @@ class Breadcrumbs extends React.Component {
             <div className="c-subheader px-3">
                 <ol className="breadcrumb border-0 m-0">
                     {this.getRouteList().slice(0).reverse().map((item, index) => (
+
                         item.active
-                            ? <Breadcrumb.Item key={index.toString()} active href={item.route}>{item.label}</Breadcrumb.Item>
-                            : <Breadcrumb.Item key={index.toString()} href={item.route}>{item.label}</Breadcrumb.Item>
+                            ? <Breadcrumb.Item key={index.toString()} active href={item.route}>{item.label}
+                                {item.itemName
+                                    ? " (" + item.itemName + ")"
+                                    : ""}</Breadcrumb.Item>
+                            : <Breadcrumb.Item key={index.toString()} href={item.route}>{item.label}
+                                {item.itemName
+                                    ? " (" + item.itemName + ")"
+                                    : ""}</Breadcrumb.Item>
                     ))}
                 </ol>
             </div>

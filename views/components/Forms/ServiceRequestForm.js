@@ -18,7 +18,8 @@ class ServiceRequestForm extends React.Component {
             service_id: "",
             provider_id: this.props.config.provider_id,
             service_request_name: "",
-            service_request_label: ""
+            service_request_label: "",
+            selectValue: []
         }
         this.selectChangeHandler = this.selectChangeHandler.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
@@ -40,6 +41,10 @@ class ServiceRequestForm extends React.Component {
                     provider_id: response.data.data.provider.id,
                     service_request_name: response.data.data.service_request_name,
                     service_request_label: response.data.data.service_request_label,
+                    selectValue: {
+                        value: response.data.data.service.id,
+                        label: response.data.data.service.service_label
+                    }
                 })
             })
         }
@@ -49,7 +54,7 @@ class ServiceRequestForm extends React.Component {
         return requests.map((item, index) => {
             return {
                 value: item.id,
-                label: item.service_name
+                label: item.service_label
             }
         })
 
@@ -72,7 +77,7 @@ class ServiceRequestForm extends React.Component {
         e.preventDefault();
         console.log(this.state)
 
-        responseHandler(sendData(this.state.action, "service/request", this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "service/request", this.state), this.props.formResponse);
     }
 
     render() {
@@ -99,7 +104,7 @@ class ServiceRequestForm extends React.Component {
                     <Form.Label>Service</Form.Label>
                     <Select
                         value={this.state.selectValue}
-                        onChange={this.selectChangeHandler} name={"service_id"} options={this.state.services} />
+                        onChange={this.selectChangeHandler} name={"service_id"} options={this.state.services}/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

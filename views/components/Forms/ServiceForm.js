@@ -37,7 +37,7 @@ export default class ServiceForm extends React.Component {
                     category_id: response.data.data.category.id,
                     selectValue: {
                         value: response.data.data.category.id,
-                        label: response.data.data.category.category_name
+                        label: response.data.data.category.category_label
                     }
                 })
             })
