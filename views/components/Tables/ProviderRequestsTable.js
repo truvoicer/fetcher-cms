@@ -3,6 +3,7 @@ import React from "react";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import ServiceRequestForm from "../../../views/components/Forms/ServiceRequestForm";
+import DuplicateForm from "../Forms/DuplicateForm";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -56,6 +57,19 @@ class ProviderRequestsTable extends React.Component {
     getTableColumnControls() {
         let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
         return [
+            {
+                control: "button",
+                text: "Duplicate",
+                action: "duplicate",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Duplicate Request",
+                    modalFormName: "duplicateRequest",
+                    endpoint: "service/request"
+                },
+                size: "sm",
+                classes: "outline-primary"
+            },
             {
                 control: "link",
                 text: "Response Keys",
@@ -136,6 +150,9 @@ class ProviderRequestsTable extends React.Component {
                 config: {
                     provider_id: this.props.provider_id,
                 }
+            },
+            duplicateRequest: {
+                modalForm: DuplicateForm
             },
             delete: {
                 modalForm: DeleteForm,

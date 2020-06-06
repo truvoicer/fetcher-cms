@@ -53,7 +53,6 @@ class Login extends React.Component {
             }
         });
         if (status === 200) {
-            console.log("admin")
             Router.replace('/admin/dashboard')
         }
     }

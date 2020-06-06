@@ -160,7 +160,7 @@ class ServiceRequestParameters extends React.Component {
     render() {
         console.log(this.context)
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
                 <>
                     <Col sm={12} md={6} lg={5}>
                     {this.state.showTable &&

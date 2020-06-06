@@ -179,7 +179,7 @@ export default class ManageProviders extends React.Component {
 
     render() {
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                     <DataList

@@ -1,20 +1,21 @@
 import {Routes} from '../../../config/routes'
-import {getSessionObject} from '../../../library/session/authenticate';
 import Link from "next/link";
-import {useContext} from "react";
 import {UserContext} from "../Context/UserContext";
 import Breadcrumbs from "./Breadcrumbs";
+import {logout} from "../../../library/session/authenticate";
 
 class AdminHeader extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-        }
+        this.logout = this.logout.bind(this);
     }
 
     componentDidMount() {
     }
 
+    logout() {
+        logout()
+    }
     showUserDropdown(e) {
         e.preventDefault();
         let ele = document.getElementById("userDropdownMenu")
@@ -60,9 +61,9 @@ class AdminHeader extends React.Component {
                         </a>
                         <div id={"userDropdownMenu"} className="dropdown-menu dropdown-menu-right pt-0">
                             <div className="dropdown-header bg-light py-2"><strong>Account</strong></div>
-                            <a className="dropdown-item" href="#">
+                            <a className="dropdown-item" href="#" onClick={this.logout}>
                                 <svg className="c-icon mr-2">
-                                    {/*<use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-account-logout"></use>*/}
+                                    <use xlinkHref={"/images/icons/sprites/free.svg#cil-account-logout"}/>
                                 </svg>
                                 Logout
                             </a>

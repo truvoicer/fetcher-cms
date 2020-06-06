@@ -9,6 +9,7 @@ export default
         "create": "/api/%s/create",
         "update": "/api/%s/update",
         "delete": "/api/%s/delete",
+        "duplicate": "/api/%s/duplicate",
         "provider": "/api/provider/%d",
         "providerList": "/api/providers",
         "providerProperty": "/api/provider/%d/property/%d",

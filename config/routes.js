@@ -2,6 +2,7 @@ export const Routes =
 {
     items: [
         {
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "Admin",
             label: "Dashboard",
             name: "dashboard",
@@ -12,6 +13,7 @@ export const Routes =
             sidebar: true
         },
         {
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "Api Services",
             label: "Categories",
             name: "categories",
@@ -21,6 +23,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Categories",
                     name: "manage_categories",
                     route: "/admin/categories",
@@ -31,6 +34,7 @@ export const Routes =
             ]
         },
         {
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Providers",
             name: "providers",
             route: "/admin/providers",
@@ -39,6 +43,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers",
@@ -47,6 +52,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Properties",
                     name: "provider_properties",
                     route: "/admin/providers/properties",
@@ -55,6 +61,7 @@ export const Routes =
                     sidebar: false
                 },
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Service Requests",
                     name: "service_requests",
                     route: "/admin/providers/%d/requests/",
@@ -63,6 +70,7 @@ export const Routes =
                     sidebar: false,
                     subs : [
                         {
+                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Request Parameters",
                             name: "requests_parameters",
                             route: "/admin/providers/requests/parameters/%d",
@@ -71,6 +79,7 @@ export const Routes =
                             sidebar: false,
                         },
                         {
+                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Request Config",
                             name: "requests_config",
                             route: "/admin/providers/requests/config/%d",
@@ -79,6 +88,7 @@ export const Routes =
                             sidebar: false,
                         },
                         {
+                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Response Keys",
                             name: "requests_response_keys",
                             route: "/admin/providers/requests/response-keys/%d",
@@ -91,6 +101,7 @@ export const Routes =
             ]
         },
         {
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Properties",
             name: "properties",
             route: "/admin/properties",
@@ -99,6 +110,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Properties",
                     name: "manage_properties",
                     route: "/admin/properties",
@@ -109,6 +121,7 @@ export const Routes =
             ]
         },
         {
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Services",
             name: "services",
             route: "/admin/services",
@@ -117,6 +130,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Services",
                     name: "manage_services",
                     route: "/admin/services",
@@ -125,6 +139,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Response Keys",
                     name: "response_keys",
                     route: "/admin/services/%d/response-keys",
@@ -135,6 +150,7 @@ export const Routes =
             ]
         },
         {
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "User Admin",
             label: "Users",
             name: "users",
@@ -144,6 +160,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Users",
                     name: "manage_users",
                     route: "/admin/users/manage",

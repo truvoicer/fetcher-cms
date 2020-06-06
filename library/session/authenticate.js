@@ -25,6 +25,7 @@ export const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('expires_at');
     // navigate to the home route
+    window.location.replace("/auth/login")
 }
 
 export const getSessionObject = () => {
@@ -47,3 +48,24 @@ export const getApiUser = async () => {
     return await axios.post(apiConfig.apiUrl + apiConfig.endpoints.getApiUser, getSessionObject("access_token") );
 }
 
+export const getRouteItem = (items, pageName) => {
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].name === pageName) {
+            return items[i];
+        }
+        if (typeof items[i].subs !== "undefined") {
+            let sub = getRouteItem(items[i].subs, pageName);
+            if (typeof sub === "object") {
+                return sub;
+            }
+        }
+    }
+}
+
+export const checkAccessControl = (routeItem, userData) => {
+  let check =  userData.roles.filter((userRole) => {
+      let access = routeItem.access_control.filter((routeRole) => userRole === routeRole);
+      return access.length > 0;
+  })
+    return check.length > 0;
+};

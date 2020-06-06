@@ -1,13 +1,15 @@
 import Admin from '../../../views/layouts/Admin'
 import DataTable from 'react-data-table-component';
 import Button from "react-bootstrap/Button";
+import Dropdown from "react-bootstrap/Dropdown";
 import React from "react";
 import Link from "next/link";
-import {fetchData, responseHandler} from "../../../library/api/middleware";
+import { fetchData, responseHandler } from "../../../library/api/middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import Router from "next/router";
 import Breadcrumbs from "../Headers/Breadcrumbs";
+import DropdownButton from "react-bootstrap/DropdownButton";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -22,8 +24,8 @@ export default class DataList extends React.Component {
                 modalTitle: "",
                 action: "",
             },
-            form: {
-                submitted: false,
+            alert: {
+                showAlert: false,
                 alertStatus: "",
                 responseMessage: ""
             }
@@ -47,9 +49,18 @@ export default class DataList extends React.Component {
             this.getTableDataResponseHandler);
     }
     getTableDataResponseHandler(status, message, data = null) {
+        console.log(status, message, data)
         if (status === 200) {
             this.setState({
                 data: data.data
+            })
+        } else {
+            this.setState({
+                alert: {
+                    showAlert: true,
+                    alertStatus: "danger",
+                    responseMessage: message
+                }
             })
         }
     }
@@ -57,8 +68,7 @@ export default class DataList extends React.Component {
         const controlObject = {
             name: 'Controls',
             right: true,
-            grow: 2,
-            button: false,
+            allowOverflow: true,
             cell: row => this.getColumnControls(controls, row)
         }
         columns.push(controlObject);
@@ -66,14 +76,20 @@ export default class DataList extends React.Component {
     }
 
     getColumnControls(controls, row) {
-        return controls.map((item, index) => {
-            switch (item.control) {
-                case "button":
-                    return this.getButton(item, row)
-                case "link":
-                    return this.getLink(item, row)
-            }
-        });
+        return (
+            <DropdownButton drop={"down"} id={"controls-dropdown"} title={"Controls"}>
+                {controls.map((item, index) => {
+                    switch (item.control) {
+                        case "button":
+                            return (
+                                this.getButton(item, row)
+                            )
+                        case "link":
+                            return this.getLink(item, row)
+                    }
+                })}
+            </DropdownButton>
+        )
     }
 
     getButton(item, row) {
@@ -83,32 +99,31 @@ export default class DataList extends React.Component {
             modal = item.modal;
         }
         return (
-            <Button key={"button_"+item.action+row.id.toString()}
+            <Dropdown.Item key={"button_" + item.action + row.id.toString()}
                 variant={item.classes}
-                    size={item.size}
-                    data-item-id={row.id}
-                    data-item-name={row[this.props.tableData.defaultColumnName]}
-                    data-item-label={row[this.props.tableData.defaultColumnLabel]}
-                    data-action={item.action}
-                    data-delete-endpoint={modal && modal.endpoint  ? modal.endpoint : null}
-                    data-modal-title={modal && modal.modalTitle  ? modal.modalTitle : null}
-                    data-modal-form-name={modal && modal.modalFormName  ? modal.modalFormName : null}
-                    onClick={modal && modal.showModal  ? this.showModal : null} >
+                size={item.size}
+                data-item-id={row.id}
+                data-item-name={row[this.props.tableData.defaultColumnName]}
+                data-item-label={row[this.props.tableData.defaultColumnLabel]}
+                data-action={item.action}
+                data-delete-endpoint={modal && modal.endpoint ? modal.endpoint : null}
+                data-modal-title={modal && modal.modalTitle ? modal.modalTitle : null}
+                data-modal-form-name={modal && modal.modalFormName ? modal.modalFormName : null}
+                onClick={modal && modal.showModal ? this.showModal : null} >
                 {item.text}
-            </Button>
+            </Dropdown.Item>
         );
     }
     getQuery(queryObject, row, type = "dynamic") {
         let esc = encodeURIComponent;
-        let operator= "/";
+        let operator = "/";
         if (type === "params") {
             operator = "=";
         }
         return "?" + Object.keys(queryObject)
             .map(k => {
                 let value = queryObject[k];
-                if (typeof value === 'object')
-                {
+                if (typeof value === 'object') {
                     return Object.keys(value)
                         .map(l => esc(l) + operator + esc(row[k][value[l]]))
                         .join('&');
@@ -124,47 +139,47 @@ export default class DataList extends React.Component {
             href += this.getQuery(item.query.params, row, "params");
             linkAs = href;
         }
-        else if(typeof item.query.dynamic !== "undefined") {
-            if(typeof item.query.dynamic.data !== "undefined") {
+        else if (typeof item.query.dynamic !== "undefined") {
+            if (typeof item.query.dynamic.data !== "undefined") {
                 href += this.getQuery(item.query.dynamic.data, row, "dynamic");
             } else {
-                if(typeof item.query.dynamic.brackets !== "undefined" && item.query.dynamic.brackets) {
-                    href = sprintf(href, "["+row.id+"]")
+                if (typeof item.query.dynamic.brackets !== "undefined" && item.query.dynamic.brackets) {
+                    href = sprintf(href, "[" + row.id + "]")
                 } else {
-                     href = sprintf(href, row.id);
+                    href = sprintf(href, row.id);
                 }
                 linkAs = href;
             }
         }
         return (
-            <Link href={href} as={linkAs} key={"link_"+item.action+row.id.toString()}>
-                <a className={item.classes}>
+            <Link href={href} as={linkAs} key={"link_" + item.action + row.id.toString()}>
+                <Dropdown.Item href={href}>
                     {item.text}
-                </a>
+                </Dropdown.Item>
             </Link>
         );
     }
     showModal(e) {
-            this.setState({
-                modal: {
-                    showModal: true,
-                    modalTitle: e.target.getAttribute("data-modal-title"),
-                    endpoint: e.target.getAttribute("data-delete-endpoint"),
-                    action: e.target.getAttribute("data-action"),
-                    itemName: e.target.getAttribute("data-item-name"),
-                    itemLabel: e.target.getAttribute("data-item-label"),
-                    itemId: e.target.getAttribute("data-item-id"),
-                    item_id: e.target.getAttribute("data-item-id"),
-                    modalFormName: e.target.getAttribute("data-modal-form-name"),
-                }
-            });
+        this.setState({
+            modal: {
+                showModal: true,
+                modalTitle: e.target.getAttribute("data-modal-title"),
+                endpoint: e.target.getAttribute("data-delete-endpoint"),
+                action: e.target.getAttribute("data-action"),
+                itemName: e.target.getAttribute("data-item-name"),
+                itemLabel: e.target.getAttribute("data-item-label"),
+                itemId: e.target.getAttribute("data-item-id"),
+                item_id: e.target.getAttribute("data-item-id"),
+                modalFormName: e.target.getAttribute("data-modal-form-name"),
+            }
+        });
     }
     getModalForm(modalFormName) {
         if (typeof modalFormName != "undefined") {
             const ModalForm = this.props.modalConfig[modalFormName].modalForm
             const modalConfig = this.props.modalConfig[modalFormName].config
             return (
-                <ModalForm data={this.state.modal} config={modalConfig} formResponse={this.formResponse}/>
+                <ModalForm data={this.state.modal} config={modalConfig} formResponse={this.formResponse} />
             )
         }
         return null;
@@ -178,8 +193,8 @@ export default class DataList extends React.Component {
         }
         this.setTableData();
         this.setState({
-            form: {
-                submitted: true,
+            alert: {
+                showAlert: true,
                 alertStatus: alertStatus,
                 responseMessage: message
             }
@@ -210,11 +225,11 @@ export default class DataList extends React.Component {
     createButton() {
         return (
             <Button variant="primary"
-                    size={"sm"}
-                    onClick={this.showModal}
-                    data-action={"create"}
-                    data-modal-title={"New"}
-                    data-modal-form-name={"default"}>
+                size={"sm"}
+                onClick={this.showModal}
+                data-action={"create"}
+                data-modal-title={"New"}
+                data-modal-form-name={"default"}>
                 New
             </Button>
         );
@@ -223,17 +238,21 @@ export default class DataList extends React.Component {
     render() {
         return (
             <div>
-                    {this.state.form.submitted &&
-                    <Alert variant={this.state.form.alertStatus}>
-                        {this.state.form.responseMessage}
+                {this.state.alert.showAlert &&
+                    <Alert variant={this.state.alert.alertStatus}>
+                        {this.state.alert.responseMessage}
                     </Alert>
-                    }
-                    <DataTable
-                        title={this.createButton()}
-                        columns={this.getTableColumns(this.props.tableColumns, this.props.tableColumnControls)}
-                        data={this.state.data}
-                    />
-                    <this.getModal/>
+                }
+                <DataTable
+                    title={this.createButton()}
+                    striped={true}
+                    highlightOnHover={false}
+                    responsive={true}
+                    overflowY={true}
+                    columns={this.getTableColumns(this.props.tableColumns, this.props.tableColumnControls)}
+                    data={this.state.data}
+                />
+                <this.getModal />
             </div>
         )
     }

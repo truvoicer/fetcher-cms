@@ -23,7 +23,8 @@ class ProviderRequests extends React.Component {
         this.state = {
             showTable: false,
             provider_id: "",
-            provider_name: ""
+            provider_name: "",
+            pageTitle: ""
         }
         this.pageName = "service_requests";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
@@ -57,7 +58,7 @@ class ProviderRequests extends React.Component {
 
     render() {
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
                 <>
                     <Col sm={12} md={12} lg={8}>
                     {this.state.showTable &&

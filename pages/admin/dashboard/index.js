@@ -17,7 +17,7 @@ export default class Dashboard extends React.Component {
     }
     render() {
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
                 <>
                     <h1>Dashboard</h1>
                 </>

@@ -1,6 +1,7 @@
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import {Routes} from '../../../config/routes'
 import {BreadcrumbsContext} from "../Context/BreadcrumbsContext";
+import {getRouteItem} from "../../../library/session/authenticate";
 
 const vsprintf = require("sprintf-js").vsprintf;
 
@@ -9,29 +10,12 @@ class Breadcrumbs extends React.Component {
     constructor(props) {
         super(props)
         this.parents = [];
-        this.getRouteItem = this.getRouteItem.bind(this);
         this.getRouteList = this.getRouteList.bind(this);
         this.setPageHref = this.setPageHref.bind(this);
     }
 
     componentDidMount() {
 
-    }
-
-    getRouteItem(items, pageName) {
-        // console.log(items)
-        let page;
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].name === pageName) {
-                return items[i];
-            }
-            if (typeof items[i].subs !== "undefined") {
-                let sub = this.getRouteItem(items[i].subs, pageName);
-                if (typeof sub === "object") {
-                    return sub;
-                }
-            }
-        }
     }
 
     setPageHref(page) {
@@ -48,12 +32,12 @@ class Breadcrumbs extends React.Component {
 
     getRouteList() {
         let pageList = [];
-        let currentPage = this.getRouteItem(Routes.items, this.context.pageName);
+        let currentPage = getRouteItem(Routes.items, this.context.pageName);
         if (typeof currentPage !== "undefined") {
             currentPage.active = true;
             pageList.push(this.setPageHref(currentPage));
             while (currentPage.parent !== "self") {
-                currentPage = this.getRouteItem(Routes.items, currentPage.parent);
+                currentPage = getRouteItem(Routes.items, currentPage.parent);
                 pageList.push(this.setPageHref(currentPage));
             }
             return pageList;
