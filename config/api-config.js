@@ -1,6 +1,8 @@
+import {SiteConfig} from "./site-config";
+
 export default
 {
-    "apiUrl": "http://localhost:8000",
+    "apiUrl": SiteConfig.apiUrl,
     "endpoints": {
         "login": "/api/login",
         "getUserList": "/api/admin/users",
