@@ -19,6 +19,7 @@ class Admin extends React.Component {
         this.state = {
             session: {
                 authenticated: false,
+                accessDenied: false,
                 user: {},
             },
         }
@@ -38,7 +39,6 @@ class Admin extends React.Component {
                         user: response.data.data
                     }
                 }));
-            } else {
             }
         })
         .catch((error) => {
@@ -54,7 +54,7 @@ class Admin extends React.Component {
                     <title>{this.props.pageTitle ? this.props.pageTitle : SiteConfig.siteName}</title>
                 </Head>
                 <div className={"c-app"}>
-                {this.state.session.authenticated ?
+                {this.state.session.authenticated &&
                 <UserContext.Provider value={this.state.session}>
                     <AdminSidebar/>
                     <div className="c-wrapper c-fixed-components">
@@ -73,8 +73,6 @@ class Admin extends React.Component {
                         </div>
                     </div>
                 </UserContext.Provider>
-                :
-                    <ErrorPage403 />
                 }
                 </div>
             </App>
