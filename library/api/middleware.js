@@ -5,11 +5,11 @@ const sprintf = require("sprintf-js").sprintf;
 
 export const sendData = async (operation, endpoint, data) => {
     data.access_token = getSessionObject().access_token;
-    return await axios.post(apiConfig.apiUrl + sprintf(apiConfig.endpoints[operation], endpoint), data);
+    return await axios.post(process.env.NEXT_PUBLIC_API_URL + sprintf(apiConfig.endpoints[operation], endpoint), data);
 }
 
 export const fetchData = async (endpoint, queryObj) => {
-        let apiUrl = apiConfig.apiUrl + endpoint + buildHttpQuery(queryObj);
+        let apiUrl = process.env.NEXT_PUBLIC_API_URL + endpoint + buildHttpQuery(queryObj);
         return await axios.get(apiUrl);
 }
 

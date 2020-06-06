@@ -3,7 +3,7 @@ import apiConfig from '../../config/api-config';
 import React from 'react'
 
 export const getToken = async (data) => {
-    return axios.post(apiConfig.apiUrl + apiConfig.endpoints.login, data);
+    return axios.post(process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.login, data);
 }
 
 // Sets user details in localStorage
@@ -42,7 +42,7 @@ export const getSessionObject = () => {
 }
 
 export const getApiUser = async () => {
-    return await axios.post(apiConfig.apiUrl + apiConfig.endpoints.getApiUser, getSessionObject("access_token") );
+    return await axios.post(process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.getApiUser, getSessionObject("access_token") );
 }
 
 export const getRouteItem = (items, pageName) => {
