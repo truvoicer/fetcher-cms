@@ -15,7 +15,6 @@ export const setSession = (authObject) => {
     localStorage.setItem('access_token', authObject.session.access_token);
     localStorage.setItem('expires_at', expiresAt);
     // navigate to the home route
-    console.log(localStorage);
 }
 
 

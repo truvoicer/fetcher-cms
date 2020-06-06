@@ -49,7 +49,6 @@ export default class DataList extends React.Component {
             this.getTableDataResponseHandler);
     }
     getTableDataResponseHandler(status, message, data = null) {
-        console.log(status, message, data)
         if (status === 200) {
             this.setState({
                 data: data.data
