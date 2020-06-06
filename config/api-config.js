@@ -2,7 +2,7 @@ import {SiteConfig} from "./site-config";
 
 export default
 {
-    "apiUrl": SiteConfig.apiUrl,
+    "apiUrl": "https://fetchertest.truvoicer.co.uk/",
     "endpoints": {
         "login": "/api/login",
         "getUserList": "/api/admin/users",
