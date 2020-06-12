@@ -13,6 +13,7 @@ export default class PropertyForm extends React.Component {
             formSubmitted: false,
             action: this.props.data.action,
             provider_id: "",
+            provider_label: "",
             provider_name: "",
             provider_user_id: "",
             provider_api_base_url: "",
@@ -41,11 +42,13 @@ export default class PropertyForm extends React.Component {
                 console.log(response);
                 this.setState({
                     provider_id: response.data.data.id,
+                    provider_label: response.data.data.provider_label,
                     provider_name: response.data.data.provider_name,
                     provider_user_id: response.data.data.provider_user_id,
                     provider_api_base_url: response.data.data.provider_api_base_url,
                     provider_access_key: response.data.data.provider_access_key,
                     provider_secret_key: response.data.data.provider_secret_key,
+                    category_id: response.data.data.category.id,
                     selectValue: {
                         value: response.data.data.category.id,
                         label: response.data.data.category.category_label
@@ -67,7 +70,7 @@ export default class PropertyForm extends React.Component {
 
     selectChangeHandler(e) {
         this.setState({
-            selectedCategory: {value: e.value, label: e.label},
+            selectValue: {value: e.value, label: e.label},
             category_id: e.value
         })
     }
@@ -79,6 +82,7 @@ export default class PropertyForm extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
+        console.log(this.state)
         responseHandler(sendData(this.state.action, "provider", this.state),  this.props.formResponse);
     }
 
@@ -86,6 +90,14 @@ export default class PropertyForm extends React.Component {
         return (
             <Form onSubmit={this.submitHandler}>
 
+                <Form.Group controlId="formProviderLabel">
+                    <Form.Label>Provider Label</Form.Label>
+                    <Form.Control type="text"
+                                  placeholder="Enter the providers label."
+                                  onChange={this.formChangeHandler}
+                                  name="provider_label"
+                                  value={this.state.provider_label}/>
+                </Form.Group>
                 <Form.Group controlId="formProviderName">
                     <Form.Label>Provider Name</Form.Label>
                     <Form.Control type="text"

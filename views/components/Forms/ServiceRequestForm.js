@@ -19,12 +19,25 @@ class ServiceRequestForm extends React.Component {
             provider_id: this.props.config.provider_id,
             service_request_name: "",
             service_request_label: "",
-            selectValue: []
+            service_request_type: "",
+            selectedService: [],
+            selectedRequestType: [],
+            requestTypes: [
+                {
+                    value: "get",
+                    label: "Get"
+                },
+                {
+                    value: "search",
+                    label: "Search"
+                }
+            ]
         }
+
         this.selectChangeHandler = this.selectChangeHandler.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
-        console.log(this.props)
+        // console.log(this.props)
     }
 
     componentDidMount() {
@@ -41,9 +54,14 @@ class ServiceRequestForm extends React.Component {
                     provider_id: response.data.data.provider.id,
                     service_request_name: response.data.data.service_request_name,
                     service_request_label: response.data.data.service_request_label,
-                    selectValue: {
+                    service_request_type: response.data.data.service_request_type,
+                    selectedService: {
                         value: response.data.data.service.id,
                         label: response.data.data.service.service_label
+                    },
+                    selectedRequestType: {
+                        value: response.data.data.service_request_type,
+                        label: response.data.data.service_request_type
                     }
                 })
             })
@@ -66,17 +84,23 @@ class ServiceRequestForm extends React.Component {
         })
     }
 
-    selectChangeHandler(e) {
-        this.setState({
-            selectValue: {value: e.value, label: e.label},
-            service_id: e.value
-        })
+    selectChangeHandler(data, e) {
+        if(e.name === "service_id") {
+            this.setState({
+                selectedService: {value: data.value, label: data.label},
+                service_id: e.value
+            })
+        }
+        else if (e.name === "service_request_type") {
+            this.setState({
+                selectedRequestType: {value: data.value, label: data.label},
+                service_request_type: data.value
+            })
+        }
     }
 
     submitHandler(e) {
         e.preventDefault();
-        console.log(this.state)
-
         responseHandler(sendData(this.state.action, "service/request", this.state), this.props.formResponse);
     }
 
@@ -100,10 +124,16 @@ class ServiceRequestForm extends React.Component {
                                   name="service_request_label"
                                   value={this.state.service_request_label}/>
                 </Form.Group>
+                <Form.Group controlId="formRequestType">
+                    <Form.Label>Request Type</Form.Label>
+                    <Select
+                        value={this.state.selectedRequestType}
+                        onChange={this.selectChangeHandler} name={"service_request_type"} options={this.state.requestTypes}/>
+                </Form.Group>
                 <Form.Group controlId="formService">
                     <Form.Label>Service</Form.Label>
                     <Select
-                        value={this.state.selectValue}
+                        value={this.state.selectedService}
                         onChange={this.selectChangeHandler} name={"service_id"} options={this.state.services}/>
                 </Form.Group>
                 <Button variant="primary" type="submit">

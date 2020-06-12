@@ -51,6 +51,11 @@ class ProviderRequestsTable extends React.Component {
                 selector: 'service_request_label',
                 sortable: true,
             },
+            {
+                name: 'Request Type',
+                selector: 'service_request_type',
+                sortable: true,
+            },
         ];
     }
 

@@ -81,6 +81,11 @@ export default class ManageProviders extends React.Component {
                 sortable: true,
             },
             {
+                name: 'Provider Label',
+                selector: 'provider_label',
+                sortable: true,
+            },
+            {
                 name: 'Api Base Url',
                 selector: 'provider_api_base_url',
                 sortable: true,
