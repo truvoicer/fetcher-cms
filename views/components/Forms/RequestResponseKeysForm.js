@@ -16,6 +16,7 @@ class RequestResponseKeysForm extends React.Component {
             key_name: "",
             key_value: "",
             show_in_response: false,
+            list_item: false,
             service_request_id: this.props.config.service_request_id
         };
 
@@ -38,16 +39,20 @@ class RequestResponseKeysForm extends React.Component {
                 key_id: data.data.key_id,
                 key_name: data.data.key_name,
                 key_value: data.data.key_value,
-                show_in_response: data.data.show_in_response
+                show_in_response: data.data.show_in_response,
+                list_item: data.data.list_item
             })
         }
     }
 
     formChangeHandler(e) {
         let value = e.target.value;
-        if (e.target.id === "show_in_response" && e.target.checked) {
+        if ((e.target.id === "show_in_response" && e.target.checked) ||
+            (e.target.id === "list_item" && e.target.checked)
+        ) {
             value = true;
-        } else if (e.target.id === "show_in_response" && !e.target.checked) {
+        } else if ((e.target.id === "show_in_response" && !e.target.checked) ||
+                    (e.target.id === "list_item" && !e.target.checked)) {
             value = false;
         }
         this.setState({
@@ -79,6 +84,16 @@ class RequestResponseKeysForm extends React.Component {
                         id={"show_in_response"}
                         label={"Show in Response?"}
                         name="show_in_response"
+                        onChange={this.formChangeHandler}
+                    />
+                </Form.Group>
+                <Form.Group controlId="formListItemCheckbox">
+                    <Form.Check
+                        checked={this.state.list_item ? "checked" : ""}
+                        type={"checkbox"}
+                        id={"list_item"}
+                        label={"List Item?"}
+                        name="list_item"
                         onChange={this.formChangeHandler}
                     />
                 </Form.Group>
