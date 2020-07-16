@@ -12,7 +12,6 @@ class RequestResponseKeysForm extends React.Component {
         this.state = {
             action: this.props.data.action,
             id: "",
-            key_id: "",
             key_name: "",
             key_value: "",
             show_in_response: false,
@@ -35,8 +34,7 @@ class RequestResponseKeysForm extends React.Component {
         if (status === 200) {
             console.log(data.data.show_in_response)
             this.setState({
-                id: data.data.key_id,
-                key_id: data.data.key_id,
+                id: data.data.id,
                 key_name: data.data.key_name,
                 key_value: data.data.key_value,
                 show_in_response: data.data.show_in_response,

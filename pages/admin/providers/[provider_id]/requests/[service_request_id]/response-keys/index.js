@@ -111,22 +111,29 @@ class ServiceRequestResponseKeys extends React.Component {
                 name: 'List Item',
                 selector: 'list_item',
                 sortable: true,
-                cell: row => this.getColumnBoolean(row.list_item)
+                switchable: true,
+                switchableConfig: {
+                    field: "list_item",
+                    endpoint: "service/request/response/key",
+                    extraData: {
+                        service_request_id: this.state.service_request_id,
+                    }
+                }
             },
             {
                 name: 'Show in Response',
                 selector: 'show_in_response',
                 sortable: true,
-                cell: row => this.getColumnBoolean(row.show_in_response)
+                switchable: true,
+                switchableConfig: {
+                    field: "show_in_response",
+                    endpoint: "service/request/response/key",
+                    extraData: {
+                        service_request_id: this.state.service_request_id,
+                    }
+                }
             },
         ];
-    }
-    getColumnBoolean(value) {
-        if (typeof value === "undefined" || !value) {
-            return <i className="fas fa-times"/>;
-        } else {
-            return <i className="fas fa-check"/>;
-        }
     }
     getTableColumnControls() {
         return [

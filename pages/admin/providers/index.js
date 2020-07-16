@@ -73,6 +73,7 @@ export default class ManageProviders extends React.Component {
             {
                 name: 'Category/s',
                 sortable: true,
+                right: false,
                 cell: row => {
                     let array = [];
                     for (let i=0;i<row.category.length;i++) {
@@ -82,38 +83,34 @@ export default class ManageProviders extends React.Component {
                 }
             },
             {
-                name: 'Provider Name',
-                selector: 'provider_name',
-                sortable: true,
-            },
-            {
                 name: 'Provider Label',
                 selector: 'provider_label',
                 sortable: true,
+                right: false,
             },
             {
                 name: 'Api Base Url',
                 selector: 'provider_api_base_url',
                 sortable: true,
-                right: true,
+                right: false,
             },
             {
                 name: 'Provider User Id',
                 selector: 'provider_user_id',
                 sortable: true,
-                right: true,
+                right: false,
             },
             {
                 name: 'Access key',
                 selector: 'provider_access_key',
                 sortable: true,
-                right: true,
+                right: false,
             },
             {
                 name: 'Secret key',
                 selector: 'provider_secret_key',
                 sortable: true,
-                right: true,
+                right: false,
             },
         ];
     }

@@ -64,13 +64,12 @@ class ProviderRequestsTable extends React.Component {
         return [
             {
                 control: "button",
-                text: "Duplicate",
-                action: "duplicate",
+                text: "Edit",
+                action: "update",
                 modal: {
                     showModal: true,
-                    modalTitle: "Duplicate Request",
-                    modalFormName: "duplicateRequest",
-                    endpoint: "service/request"
+                    modalTitle: "Edit Request Value",
+                    modalFormName: "serviceRequest",
                 },
                 size: "sm",
                 classes: "outline-primary"
@@ -116,12 +115,13 @@ class ProviderRequestsTable extends React.Component {
             },
             {
                 control: "button",
-                text: "Edit",
-                action: "update",
+                text: "Duplicate",
+                action: "duplicate",
                 modal: {
                     showModal: true,
-                    modalTitle: "Edit Request Value",
-                    modalFormName: "serviceRequest",
+                    modalTitle: "Duplicate Request",
+                    modalFormName: "duplicateRequest",
+                    endpoint: "service/request"
                 },
                 size: "sm",
                 classes: "outline-primary"

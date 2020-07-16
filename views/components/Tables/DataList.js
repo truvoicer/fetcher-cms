@@ -4,12 +4,13 @@ import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import React from "react";
 import Link from "next/link";
-import { fetchData, responseHandler } from "../../../library/api/middleware";
+import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import Router from "next/router";
 import Breadcrumbs from "../Headers/Breadcrumbs";
 import DropdownButton from "react-bootstrap/DropdownButton";
+import {isSet} from "../../../library/utils";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -37,6 +38,7 @@ export default class DataList extends React.Component {
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.getModal = this.getModal.bind(this);
+        this.getColumnSwitchable = this.getColumnSwitchable.bind(this);
         this.formResponse = this.formResponse.bind(this);
         this.getTableDataResponseHandler = this.getTableDataResponseHandler.bind(this);
     }
@@ -64,14 +66,21 @@ export default class DataList extends React.Component {
         }
     }
     getTableColumns(columns, controls) {
+        let processColumns = columns.map((column, index) => {
+            if (isSet(column.switchable)) {
+                column.cell = row => this.getColumnSwitchable(row,
+                    column.switchableConfig)
+            }
+            return column
+        })
         const controlObject = {
             name: 'Controls',
             right: true,
             allowOverflow: true,
             cell: row => this.getColumnControls(controls, row)
         }
-        columns.push(controlObject);
-        return columns;
+        processColumns.push(controlObject);
+        return processColumns;
     }
 
     getColumnControls(controls, row) {
@@ -90,7 +99,38 @@ export default class DataList extends React.Component {
             </DropdownButton>
         )
     }
-
+    getColumnSwitchable(row, config) {
+        // console.log(row)
+        let value = row[config.field]
+        if (typeof value === "undefined" || !value) {
+            return <a className={"switchable-link"} >
+                <i className="fas fa-times" data-value={false}
+                   onClick={this.switchableUpdate.bind(this, row, config)}/>
+            </a>;
+        } else {
+            return <a className={"switchable-link"}>
+                <i className="fas fa-check" data-value={true}
+                   onClick={this.switchableUpdate.bind(this, row, config)}/>
+            </a>;
+        }
+    }
+    switchableUpdate(row, config, e) {
+        e.preventDefault()
+        let action = "update";
+        let dataValue = e.target.getAttribute("data-value");
+        if(dataValue === true || dataValue === "true") {
+            row[config.field] = false
+        } else if(!dataValue || dataValue === "false") {
+            row[config.field] = true;
+        }
+        Object.keys(config.extraData).map((item) => {
+            row[item] = config.extraData[item];
+        })
+        responseHandler(
+            sendData(action,
+                "service/request/response/key",
+                row), this.formResponse);
+    }
     getButton(item, row) {
         let modal = false;
 
@@ -248,6 +288,8 @@ export default class DataList extends React.Component {
                     highlightOnHover={false}
                     responsive={true}
                     overflowY={true}
+                    pagination={true}
+                    paginationPerPage={10}
                     columns={this.getTableColumns(this.props.tableColumns, this.props.tableColumnControls)}
                     data={this.state.data}
                 />
