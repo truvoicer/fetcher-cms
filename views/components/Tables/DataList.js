@@ -11,6 +11,7 @@ import Router from "next/router";
 import Breadcrumbs from "../Headers/Breadcrumbs";
 import DropdownButton from "react-bootstrap/DropdownButton";
 import {isSet} from "../../../library/utils";
+import TextField from "./Fields/TextField";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -29,11 +30,13 @@ export default class DataList extends React.Component {
                 showAlert: false,
                 alertStatus: "",
                 responseMessage: ""
-            }
+            },
+            textField: ""
         }
         this.modalTitle = "";
         this.modalform = "";
         this.modalDynamic = {};
+        this.textField = {}
         this.setTableData = this.setTableData.bind(this);
         this.showModal = this.showModal.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -42,6 +45,7 @@ export default class DataList extends React.Component {
         this.formResponse = this.formResponse.bind(this);
         this.getTableDataResponseHandler = this.getTableDataResponseHandler.bind(this);
     }
+
     componentDidMount() {
         this.setTableData()
     }
@@ -50,6 +54,7 @@ export default class DataList extends React.Component {
         responseHandler(fetchData(this.props.tableData.endpoint, this.props.tableData.query),
             this.getTableDataResponseHandler);
     }
+
     getTableDataResponseHandler(status, message, data = null) {
         if (status === 200) {
             this.setState({
@@ -65,11 +70,12 @@ export default class DataList extends React.Component {
             })
         }
     }
+
     getTableColumns(columns, controls) {
         let processColumns = columns.map((column, index) => {
-            if (isSet(column.switchable)) {
-                column.cell = row => this.getColumnSwitchable(row,
-                    column.switchableConfig)
+            if (isSet(column.editable)) {
+                column.cell = row => this.getColumnEditable(row,
+                    column.editableConfig)
             }
             return column
         })
@@ -99,11 +105,22 @@ export default class DataList extends React.Component {
             </DropdownButton>
         )
     }
+
+    getColumnEditable(row, config) {
+        switch (config.fieldType) {
+            case "switch":
+                return this.getColumnSwitchable(row, config)
+            case "text":
+                return <TextField config={config} data={row} updateCallback={this.editableFieldRequest} formResponseCallback={this.formResponse}/>
+            default:
+                return row[config.field]
+        }
+    }
+
     getColumnSwitchable(row, config) {
-        // console.log(row)
         let value = row[config.field]
         if (typeof value === "undefined" || !value) {
-            return <a className={"switchable-link"} >
+            return <a className={"switchable-link"}>
                 <i className="fas fa-times" data-value={false}
                    onClick={this.switchableUpdate.bind(this, row, config)}/>
             </a>;
@@ -114,23 +131,31 @@ export default class DataList extends React.Component {
             </a>;
         }
     }
+
     switchableUpdate(row, config, e) {
         e.preventDefault()
-        let action = "update";
         let dataValue = e.target.getAttribute("data-value");
-        if(dataValue === true || dataValue === "true") {
+        if (dataValue === true || dataValue === "true") {
             row[config.field] = false
-        } else if(!dataValue || dataValue === "false") {
+        } else if (!dataValue || dataValue === "false") {
             row[config.field] = true;
         }
-        Object.keys(config.extraData).map((item) => {
-            row[item] = config.extraData[item];
-        })
+        this.editableFieldRequest(row, config)
+    }
+
+    editableFieldRequest(row, config, formResponse = false) {
+        let action = "update";
+        if(isSet(config.fieldConfig.extraData)) {
+            Object.keys(config.fieldConfig.extraData).map((item) => {
+                row[item] = config.fieldConfig.extraData[item];
+            })
+        }
         responseHandler(
             sendData(action,
-                "service/request/response/key",
-                row), this.formResponse);
+                config.fieldConfig.endpoint,
+                row), (!formResponse)? this.formResponse : formResponse);
     }
+
     getButton(item, row) {
         let modal = false;
 
@@ -139,20 +164,21 @@ export default class DataList extends React.Component {
         }
         return (
             <Dropdown.Item key={"button_" + item.action + row.id.toString()}
-                variant={item.classes}
-                size={item.size}
-                data-item-id={row.id}
-                data-item-name={row[this.props.tableData.defaultColumnName]}
-                data-item-label={row[this.props.tableData.defaultColumnLabel]}
-                data-action={item.action}
-                data-delete-endpoint={modal && modal.endpoint ? modal.endpoint : null}
-                data-modal-title={modal && modal.modalTitle ? modal.modalTitle : null}
-                data-modal-form-name={modal && modal.modalFormName ? modal.modalFormName : null}
-                onClick={modal && modal.showModal ? this.showModal : null} >
+                           variant={item.classes}
+                           size={item.size}
+                           data-item-id={row.id}
+                           data-item-name={row[this.props.tableData.defaultColumnName]}
+                           data-item-label={row[this.props.tableData.defaultColumnLabel]}
+                           data-action={item.action}
+                           data-delete-endpoint={modal && modal.endpoint ? modal.endpoint : null}
+                           data-modal-title={modal && modal.modalTitle ? modal.modalTitle : null}
+                           data-modal-form-name={modal && modal.modalFormName ? modal.modalFormName : null}
+                           onClick={modal && modal.showModal ? this.showModal : null}>
                 {item.text}
             </Dropdown.Item>
         );
     }
+
     getQuery(queryObject, row, type = "dynamic") {
         let esc = encodeURIComponent;
         let operator = "/";
@@ -171,14 +197,14 @@ export default class DataList extends React.Component {
                 }
             }).join('&');
     }
+
     getLink(item, row) {
         let href = item.href;
         let linkAs = item.href;
         if (typeof item.query.params !== "undefined") {
             href += this.getQuery(item.query.params, row, "params");
             linkAs = href;
-        }
-        else if (typeof item.query.dynamic !== "undefined") {
+        } else if (typeof item.query.dynamic !== "undefined") {
             if (typeof item.query.dynamic.data !== "undefined") {
                 href += this.getQuery(item.query.dynamic.data, row, "dynamic");
             } else {
@@ -198,6 +224,7 @@ export default class DataList extends React.Component {
             </Link>
         );
     }
+
     showModal(e) {
         this.setState({
             modal: {
@@ -213,16 +240,18 @@ export default class DataList extends React.Component {
             }
         });
     }
+
     getModalForm(modalFormName) {
         if (typeof modalFormName != "undefined") {
             const ModalForm = this.props.modalConfig[modalFormName].modalForm
             const modalConfig = this.props.modalConfig[modalFormName].config
             return (
-                <ModalForm data={this.state.modal} config={modalConfig} formResponse={this.formResponse} />
+                <ModalForm data={this.state.modal} config={modalConfig} formResponse={this.formResponse}/>
             )
         }
         return null;
     }
+
     formResponse(status, message, data = null) {
         let alertStatus;
         if (status === 200) {
@@ -261,14 +290,15 @@ export default class DataList extends React.Component {
             </Modal>
         );
     }
+
     createButton() {
         return (
             <Button variant="primary"
-                size={"sm"}
-                onClick={this.showModal}
-                data-action={"create"}
-                data-modal-title={"New"}
-                data-modal-form-name={"default"}>
+                    size={"sm"}
+                    onClick={this.showModal}
+                    data-action={"create"}
+                    data-modal-title={"New"}
+                    data-modal-form-name={"default"}>
                 New
             </Button>
         );
@@ -278,12 +308,13 @@ export default class DataList extends React.Component {
         return (
             <div>
                 {this.state.alert.showAlert &&
-                    <Alert variant={this.state.alert.alertStatus}>
-                        {this.state.alert.responseMessage}
-                    </Alert>
+                <Alert variant={this.state.alert.alertStatus}>
+                    {this.state.alert.responseMessage}
+                </Alert>
                 }
                 <DataTable
                     title={this.createButton()}
+                    className={"datalist"}
                     striped={true}
                     highlightOnHover={false}
                     responsive={true}
@@ -293,7 +324,7 @@ export default class DataList extends React.Component {
                     columns={this.getTableColumns(this.props.tableColumns, this.props.tableColumnControls)}
                     data={this.state.data}
                 />
-                <this.getModal />
+                <this.getModal/>
             </div>
         )
     }

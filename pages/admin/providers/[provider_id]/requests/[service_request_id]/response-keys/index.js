@@ -106,32 +106,49 @@ class ServiceRequestResponseKeys extends React.Component {
                 name: 'Key Value',
                 selector: 'key_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "key_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/response/key",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
             {
                 name: 'List Item',
                 selector: 'list_item',
                 sortable: true,
-                switchable: true,
-                switchableConfig: {
+                editable: true,
+                editableConfig: {
                     field: "list_item",
-                    endpoint: "service/request/response/key",
-                    extraData: {
-                        service_request_id: this.state.service_request_id,
+                    fieldType: "switch",
+                    fieldConfig: {
+                        endpoint: "service/request/response/key",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
                     }
-                }
+                },
             },
             {
                 name: 'Show in Response',
                 selector: 'show_in_response',
                 sortable: true,
-                switchable: true,
-                switchableConfig: {
+                editable: true,
+                editableConfig: {
                     field: "show_in_response",
-                    endpoint: "service/request/response/key",
-                    extraData: {
-                        service_request_id: this.state.service_request_id,
+                    fieldType: "switch",
+                    fieldConfig: {
+                        endpoint: "service/request/response/key",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
                     }
-                }
+                },
             },
         ];
     }

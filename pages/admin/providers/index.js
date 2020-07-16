@@ -87,30 +87,70 @@ export default class ManageProviders extends React.Component {
                 selector: 'provider_label',
                 sortable: true,
                 right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Api Base Url',
                 selector: 'provider_api_base_url',
                 sortable: true,
                 right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_api_base_url",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Provider User Id',
                 selector: 'provider_user_id',
                 sortable: true,
                 right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_user_id",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Access key',
                 selector: 'provider_access_key',
                 sortable: true,
                 right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_access_key",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Secret key',
                 selector: 'provider_secret_key',
                 sortable: true,
                 right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_secret_key",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
         ];
     }
