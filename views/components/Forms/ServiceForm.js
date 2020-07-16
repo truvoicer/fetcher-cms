@@ -48,7 +48,7 @@ export default class ServiceForm extends React.Component {
         return categoryData.map((item, index) => {
             return {
                 value: item.id,
-                label: item.category_name
+                label: item.category_label
             }
         })
 

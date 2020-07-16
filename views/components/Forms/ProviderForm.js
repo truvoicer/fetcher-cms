@@ -19,9 +19,8 @@ export default class PropertyForm extends React.Component {
             provider_api_base_url: "",
             provider_access_key: "",
             provider_secret_key: "",
-            selectedCategory: "",
-            category_id: "",
-            categories: []
+            selectedCategories: [],
+            allCategories: []
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
@@ -34,7 +33,7 @@ export default class PropertyForm extends React.Component {
         })
         fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
             this.setState({
-                categories: this.getCategoriesSelect(response.data.data),
+                allCategories: this.getCategoriesSelect(response.data.data),
             })
         })
         if (this.state.action === "update") {
@@ -48,11 +47,7 @@ export default class PropertyForm extends React.Component {
                     provider_api_base_url: response.data.data.provider_api_base_url,
                     provider_access_key: response.data.data.provider_access_key,
                     provider_secret_key: response.data.data.provider_secret_key,
-                    category_id: response.data.data.category.id,
-                    selectValue: {
-                        value: response.data.data.category.id,
-                        label: response.data.data.category.category_label
-                    }
+                    selectedCategories: this.getCategoriesSelect(response.data.data.category)
                 })
             })
         }
@@ -70,8 +65,7 @@ export default class PropertyForm extends React.Component {
 
     selectChangeHandler(e) {
         this.setState({
-            selectValue: {value: e.value, label: e.label},
-            category_id: e.value
+            selectedCategories: e,
         })
     }
     formChangeHandler(e) {
@@ -141,8 +135,11 @@ export default class PropertyForm extends React.Component {
                 <Form.Group controlId="formCategories">
                     <Form.Label>Categories</Form.Label>
                     <Select
-                        value={this.state.selectValue}
-                        onChange={this.selectChangeHandler} name={"category_id"} options={this.state.categories} />
+                        value={this.state.selectedCategories}
+                        onChange={this.selectChangeHandler}
+                        name={"category_id"}
+                        options={this.state.allCategories}
+                        isMulti={true}/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
