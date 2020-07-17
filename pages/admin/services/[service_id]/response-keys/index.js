@@ -81,11 +81,33 @@ class ServiceResponseKeys extends React.Component {
                 name: 'Response Key Name',
                 selector: 'key_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "key_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/response/key",
+                        extraData: {
+                            service_id: this.state.service_id
+                        }
+                    }
+                },
             },
             {
                 name: 'Response Key Value',
                 selector: 'key_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "key_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/response/key",
+                        extraData: {
+                            service_id: this.state.service_id
+                        }
+                    }
+                },
             },
         ];
     }

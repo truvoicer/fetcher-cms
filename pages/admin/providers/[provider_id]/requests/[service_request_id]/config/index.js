@@ -99,11 +99,33 @@ class ServiceRequestConfig extends React.Component {
                 name: 'Item Name',
                 selector: 'item_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "item_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/config",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
             {
                 name: 'item Value',
                 selector: 'item_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "item_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/config",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
         ];
     }

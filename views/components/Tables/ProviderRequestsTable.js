@@ -63,7 +63,22 @@ class ProviderRequestsTable extends React.Component {
         let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
         return [
             {
+                control: "link",
+                location: "dropdown",
+                text: "Request Test",
+                action: "request_test",
+                href: basehref + "/requests/%s/request-test/",
+                query: {
+                    dynamic: {
+                        brackets: false,
+                    }
+                },
+                size: "sm",
+                classes: "btn btn-outline-primary btn-sm"
+            },
+            {
                 control: "button",
+                location: "dropdown",
                 text: "Edit",
                 action: "update",
                 modal: {
@@ -76,6 +91,7 @@ class ProviderRequestsTable extends React.Component {
             },
             {
                 control: "link",
+                location: "dropdown",
                 text: "Response Keys",
                 action: "response_keys",
                 href: basehref + "/requests/%s/response-keys/",
@@ -89,6 +105,7 @@ class ProviderRequestsTable extends React.Component {
             },
             {
                 control: "link",
+                location: "dropdown",
                 text: "Request Config",
                 action: "request_config",
                 href: basehref + "/requests/%s/config/",
@@ -102,6 +119,7 @@ class ProviderRequestsTable extends React.Component {
             },
             {
                 control: "link",
+                location: "dropdown",
                 text: "Request Parameters",
                 action: "request_parameters",
                 href: basehref + "/requests/%s/parameters/",
@@ -115,6 +133,7 @@ class ProviderRequestsTable extends React.Component {
             },
             {
                 control: "button",
+                location: "dropdown",
                 text: "Duplicate",
                 action: "duplicate",
                 modal: {
@@ -128,6 +147,7 @@ class ProviderRequestsTable extends React.Component {
             },
             {
                 control: "button",
+                location: "dropdown",
                 text: "Delete",
                 action: "delete",
                 modal: {

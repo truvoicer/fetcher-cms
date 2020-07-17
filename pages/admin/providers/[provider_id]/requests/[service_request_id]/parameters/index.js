@@ -97,11 +97,33 @@ class ServiceRequestParameters extends React.Component {
                 name: 'Parameter Name',
                 selector: 'parameter_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "parameter_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/parameter",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
             {
                 name: 'Parameter Value',
                 selector: 'parameter_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "parameter_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/parameter",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
         ];
     }

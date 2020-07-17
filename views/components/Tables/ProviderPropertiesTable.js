@@ -50,6 +50,17 @@ class ProviderPropertiesTable extends React.Component {
                 name: 'Property Value',
                 selector: 'property_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "property_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider/property",
+                        extraData: {
+                            provider_id: this.props.provider_id
+                        }
+                    }
+                },
             },
         ];
     }

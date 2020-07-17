@@ -46,11 +46,27 @@ export default class Index extends React.Component {
                 name: 'Property Name',
                 selector: 'property_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "property_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "property"
+                    }
+                },
             },
             {
                 name: 'Property label',
                 selector: 'property_label',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "property_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "property"
+                    }
+                },
             }
         ];
     }

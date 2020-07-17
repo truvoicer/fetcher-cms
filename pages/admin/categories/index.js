@@ -42,11 +42,27 @@ class Categories extends React.Component {
                 name: 'Category Name',
                 selector: 'category_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "category_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "category"
+                    }
+                },
             },
             {
                 name: 'Category Label',
                 selector: 'category_label',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "category_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "category"
+                    }
+                },
             },
         ];
     }

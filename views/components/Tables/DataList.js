@@ -96,10 +96,10 @@ export default class DataList extends React.Component {
                     switch (item.control) {
                         case "button":
                             return (
-                                this.getButton(item, row)
+                                this.getButton(item, row, index)
                             )
                         case "link":
-                            return this.getLink(item, row)
+                            return this.getLink(item, row, index)
                     }
                 })}
             </DropdownButton>
@@ -111,7 +111,8 @@ export default class DataList extends React.Component {
             case "switch":
                 return this.getColumnSwitchable(row, config)
             case "text":
-                return <TextField config={config} data={row} updateCallback={this.editableFieldRequest} formResponseCallback={this.formResponse}/>
+                return <TextField config={config} data={row} updateCallback={this.editableFieldRequest}
+                                  formResponseCallback={this.formResponse}/>
             default:
                 return row[config.field]
         }
@@ -145,7 +146,7 @@ export default class DataList extends React.Component {
 
     editableFieldRequest(row, config, formResponse = false) {
         let action = "update";
-        if(isSet(config.fieldConfig.extraData)) {
+        if (isSet(config.fieldConfig.extraData)) {
             Object.keys(config.fieldConfig.extraData).map((item) => {
                 row[item] = config.fieldConfig.extraData[item];
             })
@@ -153,27 +154,15 @@ export default class DataList extends React.Component {
         responseHandler(
             sendData(action,
                 config.fieldConfig.endpoint,
-                row), (!formResponse)? this.formResponse : formResponse);
+                row), (!formResponse) ? this.formResponse : formResponse);
     }
 
-    getButton(item, row) {
-        let modal = false;
-
-        if (typeof item.modal != "undefined") {
-            modal = item.modal;
-        }
+    getButton(item, row, index) {
         return (
-            <Dropdown.Item key={"button_" + item.action + row.id.toString()}
+            <Dropdown.Item key={"button_" + item.action + "_" + item.location + "_" + row.id.toString() + "_" + index.toString()}
                            variant={item.classes}
                            size={item.size}
-                           data-item-id={row.id}
-                           data-item-name={row[this.props.tableData.defaultColumnName]}
-                           data-item-label={row[this.props.tableData.defaultColumnLabel]}
-                           data-action={item.action}
-                           data-delete-endpoint={modal && modal.endpoint ? modal.endpoint : null}
-                           data-modal-title={modal && modal.modalTitle ? modal.modalTitle : null}
-                           data-modal-form-name={modal && modal.modalFormName ? modal.modalFormName : null}
-                           onClick={modal && modal.showModal ? this.showModal : null}>
+                           onClick={this.showModal.bind(this, item, row)}>
                 {item.text}
             </Dropdown.Item>
         );
@@ -198,7 +187,7 @@ export default class DataList extends React.Component {
             }).join('&');
     }
 
-    getLink(item, row) {
+    getLink(item, row, index) {
         let href = item.href;
         let linkAs = item.href;
         if (typeof item.query.params !== "undefined") {
@@ -217,7 +206,7 @@ export default class DataList extends React.Component {
             }
         }
         return (
-            <Link href={href} as={linkAs} key={"link_" + item.action + row.id.toString()}>
+            <Link href={href} as={linkAs} key={"link_" + item.action + "_" + item.location + "_" + row.id.toString() + "_" + index.toString()}>
                 <Dropdown.Item href={href}>
                     {item.text}
                 </Dropdown.Item>
@@ -225,18 +214,23 @@ export default class DataList extends React.Component {
         );
     }
 
-    showModal(e) {
+    showModal(config, row, e) {
+        if (!isSet(config.modal) ||
+            !isSet(config.modal.showModal) ||
+            !config.modal.showModal) {
+            return false;
+        }
         this.setState({
             modal: {
                 showModal: true,
-                modalTitle: e.target.getAttribute("data-modal-title"),
-                endpoint: e.target.getAttribute("data-delete-endpoint"),
-                action: e.target.getAttribute("data-action"),
-                itemName: e.target.getAttribute("data-item-name"),
-                itemLabel: e.target.getAttribute("data-item-label"),
-                itemId: e.target.getAttribute("data-item-id"),
-                item_id: e.target.getAttribute("data-item-id"),
-                modalFormName: e.target.getAttribute("data-modal-form-name"),
+                modalTitle: (isSet(config.modal.modalTitle)) ? config.modal.modalTitle : null,
+                endpoint: (isSet(config.modal.endpoint)) ? config.modal.endpoint : null,
+                action: config.action,
+                itemName: row[this.props.tableData.defaultColumnName],
+                itemLabel: row[this.props.tableData.defaultColumnLabel],
+                itemId: row.id,
+                item_id: row.id,
+                modalFormName: (isSet(config.modal.modalFormName)) ? config.modal.modalFormName : null,
             }
         });
     }
