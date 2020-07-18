@@ -21,17 +21,6 @@ class ServiceRequestForm extends React.Component {
             service_request_label: "",
             service_request_type: "",
             selectedService: [],
-            selectedRequestType: [],
-            requestTypes: [
-                {
-                    value: "get",
-                    label: "Get"
-                },
-                {
-                    value: "search",
-                    label: "Search"
-                }
-            ]
         }
 
         this.selectChangeHandler = this.selectChangeHandler.bind(this);
@@ -54,15 +43,10 @@ class ServiceRequestForm extends React.Component {
                     provider_id: response.data.data.provider.id,
                     service_request_name: response.data.data.service_request_name,
                     service_request_label: response.data.data.service_request_label,
-                    service_request_type: response.data.data.service_request_type,
                     selectedService: {
                         value: response.data.data.service.id,
                         label: response.data.data.service.service_label
                     },
-                    selectedRequestType: {
-                        value: response.data.data.service_request_type,
-                        label: response.data.data.service_request_type
-                    }
                 })
             })
         }
@@ -91,12 +75,6 @@ class ServiceRequestForm extends React.Component {
                 service_id: e.value
             })
         }
-        else if (e.name === "service_request_type") {
-            this.setState({
-                selectedRequestType: {value: data.value, label: data.label},
-                service_request_type: data.value
-            })
-        }
     }
 
     submitHandler(e) {
@@ -123,12 +101,6 @@ class ServiceRequestForm extends React.Component {
                                   onChange={this.formChangeHandler}
                                   name="service_request_label"
                                   value={this.state.service_request_label}/>
-                </Form.Group>
-                <Form.Group controlId="formRequestType">
-                    <Form.Label>Request Type</Form.Label>
-                    <Select
-                        value={this.state.selectedRequestType}
-                        onChange={this.selectChangeHandler} name={"service_request_type"} options={this.state.requestTypes}/>
                 </Form.Group>
                 <Form.Group controlId="formService">
                     <Form.Label>Service</Form.Label>

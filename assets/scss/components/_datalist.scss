@@ -4,40 +4,41 @@
       margin-right: 10px;
     }
   }
+
+  .datalist-select-field {
+    width: 100%;
+    position: relative;
+    &--empty {
+
+      min-height: 27px;
+    }
+  }
   .datalist-text-field {
     position: relative;
     input {
       width: 100%;
       cursor: pointer;
-      padding: 5px;
       border: none;
-      border-radius: 3px;
       background-color: transparent;
       color: #000;
-    }
-    &--controls {
-      position: absolute;
-      top: 5px;
-      right: 25px;
-      a {
-        font-size: 14px;
-        cursor: pointer;
-      }
-      .save {
-        color: #08ff00;
-      }
-      .cancel {
-        margin-left: 4px;
-        color: #ff0001;
-      }
     }
     &.editing {
       input {
         cursor: text;
       }
     }
+
+  }
+  .datalist-field {
+    &.editing {
+      padding: 10px 0 0;
+    }
     &:hover, &.editing {
-      border: 1px solid #2299dd;
+      .datalist-field-border {
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid #2299dd;
+      }
       &:after {
         content: "\f044";
         position: absolute;
@@ -49,7 +50,21 @@
       }
     }
   }
-
+  .datalist-field-controls {
+    position: relative;
+    margin: 5px 0;
+    a {
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .save {
+      color: #08ff00;
+    }
+    .cancel {
+      margin-left: 4px;
+      color: #ff0001;
+    }
+  }
   .switchable-link {
     cursor: pointer;
   }

@@ -8,6 +8,7 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Select from "react-select";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -33,9 +34,19 @@ class ServiceRequestTest extends React.Component {
             provider_id: "",
             provider_name: "",
             provider: "",
+            request_type: {},
+            options: [
+                {
+                    value: "list",
+                    label: "List"
+                },
+                {
+                    value: "single",
+                    label: "Single"
+                }
+            ],
             service_request: {},
-            item_id: "",
-            keywords: "",
+            query: "",
             limit: "",
             request: {
                 show: false,
@@ -45,6 +56,7 @@ class ServiceRequestTest extends React.Component {
         this.pageName = "request_test";
         this.submitHandler = this.submitHandler.bind(this)
         this.formChangeHandler = this.formChangeHandler.bind(this)
+        this.selectChangeHandler = this.selectChangeHandler.bind(this)
         this.getRequestCallback = this.getRequestCallback.bind(this)
     }
 
@@ -87,6 +99,14 @@ class ServiceRequestTest extends React.Component {
             }
         }
     }
+    selectChangeHandler(e) {
+        this.setState({
+            request_type: {
+                value: e.value,
+                label: e.label
+            }
+        })
+    }
 
     formChangeHandler(e) {
         this.setState({
@@ -97,11 +117,10 @@ class ServiceRequestTest extends React.Component {
     submitHandler(e) {
         e.preventDefault();
         let queryData = {
-            id: this.state.item_id,
-            keywords: this.state.keywords,
+            query: this.state.query,
             provider: this.state.provider,
             limit: this.state.limit,
-            request_type: this.state.service_request.service_request_type
+            request_type: this.state.request_type.value
         }
         responseHandler(fetchData(ApiConfig.endpoints.serviceApiRequest, queryData),
             this.getRequestCallback);
@@ -137,7 +156,15 @@ class ServiceRequestTest extends React.Component {
                                 <Row>
                                     <Col sm={12} md={2} lg={2}>
                                         <Form onSubmit={this.submitHandler}>
-                                            {this.state.service_request.service_request_type === "search" &&
+                                            <Form.Group controlId="formRequestType">
+                                                <Form.Label>Request Type</Form.Label>
+                                                <Select
+                                                    value={this.state.request_type}
+                                                    options={this.state.options}
+                                                    onChange={this.selectChangeHandler}
+                                                />
+                                            </Form.Group>
+                                            {this.state.request_type.value === "list" &&
                                             <>
                                                 <Form.Group controlId="formSearchLimit">
                                                     <Form.Label>Search Limit</Form.Label>
@@ -148,24 +175,15 @@ class ServiceRequestTest extends React.Component {
                                                                   value={this.state.limit}
                                                     />
                                                 </Form.Group>
-                                                <Form.Group controlId="formSearchQuery">
-                                                    <Form.Label>Search Query</Form.Label>
-                                                    <Form.Control type={"text"}
-                                                                  placeholder="Enter the search query."
-                                                                  onChange={this.formChangeHandler}
-                                                                  name="keywords"
-                                                                  value={this.state.keywords}
-                                                    />
-                                                </Form.Group>
-                                            </>
+                                                </>
                                             }
-                                            {this.state.service_request.service_request_type === "get" &&
+                                            {(this.state.request_type.value === "single" || this.state.request_type.value === "list") &&
                                             <Form.Group controlId="formParameterName">
-                                                <Form.Label>Item ID</Form.Label>
+                                                <Form.Label>Query</Form.Label>
                                                 <Form.Control
-                                                              placeholder="Enter the item id."
+                                                              placeholder="Enter the query"
                                                               onChange={this.formChangeHandler}
-                                                              name="item_id"
+                                                              name="query"
                                                               value={this.state.item_id}
                                                 />
                                             </Form.Group>

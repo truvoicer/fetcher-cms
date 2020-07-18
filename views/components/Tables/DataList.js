@@ -9,6 +9,7 @@ import TextField from "./Fields/TextField";
 import ControlsDropdown from "./Components/ControlsDropdown";
 import Switcher from "./Fields/Switcher";
 import ControlsInlineButton from "./Components/ControlsInlineButton";
+import SelectField from "./Fields/SelectField";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -115,8 +116,13 @@ export default class DataList extends React.Component {
                                   data={row}
                                   updateCallback={this.editableFieldRequest}
                                   formResponseCallback={this.formResponse}/>
+            case "select":
+                return <SelectField config={config}
+                                  data={row}
+                                  updateCallback={this.editableFieldRequest}
+                                  formResponseCallback={this.formResponse}/>
             default:
-                return row[config.field]
+                return (typeof row[config.field] === "string")? row[config.field]: null
         }
     }
 
@@ -150,6 +156,7 @@ export default class DataList extends React.Component {
                 itemId: (!row)? null : row.id,
                 item_id: (!row)? null : row.id,
                 modalFormName: (isSet(config.modal.modalFormName)) ? config.modal.modalFormName : null,
+                closeModalCallBack: this.handleClose
             }
         });
     }

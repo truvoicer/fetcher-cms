@@ -65,7 +65,7 @@ class ProviderPropertiesTable extends React.Component {
         ];
     }
 
-    getTableDropdownControls() {
+    getTableInlineControls() {
         return [
             {
                 control: "button",
@@ -76,9 +76,14 @@ class ProviderPropertiesTable extends React.Component {
                     modalTitle: "Edit Property Value",
                     modalFormName: "providerProperty",
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
+        ]
+    }
+
+    getTableDropdownControls() {
+        return [
             {
                 control: "button",
                 text: "Delete",
@@ -125,6 +130,7 @@ class ProviderPropertiesTable extends React.Component {
                 tableData={this.getTableData()}
                 tableColumns={this.getTableColumns()}
                 tableDropdownControls={this.getTableDropdownControls()}
+                tableInlineControls={this.getTableInlineControls()}
                 modalConfig={this.getModalConfig()}
             />
         )

@@ -74,13 +74,21 @@ export default class ManageProviders extends React.Component {
                 name: 'Category/s',
                 sortable: true,
                 right: false,
-                cell: row => {
-                    let array = [];
-                    for (let i=0;i<row.category.length;i++) {
-                        array.push(row.category[i].category_label);
+                allowOverflow: true,
+                editable: true,
+                editableConfig: {
+                    field: "category",
+                    fieldType: "select",
+                    fieldConfig: {
+                        multiple: true,
+                        endpoint: "provider",
+                        select: {
+                            endpoint: ApiConfig.endpoints.categoryList,
+                            valueKey: "id",
+                            labelKey: "category_label"
+                        }
                     }
-                    return array.join(", ");
-                }
+                },
             },
             {
                 name: 'Provider Label',
@@ -155,6 +163,23 @@ export default class ManageProviders extends React.Component {
         ];
     }
 
+    getTableInlineControls() {
+        return [
+            {
+                control: "button",
+                text: "Edit",
+                action: "update",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Edit Provider",
+                    modalFormName: "provider"
+                },
+                size: "md",
+                classes: "outline-primary"
+            },
+        ]
+    }
+
     getTableDropdownControls() {
         return [
             {
@@ -182,18 +207,6 @@ export default class ManageProviders extends React.Component {
                 },
                 size: "sm",
                 classes: "btn btn-outline-primary btn-sm"
-            },
-            {
-                control: "button",
-                text: "Edit",
-                action: "update",
-                modal: {
-                    showModal: true,
-                    modalTitle: "Edit Provider",
-                    modalFormName: "provider"
-                },
-                size: "sm",
-                classes: "outline-primary"
             },
             {
                 control: "button",
@@ -234,6 +247,7 @@ export default class ManageProviders extends React.Component {
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
                         tableDropdownControls={this.getTableDropdownControls()}
+                        tableInlineControls={this.getTableInlineControls()}
                         modalConfig={this.getModalConfig()}
                     />
                     </Col>

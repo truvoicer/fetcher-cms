@@ -74,22 +74,6 @@ class ProviderRequestsTable extends React.Component {
                 },
             },
             {
-                name: 'Request Type',
-                selector: 'service_request_type',
-                sortable: true,
-                editable: true,
-                editableConfig: {
-                    field: "service_request_type",
-                    fieldType: "text",
-                    fieldConfig: {
-                        endpoint: "service/request",
-                        extraData: {
-                            provider_id: this.props.provider_id,
-                        }
-                    }
-                },
-            },
-            {
                 name: 'Controls',
                 controlsColumn: true,
                 right: false,

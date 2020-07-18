@@ -27,7 +27,7 @@ class DeleteForm extends React.Component {
                     <Alert variant={"warning"}>
                         Are you sure you want to delete ({this.props.data.itemLabel})?
                     </Alert>
-                    <Button variant="primary">Cancel</Button>
+                    <Button variant="primary" onClick={this.props.data.closeModalCallBack}>Cancel</Button>
                     <Button variant="danger" onClick={this.deleteItem} >Confirm</Button>
                 </Col>
             </Row>
