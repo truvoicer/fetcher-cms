@@ -31,6 +31,7 @@ class ServiceRequestConfig extends React.Component {
         this.pageName = "requests_config";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
+        this.getTableInlineControls = this.getTableInlineControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -115,25 +116,24 @@ class ServiceRequestConfig extends React.Component {
                 name: 'item Value',
                 selector: 'item_value',
                 sortable: true,
-                editable: true,
-                editableConfig: {
-                    field: "item_value",
-                    fieldType: "text",
-                    fieldConfig: {
-                        endpoint: "service/request/config",
-                        extraData: {
-                            service_request_id: this.state.service_request_id,
-                        }
+                cell: row => {
+                    if (row.value_type === "list") {
+                        let decode = JSON.parse(row.item_value)
+                        return decode.map((item) => {
+                            return "[" + item.name + ": " + item.value + "]"
+                        }).join(", ")
                     }
-                },
-            },
+                    return row.item_value
+                }
+            }
         ];
     }
 
-    getTableDropdownControls() {
+    getTableInlineControls() {
         return [
             {
                 control: "button",
+                location: "inline",
                 text: "Edit",
                 action: "update",
                 modal: {
@@ -144,8 +144,14 @@ class ServiceRequestConfig extends React.Component {
                 size: "sm",
                 classes: "outline-primary"
             },
+        ]
+    }
+
+    getTableDropdownControls() {
+        return [
             {
                 control: "button",
+                location: "dropdown",
                 text: "Delete",
                 action: "delete",
                 modal: {
@@ -182,7 +188,6 @@ class ServiceRequestConfig extends React.Component {
 
 
     render() {
-        console.log(this.context)
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
                 <>
@@ -192,6 +197,7 @@ class ServiceRequestConfig extends React.Component {
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
                         tableDropdownControls={this.getTableDropdownControls()}
+                        tableInlineControls={this.getTableInlineControls()}
                         modalConfig={this.getModalConfig()}
                     />}
                     </Col>

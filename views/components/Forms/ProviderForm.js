@@ -12,7 +12,7 @@ export default class PropertyForm extends React.Component {
         this.state = {
             formSubmitted: false,
             action: this.props.data.action,
-            provider_id: "",
+            id: "",
             provider_label: "",
             provider_name: "",
             provider_user_id: "",
@@ -40,7 +40,7 @@ export default class PropertyForm extends React.Component {
             fetchData(sprintf(ApiConfig.endpoints.provider, this.props.data.itemId)).then((response) => {
                 console.log(response);
                 this.setState({
-                    provider_id: response.data.data.id,
+                    id: response.data.data.id,
                     provider_label: response.data.data.provider_label,
                     provider_name: response.data.data.provider_name,
                     provider_user_id: response.data.data.provider_user_id,
