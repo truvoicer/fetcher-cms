@@ -16,7 +16,7 @@ class ProviderPropertiesTable extends React.Component {
             provider_id: false
         }
         this.provider_id = ""
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -65,7 +65,7 @@ class ProviderPropertiesTable extends React.Component {
         ];
     }
 
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -124,7 +124,7 @@ class ProviderPropertiesTable extends React.Component {
             <DataList
                 tableData={this.getTableData()}
                 tableColumns={this.getTableColumns()}
-                tableColumnControls={this.getTableColumnControls()}
+                tableDropdownControls={this.getTableDropdownControls()}
                 modalConfig={this.getModalConfig()}
             />
         )

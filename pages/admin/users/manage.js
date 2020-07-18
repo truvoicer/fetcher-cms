@@ -12,7 +12,7 @@ export default class ManageUsers extends React.Component {
 
         this.pageName = "manage_users";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -70,7 +70,7 @@ export default class ManageUsers extends React.Component {
         ];
     }
 
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -124,7 +124,7 @@ export default class ManageUsers extends React.Component {
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
-                        tableColumnControls={this.getTableColumnControls()}
+                        tableDropdownControls={this.getTableDropdownControls()}
                         modalConfig={this.getModalConfig()}
                     />
                     </Col>

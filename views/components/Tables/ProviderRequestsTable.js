@@ -16,7 +16,7 @@ class ProviderRequestsTable extends React.Component {
             provider_id: false
         }
         this.provider_id = ""
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -45,26 +45,79 @@ class ProviderRequestsTable extends React.Component {
                 name: 'Request Name',
                 selector: 'service_request_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "service_request_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request",
+                        extraData: {
+                            provider_id: this.props.provider_id,
+                        }
+                    }
+                },
             },
             {
                 name: 'Request Label',
                 selector: 'service_request_label',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "service_request_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request",
+                        extraData: {
+                            provider_id: this.props.provider_id,
+                        }
+                    }
+                },
             },
             {
                 name: 'Request Type',
                 selector: 'service_request_type',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "service_request_type",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request",
+                        extraData: {
+                            provider_id: this.props.provider_id,
+                        }
+                    }
+                },
+            },
+            {
+                name: 'Controls',
+                controlsColumn: true,
+                right: false,
+                allowOverflow: true,
+                grow: 2,
             },
         ];
     }
 
-    getTableColumnControls() {
+    getTableInlineControls() {
         let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
         return [
             {
+                control: "button",
+                location: "inline",
+                text: "Edit",
+                action: "update",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Edit Request Value",
+                    modalFormName: "serviceRequest",
+                },
+                size: "md",
+                classes: "outline-primary"
+            },
+            {
                 control: "link",
-                location: "dropdown",
+                location: "inline",
                 text: "Request Test",
                 action: "request_test",
                 href: basehref + "/requests/%s/request-test/",
@@ -73,22 +126,14 @@ class ProviderRequestsTable extends React.Component {
                         brackets: false,
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
-            {
-                control: "button",
-                location: "dropdown",
-                text: "Edit",
-                action: "update",
-                modal: {
-                    showModal: true,
-                    modalTitle: "Edit Request Value",
-                    modalFormName: "serviceRequest",
-                },
-                size: "sm",
-                classes: "outline-primary"
-            },
+        ];
+    }
+    getTableDropdownControls() {
+        let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
+        return [
             {
                 control: "link",
                 location: "dropdown",
@@ -194,7 +239,8 @@ class ProviderRequestsTable extends React.Component {
             <DataList
                 tableData={this.getTableData()}
                 tableColumns={this.getTableColumns()}
-                tableColumnControls={this.getTableColumnControls()}
+                tableDropdownControls={this.getTableDropdownControls()}
+                tableInlineControls={this.getTableInlineControls()}
                 modalConfig={this.getModalConfig()}
             />
         )

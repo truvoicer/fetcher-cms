@@ -30,7 +30,7 @@ class ServiceRequestResponseKeys extends React.Component {
         }
         this.pageName = "requests_response_keys";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -152,7 +152,7 @@ class ServiceRequestResponseKeys extends React.Component {
             },
         ];
     }
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -215,7 +215,7 @@ class ServiceRequestResponseKeys extends React.Component {
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
-                        tableColumnControls={this.getTableColumnControls()}
+                        tableDropdownControls={this.getTableDropdownControls()}
                         modalConfig={this.getModalConfig()}
                     />}
                     </Col>

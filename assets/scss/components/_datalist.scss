@@ -1,4 +1,9 @@
 .datalist {
+  .rdt_TableCell {
+    .dropdown, a, button {
+      margin-right: 10px;
+    }
+  }
   .datalist-text-field {
     position: relative;
     input {
