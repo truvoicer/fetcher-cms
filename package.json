@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev2": "next dev -p 3001",
     "build": "next build",
     "start": "next start"
   },
@@ -16,7 +17,7 @@
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "dateformat": "^3.0.3",
-    "next": "9.3.6",
+    "next": "^9.3.6",
     "react": "16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-data-table-component": "^6.9.2",
