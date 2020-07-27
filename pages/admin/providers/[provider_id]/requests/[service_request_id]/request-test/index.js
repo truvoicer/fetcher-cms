@@ -34,18 +34,13 @@ class ServiceRequestTest extends React.Component {
             provider_id: "",
             provider_name: "",
             provider: "",
-            request_type: {},
-            options: [
-                {
-                    value: "list",
-                    label: "List"
-                },
-                {
-                    value: "single",
-                    label: "Single"
-                }
-            ],
+            request_type: {
+                value: "",
+                label: "Select a Request Type"
+            },
+            request_type_options: [],
             service_request: {},
+            service_request_list: [],
             query: "",
             limit: "",
             request: {
@@ -65,14 +60,15 @@ class ServiceRequestTest extends React.Component {
         this.setState({
             showTable: true,
             service_request_id: service_request_id,
-            provider_id: provider_id
+            provider_id: provider_id,
         })
 
         fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
             this.setState({
                 provider_id: response.data.data.id,
                 provider_name: response.data.data.provider_name,
-                provider: response.data.data.provider_name
+                provider: response.data.data.provider_name,
+                request_type_options: this.getRequestTypeOptions(response.data.data.serviceRequests)
             })
         })
         fetchData(sprintf(ApiConfig.endpoints.serviceRequest, service_request_id)).then((response) => {
@@ -82,6 +78,18 @@ class ServiceRequestTest extends React.Component {
             })
         })
 
+    }
+
+    getRequestTypeOptions(serviceRequests = []) {
+        if (serviceRequests.length === 0) {
+            return [];
+        }
+        return serviceRequests.map((item) => {
+            return {
+                value: item.service_request_name,
+                label: item.service_request_label
+            }
+        })
     }
 
     getBreadcrumbsConfig() {
@@ -99,6 +107,7 @@ class ServiceRequestTest extends React.Component {
             }
         }
     }
+
     selectChangeHandler(e) {
         this.setState({
             request_type: {
@@ -160,11 +169,10 @@ class ServiceRequestTest extends React.Component {
                                                 <Form.Label>Request Type</Form.Label>
                                                 <Select
                                                     value={this.state.request_type}
-                                                    options={this.state.options}
+                                                    options={this.state.request_type_options}
                                                     onChange={this.selectChangeHandler}
                                                 />
                                             </Form.Group>
-                                            {this.state.request_type.value === "list" &&
                                             <>
                                                 <Form.Group controlId="formSearchLimit">
                                                     <Form.Label>Search Limit</Form.Label>
@@ -175,19 +183,16 @@ class ServiceRequestTest extends React.Component {
                                                                   value={this.state.limit}
                                                     />
                                                 </Form.Group>
-                                                </>
-                                            }
-                                            {(this.state.request_type.value === "single" || this.state.request_type.value === "list") &&
+                                            </>
                                             <Form.Group controlId="formParameterName">
                                                 <Form.Label>Query</Form.Label>
                                                 <Form.Control
-                                                              placeholder="Enter the query"
-                                                              onChange={this.formChangeHandler}
-                                                              name="query"
-                                                              value={this.state.item_id}
+                                                    placeholder="Enter the query"
+                                                    onChange={this.formChangeHandler}
+                                                    name="query"
+                                                    value={this.state.item_id}
                                                 />
                                             </Form.Group>
-                                            }
                                             <Button variant="primary" type="submit">
                                                 Submit
                                             </Button>
@@ -195,8 +200,8 @@ class ServiceRequestTest extends React.Component {
                                     </Col>
                                     <Col sm={12} md={10} lg={10}>
                                             <textarea className={"request-results"}
-                                            value={this.state.request.resultString}
-                                            readOnly={true}>
+                                                      value={this.state.request.resultString}
+                                                      readOnly={true}>
                                             </textarea>
                                     </Col>
                                 </Row>
