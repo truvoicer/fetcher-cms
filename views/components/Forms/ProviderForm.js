@@ -29,6 +29,7 @@ export default class PropertyForm extends React.Component {
     }
 
     componentDidMount() {
+
         this.setState({
             formSubmitted: false
         })
