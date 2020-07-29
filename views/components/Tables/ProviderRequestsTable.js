@@ -17,6 +17,7 @@ class ProviderRequestsTable extends React.Component {
         }
         this.provider_id = ""
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
+        this.getTableInlineControls = this.getTableInlineControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -42,12 +43,12 @@ class ProviderRequestsTable extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Request Name',
-                selector: 'service_request_name',
+                name: 'Request Label',
+                selector: 'service_request_label',
                 sortable: true,
                 editable: true,
                 editableConfig: {
-                    field: "service_request_name",
+                    field: "service_request_label",
                     fieldType: "text",
                     fieldConfig: {
                         endpoint: "service/request",
@@ -58,12 +59,12 @@ class ProviderRequestsTable extends React.Component {
                 },
             },
             {
-                name: 'Request Label',
-                selector: 'service_request_label',
+                name: 'Request Name',
+                selector: 'service_request_name',
                 sortable: true,
                 editable: true,
                 editableConfig: {
-                    field: "service_request_label",
+                    field: "service_request_name",
                     fieldType: "text",
                     fieldConfig: {
                         endpoint: "service/request",

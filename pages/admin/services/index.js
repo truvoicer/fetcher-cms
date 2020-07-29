@@ -3,9 +3,6 @@ import ApiConfig from "../../../config/api-config";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import ServiceForm from "../../../views/components/Forms/ServiceForm";
-import Link from "next/link";
-import Breadcrumbs from "../../../views/components/Headers/Breadcrumbs";
-import Container from "react-bootstrap/Container";
 import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 
@@ -16,6 +13,7 @@ class ManageServices extends React.Component {
         this.pageName = "manage_services";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
+        this.getTableInlineControls = this.getTableInlineControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -43,17 +41,9 @@ class ManageServices extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Service Name',
-                selector: 'service_name',
+                name: 'Category',
+                selector: 'category.category_label',
                 sortable: true,
-                editable: true,
-                editableConfig: {
-                    field: "service_name",
-                    fieldType: "text",
-                    fieldConfig: {
-                        endpoint: "service"
-                    }
-                },
             },
             {
                 name: 'Service Label',
@@ -69,11 +59,36 @@ class ManageServices extends React.Component {
                 },
             },
             {
-                name: 'Category',
-                selector: 'category.category_name',
+                name: 'Service Name',
+                selector: 'service_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "service_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service"
+                    }
+                },
             },
         ];
+    }
+
+    getTableInlineControls() {
+        return [
+            {
+                control: "button",
+                text: "Edit",
+                action: "update",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Edit Service",
+                    modalFormName: "service"
+                },
+                size: "md",
+                classes: "outline-primary"
+            },
+        ]
     }
 
     getTableDropdownControls() {
@@ -90,18 +105,6 @@ class ManageServices extends React.Component {
                 },
                 size: "sm",
                 classes: "btn btn-outline-primary btn-sm"
-            },
-            {
-                control: "button",
-                text: "Edit",
-                action: "update",
-                modal: {
-                    showModal: true,
-                    modalTitle: "Edit Service",
-                    modalFormName: "service"
-                },
-                size: "sm",
-                classes: "outline-primary"
             },
             {
                 control: "button",
@@ -138,11 +141,12 @@ class ManageServices extends React.Component {
             return (
                 <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
                     <>
-                        <Col sm={12} md={6} lg={6}>
+                        <Col sm={12} md={7} lg={7}>
                         <DataList
                             tableData={this.getTableData()}
                             tableColumns={this.getTableColumns()}
                             tableDropdownControls={this.getTableDropdownControls()}
+                            tableInlineControls={this.getTableInlineControls()}
                             modalConfig={this.getModalConfig()}
                         />
                         </Col>

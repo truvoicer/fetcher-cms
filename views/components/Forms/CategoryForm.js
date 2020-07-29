@@ -4,6 +4,8 @@ import {sendData, fetchData, responseHandler} from '../../../library/api/middlew
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Select from 'react-select';
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 const sprintf = require("sprintf-js").sprintf;
 
 export default class ServiceForm extends React.Component {
@@ -56,23 +58,28 @@ export default class ServiceForm extends React.Component {
     render() {
         return (
             <Form onSubmit={this.submitHandler}>
-
-                <Form.Group controlId="formCategoryName">
-                    <Form.Label>Category Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the category name."
-                                  onChange={this.formChangeHandler}
-                                  name="category_name"
-                                  value={this.state.category_name}/>
-                </Form.Group>
-                <Form.Group controlId="formCategoryLabel">
-                    <Form.Label>Category Label</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the category label."
-                                  onChange={this.formChangeHandler}
-                                  name="category_label"
-                                  value={this.state.category_label}/>
-                </Form.Group>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formCategoryLabel">
+                            <Form.Label>Category Label</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the category label."
+                                          onChange={this.formChangeHandler}
+                                          name="category_label"
+                                          value={this.state.category_label}/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="formCategoryName">
+                            <Form.Label>Category Name</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the category name."
+                                          onChange={this.formChangeHandler}
+                                          name="category_name"
+                                          value={this.state.category_name}/>
+                        </Form.Group>
+                    </Col>
+                </Row>
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
