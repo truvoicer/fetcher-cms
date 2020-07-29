@@ -1,0 +1,21 @@
+.form-list {
+    margin-bottom: 1rem;
+    .form-label {
+        display: block;
+    }
+    &--body {
+        margin-bottom: 1rem;
+        &--row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            margin-top: 5px;
+            input {
+                margin-left: 10px;
+                &:first-child {
+                    margin: 0;
+                }
+            }
+        }
+    }
+}

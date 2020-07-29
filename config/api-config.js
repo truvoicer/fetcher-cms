@@ -34,5 +34,6 @@ export default
         "requestResponseKey": "/api/service/request/%d/response/key/%d",
         "requestResponseKeyList": "/api/service/request/%d/response/key/list",
         "requestResponseKeyRelation": "/api/service/request/response/key/relation/%d",
+        "serviceApiRequest": "/api/service/api/request/run",
     }
 }

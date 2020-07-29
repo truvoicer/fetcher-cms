@@ -95,6 +95,15 @@ export const Routes =
                             parent: "service_requests",
                             icon: "cil-wc",
                             sidebar: false,
+                        },
+                        {
+                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                            label: "Request Test",
+                            name: "request_test",
+                            route: "/admin/providers/requests/request-test/%d",
+                            parent: "service_requests",
+                            icon: "cil-wc",
+                            sidebar: false,
                         }
                     ]
                 },

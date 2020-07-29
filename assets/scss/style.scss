@@ -4,5 +4,12 @@
 // Import styles
 @import "node_modules/@coreui/coreui/scss/coreui";
 
+@import "layout/main";
+@import "layout/footer";
+
+@import "components/datalist";
+@import "components/requests";
+@import "components/forms";
+
 // If you want to add something do it here
 @import "custom";

@@ -29,7 +29,7 @@ class ServiceRequestParameters extends React.Component {
         }
         this.pageName = "requests_parameters";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -97,16 +97,38 @@ class ServiceRequestParameters extends React.Component {
                 name: 'Parameter Name',
                 selector: 'parameter_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "parameter_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/parameter",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
             {
                 name: 'Parameter Value',
                 selector: 'parameter_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "parameter_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service/request/parameter",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
             },
         ];
     }
 
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -167,7 +189,7 @@ class ServiceRequestParameters extends React.Component {
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
-                        tableColumnControls={this.getTableColumnControls()}
+                        tableDropdownControls={this.getTableDropdownControls()}
                         modalConfig={this.getModalConfig()}
                     />}
                     </Col>

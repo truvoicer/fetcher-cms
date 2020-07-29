@@ -45,7 +45,7 @@ export default class ManageProviders extends React.Component {
         this.pageName = "manage_providers";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
 
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
 
@@ -71,43 +71,116 @@ export default class ManageProviders extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Category',
-                selector: 'category.category_label',
+                name: 'Category/s',
                 sortable: true,
+                right: false,
+                allowOverflow: true,
+                editable: true,
+                editableConfig: {
+                    field: "category",
+                    fieldType: "select",
+                    fieldConfig: {
+                        multiple: true,
+                        endpoint: "provider",
+                        select: {
+                            endpoint: ApiConfig.endpoints.categoryList,
+                            valueKey: "id",
+                            labelKey: "category_label"
+                        }
+                    }
+                },
             },
             {
-                name: 'Provider Name',
-                selector: 'provider_name',
+                name: 'Provider Label',
+                selector: 'provider_label',
                 sortable: true,
+                right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Api Base Url',
                 selector: 'provider_api_base_url',
                 sortable: true,
-                right: true,
+                right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_api_base_url",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Provider User Id',
                 selector: 'provider_user_id',
                 sortable: true,
-                right: true,
+                right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_user_id",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Access key',
                 selector: 'provider_access_key',
                 sortable: true,
-                right: true,
+                right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_access_key",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
             {
                 name: 'Secret key',
                 selector: 'provider_secret_key',
                 sortable: true,
-                right: true,
+                right: false,
+                editable: true,
+                editableConfig: {
+                    field: "provider_secret_key",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider"
+                    }
+                },
             },
         ];
     }
 
-    getTableColumnControls() {
+    getTableInlineControls() {
+        return [
+            {
+                control: "button",
+                text: "Edit",
+                action: "update",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Edit Provider",
+                    modalFormName: "provider"
+                },
+                size: "md",
+                classes: "outline-primary"
+            },
+        ]
+    }
+
+    getTableDropdownControls() {
         return [
             {
                 control: "link",
@@ -134,18 +207,6 @@ export default class ManageProviders extends React.Component {
                 },
                 size: "sm",
                 classes: "btn btn-outline-primary btn-sm"
-            },
-            {
-                control: "button",
-                text: "Edit",
-                action: "update",
-                modal: {
-                    showModal: true,
-                    modalTitle: "Edit Provider",
-                    modalFormName: "provider"
-                },
-                size: "sm",
-                classes: "outline-primary"
             },
             {
                 control: "button",
@@ -185,7 +246,8 @@ export default class ManageProviders extends React.Component {
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
-                        tableColumnControls={this.getTableColumnControls()}
+                        tableDropdownControls={this.getTableDropdownControls()}
+                        tableInlineControls={this.getTableInlineControls()}
                         modalConfig={this.getModalConfig()}
                     />
                     </Col>

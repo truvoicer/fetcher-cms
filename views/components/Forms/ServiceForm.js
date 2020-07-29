@@ -11,11 +11,11 @@ export default class ServiceForm extends React.Component {
         super(props);
         this.state = {
             action: this.props.data.action,
-            category_id: "",
             id: "",
             service_name: "",
             service_label: "",
-            selectValue: ""
+            selectValue: "",
+            category: {}
         }
         this.selectChangeHandler = this.selectChangeHandler.bind(this);
         this.formChangeHandler = this.formChangeHandler.bind(this);
@@ -34,7 +34,7 @@ export default class ServiceForm extends React.Component {
                     id: response.data.data.id,
                     service_name: response.data.data.service_name,
                     service_label: response.data.data.service_label,
-                    category_id: response.data.data.category.id,
+                    category: response.data.data.category,
                     selectValue: {
                         value: response.data.data.category.id,
                         label: response.data.data.category.category_label
@@ -48,7 +48,7 @@ export default class ServiceForm extends React.Component {
         return categoryData.map((item, index) => {
             return {
                 value: item.id,
-                label: item.category_name
+                label: item.category_label
             }
         })
 
@@ -57,7 +57,9 @@ export default class ServiceForm extends React.Component {
     selectChangeHandler(e) {
         this.setState({
             selectValue: {value: e.value, label: e.label},
-            category_id: e.value
+            category: {
+                id: e.value,
+            }
         })
     }
 

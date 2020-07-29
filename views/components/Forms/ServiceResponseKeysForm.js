@@ -39,10 +39,18 @@ class ServiceResponseKeysForm extends React.Component {
 
 
     formChangeHandler(e) {
-        let value = e.target.value;
-        this.setState({
-            [e.target.name]: value
-        })
+        let autocomplete;
+        if (e.target.name === "key_name") {
+            this.setState({
+                key_name: e.target.value,
+                key_value: e.target.value.toLowerCase()
+            })
+        } else if (e.target.name === "key_value") {
+            this.setState({
+                key_value: e.target.value,
+                key_name: e.target.value.toUpperCase()
+            })
+        }
     }
 
     submitHandler(e) {

@@ -12,7 +12,7 @@ class Categories extends React.Component {
 
         this.pageName = "manage_categories";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -42,16 +42,32 @@ class Categories extends React.Component {
                 name: 'Category Name',
                 selector: 'category_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "category_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "category"
+                    }
+                },
             },
             {
                 name: 'Category Label',
                 selector: 'category_label',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "category_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "category"
+                    }
+                },
             },
         ];
     }
 
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -104,7 +120,7 @@ class Categories extends React.Component {
                         <DataList
                             tableData={this.getTableData()}
                             tableColumns={this.getTableColumns()}
-                            tableColumnControls={this.getTableColumnControls()}
+                            tableDropdownControls={this.getTableDropdownControls()}
                             modalConfig={this.getModalConfig()}
                         />
                         </Col>

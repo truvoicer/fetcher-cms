@@ -1,0 +1,71 @@
+.datalist {
+  .rdt_TableCell {
+    .dropdown, a, button {
+      margin-right: 10px;
+    }
+  }
+
+  .datalist-select-field {
+    width: 100%;
+    position: relative;
+    &--empty {
+
+      min-height: 27px;
+    }
+  }
+  .datalist-text-field {
+    position: relative;
+    input {
+      width: 100%;
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      color: #000;
+    }
+    &.editing {
+      input {
+        cursor: text;
+      }
+    }
+
+  }
+  .datalist-field {
+    &.editing {
+      padding: 10px 0 0;
+    }
+    &:hover, &.editing {
+      .datalist-field-border {
+        padding: 5px;
+        border-radius: 3px;
+        border: 1px solid #2299dd;
+      }
+      &:after {
+        content: "\f044";
+        position: absolute;
+        right: 2px;
+        display: block;
+        top: 4px;
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+      }
+    }
+  }
+  .datalist-field-controls {
+    position: relative;
+    margin: 5px 0;
+    a {
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .save {
+      color: #08ff00;
+    }
+    .cancel {
+      margin-left: 4px;
+      color: #ff0001;
+    }
+  }
+  .switchable-link {
+    cursor: pointer;
+  }
+}

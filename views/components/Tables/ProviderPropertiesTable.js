@@ -16,7 +16,7 @@ class ProviderPropertiesTable extends React.Component {
             provider_id: false
         }
         this.provider_id = ""
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -50,11 +50,22 @@ class ProviderPropertiesTable extends React.Component {
                 name: 'Property Value',
                 selector: 'property_value',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "property_value",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "provider/property",
+                        extraData: {
+                            provider_id: this.props.provider_id
+                        }
+                    }
+                },
             },
         ];
     }
 
-    getTableColumnControls() {
+    getTableInlineControls() {
         return [
             {
                 control: "button",
@@ -65,9 +76,14 @@ class ProviderPropertiesTable extends React.Component {
                     modalTitle: "Edit Property Value",
                     modalFormName: "providerProperty",
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
+        ]
+    }
+
+    getTableDropdownControls() {
+        return [
             {
                 control: "button",
                 text: "Delete",
@@ -113,7 +129,8 @@ class ProviderPropertiesTable extends React.Component {
             <DataList
                 tableData={this.getTableData()}
                 tableColumns={this.getTableColumns()}
-                tableColumnControls={this.getTableColumnControls()}
+                tableDropdownControls={this.getTableDropdownControls()}
+                tableInlineControls={this.getTableInlineControls()}
                 modalConfig={this.getModalConfig()}
             />
         )

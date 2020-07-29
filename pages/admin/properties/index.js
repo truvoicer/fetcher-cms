@@ -14,7 +14,7 @@ export default class Index extends React.Component {
 
         this.pageName = "manage_properties";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -46,16 +46,32 @@ export default class Index extends React.Component {
                 name: 'Property Name',
                 selector: 'property_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "property_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "property"
+                    }
+                },
             },
             {
                 name: 'Property label',
                 selector: 'property_label',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "property_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "property"
+                    }
+                },
             }
         ];
     }
 
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -109,7 +125,7 @@ export default class Index extends React.Component {
                     <DataList
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
-                        tableColumnControls={this.getTableColumnControls()}
+                        tableDropdownControls={this.getTableDropdownControls()}
                         modalConfig={this.getModalConfig()}
                     />
                     </Col>

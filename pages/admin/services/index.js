@@ -15,7 +15,7 @@ class ManageServices extends React.Component {
 
         this.pageName = "manage_services";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableColumnControls = this.getTableColumnControls.bind(this);
+        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -46,11 +46,27 @@ class ManageServices extends React.Component {
                 name: 'Service Name',
                 selector: 'service_name',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "service_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service"
+                    }
+                },
             },
             {
                 name: 'Service Label',
                 selector: 'service_label',
                 sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "service_label",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "service"
+                    }
+                },
             },
             {
                 name: 'Category',
@@ -60,7 +76,7 @@ class ManageServices extends React.Component {
         ];
     }
 
-    getTableColumnControls() {
+    getTableDropdownControls() {
         return [
             {
                 control: "link",
@@ -126,7 +142,7 @@ class ManageServices extends React.Component {
                         <DataList
                             tableData={this.getTableData()}
                             tableColumns={this.getTableColumns()}
-                            tableColumnControls={this.getTableColumnControls()}
+                            tableDropdownControls={this.getTableDropdownControls()}
                             modalConfig={this.getModalConfig()}
                         />
                         </Col>
