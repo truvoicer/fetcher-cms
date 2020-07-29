@@ -13,6 +13,7 @@ class Categories extends React.Component {
         this.pageName = "manage_categories";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
+        this.getTableInlineControls = this.getTableInlineControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
     }
@@ -22,6 +23,7 @@ class Categories extends React.Component {
             pageName: this.pageName,
         }
     }
+
     getTableData() {
         return {
             title: "",
@@ -39,19 +41,6 @@ class Categories extends React.Component {
     getTableColumns() {
         return [
             {
-                name: 'Category Name',
-                selector: 'category_name',
-                sortable: true,
-                editable: true,
-                editableConfig: {
-                    field: "category_name",
-                    fieldType: "text",
-                    fieldConfig: {
-                        endpoint: "category"
-                    }
-                },
-            },
-            {
                 name: 'Category Label',
                 selector: 'category_label',
                 sortable: true,
@@ -64,23 +53,42 @@ class Categories extends React.Component {
                     }
                 },
             },
+            {
+                name: 'Category Name',
+                selector: 'category_name',
+                sortable: true,
+                editable: true,
+                editableConfig: {
+                    field: "category_name",
+                    fieldType: "text",
+                    fieldConfig: {
+                        endpoint: "category"
+                    }
+                },
+            },
         ];
     }
 
-    getTableDropdownControls() {
+    getTableInlineControls() {
         return [
             {
                 control: "button",
                 text: "Edit",
                 action: "update",
+                location: "inline",
                 modal: {
                     showModal: true,
                     modalTitle: "Edit Category",
                     modalFormName: "category"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
-            },
+            }
+        ]
+    }
+
+    getTableDropdownControls() {
+        return [
             {
                 control: "button",
                 text: "Delete",
@@ -113,20 +121,22 @@ class Categories extends React.Component {
 
 
     render() {
-            return (
-                <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
-                    <>
-                        <Col sm={12} md={6} lg={6}>
+        return (
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
+                <>
+                    <Col sm={12} md={6} lg={6}>
                         <DataList
                             tableData={this.getTableData()}
                             tableColumns={this.getTableColumns()}
                             tableDropdownControls={this.getTableDropdownControls()}
+                            tableInlineControls={this.getTableInlineControls()}
                             modalConfig={this.getModalConfig()}
                         />
-                        </Col>
-                    </>
-                </Admin>
+                    </Col>
+                </>
+            </Admin>
         )
     }
 }
+
 export default Categories

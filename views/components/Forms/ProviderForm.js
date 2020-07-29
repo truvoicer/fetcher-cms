@@ -4,6 +4,8 @@ import {sendData, fetchData, responseHandler} from '../../../library/api/middlew
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Select from "react-select";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -88,22 +90,51 @@ export default class PropertyForm extends React.Component {
     render() {
         return (
             <Form onSubmit={this.submitHandler}>
-                <Form.Group controlId="formProviderLabel">
-                    <Form.Label>Provider Label</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers label."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_label"
-                                  value={this.state.provider_label}/>
-                </Form.Group>
-                <Form.Group controlId="formProviderName">
-                    <Form.Label>Provider Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers name."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_name"
-                                  value={this.state.provider_name}/>
-                </Form.Group>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formProviderLabel">
+                            <Form.Label>Provider Label</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the providers label."
+                                          onChange={this.formChangeHandler}
+                                          name="provider_label"
+                                          value={this.state.provider_label}/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="formProviderName">
+                            <Form.Label>Provider Name</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the providers name."
+                                          onChange={this.formChangeHandler}
+                                          name="provider_name"
+                                          value={this.state.provider_name}/>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formProviderUserId">
+                            <Form.Label>Provider User Id</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the providers user id."
+                                          onChange={this.formChangeHandler}
+                                          name="provider_user_id"
+                                          value={this.state.provider_user_id}/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="formCategories">
+                            <Form.Label>Categories</Form.Label>
+                            <Select
+                                value={this.state.selectedCategories}
+                                onChange={this.selectChangeHandler}
+                                name={"category_id"}
+                                options={this.state.allCategories}
+                                isMulti={true}/>
+                        </Form.Group>
+                    </Col>
+                </Row>
                 <Form.Group controlId="formProviderApiUrl">
                     <Form.Label>Provider Api Base Url</Form.Label>
                     <Form.Control type="text"
@@ -112,14 +143,8 @@ export default class PropertyForm extends React.Component {
                                   name="provider_api_base_url"
                                   value={this.state.provider_api_base_url}/>
                 </Form.Group>
-                <Form.Group controlId="formProviderUserId">
-                    <Form.Label>Provider User Id</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers user id."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_user_id"
-                                  value={this.state.provider_user_id}/>
-                </Form.Group>
+
+
                 <Form.Group controlId="formProviderAccessKey">
                     <Form.Label>Provider Access Key</Form.Label>
                     <Form.Control type="text"
@@ -136,15 +161,7 @@ export default class PropertyForm extends React.Component {
                                   name="provider_secret_key"
                                   value={this.state.provider_secret_key}/>
                 </Form.Group>
-                <Form.Group controlId="formCategories">
-                    <Form.Label>Categories</Form.Label>
-                    <Select
-                        value={this.state.selectedCategories}
-                        onChange={this.selectChangeHandler}
-                        name={"category_id"}
-                        options={this.state.allCategories}
-                        isMulti={true}/>
-                </Form.Group>
+
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>

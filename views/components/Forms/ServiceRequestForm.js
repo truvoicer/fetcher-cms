@@ -20,6 +20,7 @@ class ServiceRequestForm extends React.Component {
             service_request_name: "",
             service_request_label: "",
             service_request_type: "",
+            services: [],
             selectedService: [],
         }
 
@@ -69,7 +70,7 @@ class ServiceRequestForm extends React.Component {
     }
 
     selectChangeHandler(data, e) {
-        if(e.name === "service_id") {
+        if (e.name === "service_id") {
             this.setState({
                 selectedService: {value: data.value, label: data.label},
                 service_id: e.value
@@ -85,28 +86,36 @@ class ServiceRequestForm extends React.Component {
     render() {
         return (
             <Form onSubmit={this.submitHandler}>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formRequestName">
+                            <Form.Group controlId="formRequestLabel">
+                                <Form.Label>Request Label</Form.Label>
+                                <Form.Control type="text"
+                                              placeholder="Enter the request label."
+                                              onChange={this.formChangeHandler}
+                                              name="service_request_label"
+                                              value={this.state.service_request_label}/>
+                            </Form.Group>
 
-                <Form.Group controlId="formRequestName">
-                    <Form.Label>Request Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the request Key name."
-                                  onChange={this.formChangeHandler}
-                                  name="service_request_name"
-                                  value={this.state.service_request_name}/>
-                </Form.Group>
-                <Form.Group controlId="formRequestLabel">
-                    <Form.Label>Request Label</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the request label."
-                                  onChange={this.formChangeHandler}
-                                  name="service_request_label"
-                                  value={this.state.service_request_label}/>
-                </Form.Group>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Label>Request Name</Form.Label>
+                        <Form.Control type="text"
+                                      placeholder="Enter the request Key name."
+                                      onChange={this.formChangeHandler}
+                                      name="service_request_name"
+                                      value={this.state.service_request_name}/>
+                    </Col>
+                </Row>
                 <Form.Group controlId="formService">
                     <Form.Label>Service</Form.Label>
                     <Select
                         value={this.state.selectedService}
-                        onChange={this.selectChangeHandler} name={"service_id"} options={this.state.services}/>
+                        onChange={this.selectChangeHandler}
+                        name={"service_id"}
+                        options={this.state.services}/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

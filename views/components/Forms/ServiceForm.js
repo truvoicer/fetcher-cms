@@ -4,6 +4,9 @@ import {sendData, fetchData, responseHandler} from '../../../library/api/middlew
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Select from 'react-select';
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
 const sprintf = require("sprintf-js").sprintf;
 
 export default class ServiceForm extends React.Component {
@@ -71,34 +74,39 @@ export default class ServiceForm extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
-        responseHandler(sendData(this.state.action, "service", this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "service", this.state), this.props.formResponse);
     }
 
     render() {
         return (
             <Form onSubmit={this.submitHandler}>
-
-                <Form.Group controlId="formServiceName">
-                    <Form.Label>Service Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the service name."
-                                  onChange={this.formChangeHandler}
-                                  name="service_name"
-                                  value={this.state.service_name}/>
-                </Form.Group>
-                <Form.Group controlId="formServiceLabel">
-                    <Form.Label>Service Label</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the service label."
-                                  onChange={this.formChangeHandler}
-                                  name="service_label"
-                                  value={this.state.service_label}/>
-                </Form.Group>
+                <Row>
+                    <Col>
+                        <Form.Group controlId="formServiceLabel">
+                            <Form.Label>Service Label</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the service label."
+                                          onChange={this.formChangeHandler}
+                                          name="service_label"
+                                          value={this.state.service_label}/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group controlId="formServiceName">
+                            <Form.Label>Service Name</Form.Label>
+                            <Form.Control type="text"
+                                          placeholder="Enter the service name."
+                                          onChange={this.formChangeHandler}
+                                          name="service_name"
+                                          value={this.state.service_name}/>
+                        </Form.Group>
+                    </Col>
+                </Row>
                 <Form.Group controlId="formCategory">
                     <Form.Label>Category</Form.Label>
                     <Select
                         value={this.state.selectValue}
-                        onChange={this.selectChangeHandler} name={"category_id"} options={this.state.categories} />
+                        onChange={this.selectChangeHandler} name={"category_id"} options={this.state.categories}/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit
