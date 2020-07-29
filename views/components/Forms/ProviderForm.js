@@ -83,7 +83,6 @@ export default class PropertyForm extends React.Component {
     render() {
         return (
             <Form onSubmit={this.submitHandler}>
-
                 <Form.Group controlId="formProviderLabel">
                     <Form.Label>Provider Label</Form.Label>
                     <Form.Control type="text"
