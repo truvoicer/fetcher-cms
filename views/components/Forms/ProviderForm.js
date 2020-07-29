@@ -4,6 +4,7 @@ import {sendData, fetchData, responseHandler} from '../../../library/api/middlew
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Select from "react-select";
+
 const sprintf = require("sprintf-js").sprintf;
 
 export default class PropertyForm extends React.Component {
@@ -31,11 +32,13 @@ export default class PropertyForm extends React.Component {
         this.setState({
             formSubmitted: false
         })
+
         fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
             this.setState({
                 allCategories: this.getCategoriesSelect(response.data.data),
             })
         })
+
         if (this.state.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.provider, this.props.data.itemId)).then((response) => {
                 console.log(response);
@@ -68,6 +71,7 @@ export default class PropertyForm extends React.Component {
             selectedCategories: e,
         })
     }
+
     formChangeHandler(e) {
         this.setState({
             [e.target.name]: e.target.value
@@ -77,7 +81,7 @@ export default class PropertyForm extends React.Component {
     submitHandler(e) {
         e.preventDefault();
         console.log(this.state)
-        responseHandler(sendData(this.state.action, "provider", this.state),  this.props.formResponse);
+        responseHandler(sendData(this.state.action, "provider", this.state), this.props.formResponse);
     }
 
     render() {
