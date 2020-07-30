@@ -7,10 +7,10 @@ import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 
 class ManageServices extends React.Component {
+    static pageName = "manage_services";
     constructor(props) {
         super(props);
 
-        this.pageName = "manage_services";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableInlineControls = this.getTableInlineControls.bind(this);
@@ -20,7 +20,7 @@ class ManageServices extends React.Component {
 
     getBreadcrumbsConfig() {
         return {
-            pageName: this.pageName
+            pageName: ManageServices.pageName
         }
     }
 
@@ -139,7 +139,7 @@ class ManageServices extends React.Component {
 
     render() {
             return (
-                <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
+                <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ManageServices.pageName}>
                     <>
                         <Col sm={12} md={7} lg={7}>
                         <DataList

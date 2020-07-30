@@ -2,6 +2,7 @@ import Breadcrumb from "react-bootstrap/Breadcrumb";
 import {Routes} from '../../../config/routes'
 import {BreadcrumbsContext} from "../Context/BreadcrumbsContext";
 import {getRouteItem} from "../../../library/session/authenticate";
+import {isSet} from "../../../library/utils";
 
 const vsprintf = require("sprintf-js").vsprintf;
 
@@ -25,7 +26,12 @@ class Breadcrumbs extends React.Component {
         if (typeof this.context.data[page.name] === "undefined") {
             return page;
         }
-        page.route = vsprintf(page.route, this.context.data[page.name].id);
+        let dataArray = Object.keys(this.context.data).map(item => {
+            if(isSet(this.context.data[item])) {
+                return this.context.data[item].id;
+            }
+        })
+        page.route = vsprintf(page.route, dataArray);
         page.itemName = this.context.data[page.name].name;
         return page;
     }

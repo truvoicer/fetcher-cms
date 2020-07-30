@@ -66,14 +66,14 @@ class ServiceRequestConfig extends React.Component {
         return {
             pageName: this.pageName,
             data: {
+                service_requests: {
+                    id: this.state.provider_id,
+                    name: this.state.provider_name
+                },
                 requests_config: {
                     id: this.state.service_request_id,
                     name: this.state.service_request_name
                 },
-                service_requests: {
-                    id: this.state.provider_id,
-                    name: this.state.provider_name
-                }
             }
         }
     }

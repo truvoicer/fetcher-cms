@@ -8,6 +8,7 @@ export default
         "getUserList": "/api/admin/users",
         "getUser": "/api/admin/user/%d",
         "getApiUser": "/api/get-user",
+        "search": "/api/admin/search/%s",
         "create": "/api/%s/create",
         "update": "/api/%s/update",
         "delete": "/api/%s/delete",

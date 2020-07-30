@@ -4,6 +4,7 @@ import {checkAccessControl, getRouteItem, getSessionObject} from '../../../libra
 import Link from "next/link";
 import React from "react";
 import {UserContext} from "../Context/UserContext";
+import SearchComponent from "../Search/SearchComponent";
 
 class Sidebar extends React.Component {
     constructor(props) {
@@ -97,6 +98,8 @@ class Sidebar extends React.Component {
                 <div className="c-sidebar-brand d-lg-down-none">
                     {SiteConfig.siteName}
                 </div>
+
+                <SearchComponent />
                 <this.getSidebarNav/>
             </div>
         )

@@ -4,6 +4,8 @@ import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import ServiceRequestForm from "../../../views/components/Forms/ServiceRequestForm";
 import DuplicateForm from "../Forms/DuplicateForm";
+import {getRouteItem} from "../../../library/session/authenticate";
+import {Routes} from "../../../config/routes";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -85,7 +87,7 @@ class ProviderRequestsTable extends React.Component {
     }
 
     getTableInlineControls() {
-        let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
+        console.log(this.props.baseUrl)
         return [
             {
                 control: "button",
@@ -105,7 +107,7 @@ class ProviderRequestsTable extends React.Component {
                 location: "inline",
                 text: "Request Test",
                 action: "request_test",
-                href: basehref + "/requests/%s/request-test/",
+                href: this.props.baseUrl + "/%s/request-test/",
                 query: {
                     dynamic: {
                         brackets: false,
@@ -117,14 +119,13 @@ class ProviderRequestsTable extends React.Component {
         ];
     }
     getTableDropdownControls() {
-        let basehref = sprintf("/admin/providers/%s", this.props.provider_id);
         return [
             {
                 control: "link",
                 location: "dropdown",
                 text: "Response Keys",
                 action: "response_keys",
-                href: basehref + "/requests/%s/response-keys/",
+                href: this.props.baseUrl + "/%s/response-keys/",
                 query: {
                     dynamic: {
                         brackets: false,
@@ -138,7 +139,7 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Request Config",
                 action: "request_config",
-                href: basehref + "/requests/%s/config/",
+                href: this.props.baseUrl + "/%s/config/",
                 query: {
                     dynamic: {
                         brackets: false,
@@ -152,7 +153,7 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Request Parameters",
                 action: "request_parameters",
-                href: basehref + "/requests/%s/parameters/",
+                href: this.props.baseUrl + "/%s/parameters/",
                 query: {
                     dynamic: {
                         brackets: false,

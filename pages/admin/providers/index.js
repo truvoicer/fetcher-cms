@@ -16,6 +16,7 @@ import PropertyForm from "../../../views/components/Forms/PropertyForm";
 import DataList from "../../../views/components/Tables/DataList";
 
 export default class ManageProviders extends React.Component {
+    static pageName = "manage_providers";
     constructor(props) {
         super(props)
         this.props = props;
@@ -42,7 +43,6 @@ export default class ManageProviders extends React.Component {
         this.deleteProviderTitle = "Delete Provider";
         this.propertiesTitle = "Provider Properties";
 
-        this.pageName = "manage_providers";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
 
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
@@ -53,7 +53,7 @@ export default class ManageProviders extends React.Component {
 
     getBreadcrumbsConfig() {
         return {
-            pageName: this.pageName,
+            pageName: ManageProviders.pageName,
         }
     }
 
@@ -240,7 +240,7 @@ export default class ManageProviders extends React.Component {
 
     render() {
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ManageProviders.pageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                     <DataList
