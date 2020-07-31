@@ -52,7 +52,7 @@ class ProviderRequests extends React.Component {
         return {
             pageName: ProviderRequests.pageName,
             data: {
-                service_requests: {
+                provider: {
                     id: this.state.provider_id,
                     name: this.state.provider_name
                 }

@@ -13,6 +13,8 @@ import Select from "react-select";
 const sprintf = require("sprintf-js").sprintf
 
 class ServiceRequestTest extends React.Component {
+
+    static pageName = "request_test";
     static async getInitialProps(ctx) {
         return {
             props: {}
@@ -48,7 +50,6 @@ class ServiceRequestTest extends React.Component {
                 resultString: ""
             }
         }
-        this.pageName = "request_test";
         this.submitHandler = this.submitHandler.bind(this)
         this.formChangeHandler = this.formChangeHandler.bind(this)
         this.selectChangeHandler = this.selectChangeHandler.bind(this)
@@ -94,13 +95,13 @@ class ServiceRequestTest extends React.Component {
 
     getBreadcrumbsConfig() {
         return {
-            pageName: this.pageName,
+            pageName: ServiceRequestTest.pageName,
             data: {
-                requests_response_keys: {
+                service_requests: {
                     id: this.state.service_request_id,
                     name: this.state.service_request_name
                 },
-                service_requests: {
+                provider: {
                     id: this.state.provider_id,
                     name: this.state.provider_name
                 }
@@ -156,7 +157,7 @@ class ServiceRequestTest extends React.Component {
 
     render() {
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestTest.pageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                         <Card>

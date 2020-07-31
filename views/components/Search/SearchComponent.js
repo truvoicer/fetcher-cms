@@ -75,7 +75,7 @@ class SearchComponent extends Component {
     getListData(data) {
         return data.items.map((item, index) => {
             switch (data.type) {
-                case "providers":
+                case "provider":
                     return {
                         name: item.provider_name,
                         label: item.provider_label,
@@ -159,17 +159,16 @@ class SearchComponent extends Component {
                                                 (this.state.showListSubItems && this.state.subListItemName !== item.name? " hover" : "")
                                     }
                                         key={index.toString()}
-                                        onClick={this.listItemHandler.bind(this, item)}
+                                        // onClick={this.listItemHandler.bind(this, item)}
                                         // onMouseOver={this.listItemHandler.bind(this, item)}>
                                         >
-                                        <a className={"admin-search--results--list--item--label"}
-                                        >{item.label}</a>
-                                        {this.state.showListSubItems && this.state.subListItemName === item.name &&
+                                        <a className={"admin-search--results--list--item--label"}>{item.label}</a>
+                                        {/*{this.state.showListSubItems && this.state.subListItemName === item.name &&*/}
 
-                                        <ul className={"admin-search--results--list--subs"}>
-                                            {this.state.listSubItems}
-                                        </ul>
-                                        }
+                                        {/*<ul className={"admin-search--results--list--subs"}>*/}
+                                        {/*    {this.state.listSubItems}*/}
+                                        {/*</ul>*/}
+                                        {/*}*/}
                                     </li>
                                 ))}
                             </ul>

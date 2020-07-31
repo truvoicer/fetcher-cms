@@ -26,12 +26,7 @@ class Breadcrumbs extends React.Component {
         if (typeof this.context.data[page.name] === "undefined") {
             return page;
         }
-        let dataArray = Object.keys(this.context.data).map(item => {
-            if(isSet(this.context.data[item])) {
-                return this.context.data[item].id;
-            }
-        })
-        page.route = vsprintf(page.route, dataArray);
+        page.route = vsprintf(page.route, this.context.data);
         page.itemName = this.context.data[page.name].name;
         return page;
     }

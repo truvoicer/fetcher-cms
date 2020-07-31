@@ -5,6 +5,9 @@ import DataList from "../../../views/components/Tables/DataList";
 import ServiceForm from "../../../views/components/Forms/ServiceForm";
 import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
+import {getRouteItem} from "../../../library/session/authenticate";
+import {Routes} from "../../../config/routes";
+import ServiceResponseKeys from "./[service_id]/response-keys";
 
 class ManageServices extends React.Component {
     static pageName = "manage_services";
@@ -97,10 +100,15 @@ class ManageServices extends React.Component {
                 control: "link",
                 text: "Response Keys",
                 action: "response_keys",
-                href: "/admin/services/%s/response-keys/",
-                query: {
-                    dynamic: {
-                        brackets: false
+                href: getRouteItem(Routes.items, ServiceResponseKeys.pageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        service: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
                     }
                 },
                 size: "sm",

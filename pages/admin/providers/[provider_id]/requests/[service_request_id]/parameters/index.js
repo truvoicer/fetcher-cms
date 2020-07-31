@@ -11,6 +11,7 @@ import {fetchData} from "../../../../../../../library/api/middleware";
 const sprintf = require("sprintf-js").sprintf
 
 class ServiceRequestParameters extends React.Component {
+    static pageName = "requests_parameters";
     static async getInitialProps(ctx) {
         return {
             props: {
@@ -27,7 +28,7 @@ class ServiceRequestParameters extends React.Component {
             provider_id: "",
             provider_name: "",
         }
-        this.pageName = "requests_parameters";
+
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
@@ -62,13 +63,13 @@ class ServiceRequestParameters extends React.Component {
 
     getBreadcrumbsConfig() {
         return {
-            pageName: this.pageName,
+            pageName: ServiceRequestParameters.pageName,
             data: {
-                service_requests: {
+                provider: {
                     id: this.state.provider_id,
                     name: this.state.provider_name
                 },
-                requests_parameters: {
+                service_requests: {
                     id: this.state.service_request_id,
                     name: this.state.service_request_name
                 },
@@ -182,7 +183,7 @@ class ServiceRequestParameters extends React.Component {
     render() {
         console.log(this.context)
         return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
+            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestParameters.pageName}>
                 <>
                     <Col sm={12} md={6} lg={5}>
                     {this.state.showTable &&

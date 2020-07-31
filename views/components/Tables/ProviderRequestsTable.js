@@ -6,6 +6,14 @@ import ServiceRequestForm from "../../../views/components/Forms/ServiceRequestFo
 import DuplicateForm from "../Forms/DuplicateForm";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
+import ServiceRequestTest
+    from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/request-test";
+import ServiceRequestParameters
+    from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/parameters";
+import ServiceRequestResponseKeys
+    from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/response-keys";
+import ServiceRequestConfig from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/config";
+import ProviderRequests from "../../../pages/admin/providers/[provider_id]/requests";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -87,7 +95,6 @@ class ProviderRequestsTable extends React.Component {
     }
 
     getTableInlineControls() {
-        console.log(this.props.baseUrl)
         return [
             {
                 control: "button",
@@ -107,10 +114,19 @@ class ProviderRequestsTable extends React.Component {
                 location: "inline",
                 text: "Request Test",
                 action: "request_test",
-                href: this.props.baseUrl + "/%s/request-test/",
-                query: {
-                    dynamic: {
-                        brackets: false,
+                href: getRouteItem(Routes.items, ServiceRequestTest.pageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        provider: {
+                            dynamic: false,
+                            id: this.props.provider_id
+                        },
+                        service_request: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
                     }
                 },
                 size: "md",
@@ -125,10 +141,19 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Response Keys",
                 action: "response_keys",
-                href: this.props.baseUrl + "/%s/response-keys/",
-                query: {
-                    dynamic: {
-                        brackets: false,
+                href: getRouteItem(Routes.items, ServiceRequestResponseKeys.pageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        provider: {
+                            dynamic: false,
+                            id: this.props.provider_id
+                        },
+                        service_request: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
                     }
                 },
                 size: "sm",
@@ -139,10 +164,19 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Request Config",
                 action: "request_config",
-                href: this.props.baseUrl + "/%s/config/",
-                query: {
-                    dynamic: {
-                        brackets: false,
+                href: getRouteItem(Routes.items, ServiceRequestConfig.pageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        provider: {
+                            dynamic: false,
+                            id: this.props.provider_id
+                        },
+                        service_request: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
                     }
                 },
                 size: "sm",
@@ -153,10 +187,19 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Request Parameters",
                 action: "request_parameters",
-                href: this.props.baseUrl + "/%s/parameters/",
-                query: {
-                    dynamic: {
-                        brackets: false,
+                href: getRouteItem(Routes.items, ServiceRequestParameters.pageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        provider: {
+                            dynamic: false,
+                            id: this.props.provider_id
+                        },
+                        service_request: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
                     }
                 },
                 size: "sm",
