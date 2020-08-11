@@ -146,7 +146,7 @@ class ServiceRequestTest extends React.Component {
             }
 
         } else {
-            result = "Error in request..."
+            result = message
         }
         this.setState({
             request: {

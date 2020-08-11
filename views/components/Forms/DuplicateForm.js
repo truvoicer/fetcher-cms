@@ -1,9 +1,7 @@
-import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
+import {responseHandler, sendData} from "../../../library/api/middleware";
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import Select from "react-select";
-import ApiConfig from "../../../config/api-config";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -15,46 +13,15 @@ class DuplicateForm extends React.Component {
             item_id: this.props.data.item_id,
             item_name: "",
             item_label: "",
-            services: [],
-            selectedService: [],
-            service_id: ""
         }
         this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.selectChangeHandler = this.selectChangeHandler.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
-    }
-
-    componentDidMount() {
-        fetchData(sprintf(ApiConfig.endpoints.serviceList)).then((response) => {
-            this.setState({
-                services: this.getServicesSelect(response.data.data),
-            })
-        })
-    }
-
-    getServicesSelect(requests) {
-        return requests.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.service_label
-            }
-        })
-
     }
 
     formChangeHandler(e) {
         this.setState({
             [e.target.name]: e.target.value
         })
-    }
-
-    selectChangeHandler(data, e) {
-        if(e.name === "service_id") {
-            this.setState({
-                selectedService: {value: data.value, label: data.label},
-                service_id: data.value
-            })
-        }
     }
 
     submitHandler(e) {
@@ -80,14 +47,6 @@ class DuplicateForm extends React.Component {
                                   onChange={this.formChangeHandler}
                                   name="item_name"
                                   value={this.state.item_name}/>
-                </Form.Group>
-                <Form.Group controlId="formService">
-                    <Form.Label>Service</Form.Label>
-                    <Select
-                        value={this.state.selectedService}
-                        onChange={this.selectChangeHandler}
-                        name={"service_id"}
-                        options={this.state.services}/>
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Submit

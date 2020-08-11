@@ -122,7 +122,7 @@ class ProviderRequestsTable extends React.Component {
                             dynamic: false,
                             id: this.props.provider_id
                         },
-                        service_request: {
+                        service_requests: {
                             dynamic: true,
                             column: "id",
                             key: "id"
@@ -149,7 +149,7 @@ class ProviderRequestsTable extends React.Component {
                             dynamic: false,
                             id: this.props.provider_id
                         },
-                        service_request: {
+                        service_requests: {
                             dynamic: true,
                             column: "id",
                             key: "id"
@@ -172,7 +172,7 @@ class ProviderRequestsTable extends React.Component {
                             dynamic: false,
                             id: this.props.provider_id
                         },
-                        service_request: {
+                        service_requests: {
                             dynamic: true,
                             column: "id",
                             key: "id"
@@ -195,7 +195,7 @@ class ProviderRequestsTable extends React.Component {
                             dynamic: false,
                             id: this.props.provider_id
                         },
-                        service_request: {
+                        service_requests: {
                             dynamic: true,
                             column: "id",
                             key: "id"
