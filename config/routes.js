@@ -176,7 +176,16 @@ export const Routes =
                     parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
-                }
+                },
+                {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "Api Tokens",
+                    name: "api_tokens",
+                    route: "/admin/users/%(user.id)d/api-tokens",
+                    parent: "users",
+                    icon: "cil-wc",
+                    sidebar: false
+                },
             ]
         }
     ]

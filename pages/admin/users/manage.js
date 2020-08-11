@@ -5,6 +5,9 @@ import DataList from "../../../views/components/Tables/DataList";
 import React from "react";
 import UserForm from "../../../views/components/Forms/UserForm";
 import Col from "react-bootstrap/Col";
+import {getRouteItem} from "../../../library/session/authenticate";
+import {Routes} from "../../../config/routes";
+import ApiTokens from "./[user_id]/api-tokens";
 
 export default class ManageUsers extends React.Component {
     constructor(props) {
@@ -12,6 +15,7 @@ export default class ManageUsers extends React.Component {
 
         this.pageName = "manage_users";
         this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
+        this.getTableInlineControls = this.getTableInlineControls.bind(this);
         this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
         this.getTableColumns = this.getTableColumns.bind(this);
         this.getTableData = this.getTableData.bind(this);
@@ -70,6 +74,30 @@ export default class ManageUsers extends React.Component {
         ];
     }
 
+    getTableInlineControls() {
+        return [
+            {
+                control: "link",
+                location: "inline",
+                text: "Access Tokens",
+                action: "access_tokens",
+                href: getRouteItem(Routes.items, ApiTokens.pageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        user: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
+                    }
+                },
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
+            },
+        ]
+    }
+
     getTableDropdownControls() {
         return [
             {
@@ -125,6 +153,7 @@ export default class ManageUsers extends React.Component {
                         tableData={this.getTableData()}
                         tableColumns={this.getTableColumns()}
                         tableDropdownControls={this.getTableDropdownControls()}
+                        tableInlineControls={this.getTableInlineControls()}
                         modalConfig={this.getModalConfig()}
                     />
                     </Col>
