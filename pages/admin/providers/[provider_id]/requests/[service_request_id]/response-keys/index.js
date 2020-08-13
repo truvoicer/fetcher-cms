@@ -101,6 +101,7 @@ class ServiceRequestResponseKeys extends React.Component {
                 name: 'Key Name',
                 selector: 'key_name',
                 sortable: true,
+                grow: 2
             },
             {
                 name: 'Key Value',

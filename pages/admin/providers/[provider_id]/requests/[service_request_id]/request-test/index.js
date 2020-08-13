@@ -15,6 +15,7 @@ const sprintf = require("sprintf-js").sprintf
 class ServiceRequestTest extends React.Component {
 
     static pageName = "request_test";
+
     static async getInitialProps(ctx) {
         return {
             props: {}
@@ -48,12 +49,15 @@ class ServiceRequestTest extends React.Component {
             request: {
                 show: false,
                 resultString: ""
-            }
+            },
+            queryParameterList: [],
+            queryParameterData: []
         }
         this.submitHandler = this.submitHandler.bind(this)
         this.formChangeHandler = this.formChangeHandler.bind(this)
         this.selectChangeHandler = this.selectChangeHandler.bind(this)
         this.getRequestCallback = this.getRequestCallback.bind(this)
+        this.addQueryParameter = this.addQueryParameter.bind(this)
     }
 
     componentDidMount() {
@@ -126,12 +130,16 @@ class ServiceRequestTest extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
+        let parameterGroups = Array.from(document.getElementsByClassName("parameter-group"));
         let queryData = {
-            query: this.state.query,
+            request_type: this.state.request_type.value,
             provider: this.state.provider,
-            limit: this.state.limit,
-            request_type: this.state.request_type.value
         }
+        parameterGroups.map((item, index) => {
+            let paramName = item.getElementsByClassName("parameter-name")[0];
+            let paramValue = item.getElementsByClassName("parameter-value")[0];
+            queryData[paramName.value] = paramValue.value
+        })
         responseHandler(fetchData(ApiConfig.endpoints.serviceApiRequest, queryData),
             this.getRequestCallback);
     }
@@ -155,6 +163,39 @@ class ServiceRequestTest extends React.Component {
         })
     }
 
+    addQueryParameter() {
+        let queryParameters = this.state.queryParameterList;
+        queryParameters.push(this.parameterRow())
+        this.setState({
+            queryParameterList: queryParameters
+        })
+    }
+
+    parameterRow() {
+        return (
+            <div className={"parameter-group"}>
+                <Row>
+                    <Col sm={12} md={6} lg={6}>
+                        <Form.Group controlId="formParameterName">
+                            <Form.Control
+                                className={"parameter-name"}
+                                placeholder="Parameter Name"
+                            />
+                        </Form.Group>
+                    </Col>
+                    <Col sm={12} md={6} lg={6}>
+                        <Form.Group controlId="formParameterValue">
+                            <Form.Control
+                                className={"parameter-value"}
+                                placeholder="Parameter Value"
+                            />
+                        </Form.Group>
+                    </Col>
+                </Row>
+            </div>
+        )
+    }
+
     render() {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestTest.pageName}>
@@ -164,7 +205,7 @@ class ServiceRequestTest extends React.Component {
                             <Card.Header>Request Test</Card.Header>
                             <Card.Body>
                                 <Row>
-                                    <Col sm={12} md={2} lg={2}>
+                                    <Col sm={12} md={2} lg={4}>
                                         <Form onSubmit={this.submitHandler}>
                                             <Form.Group controlId="formRequestType">
                                                 <Form.Label>Request Type</Form.Label>
@@ -174,32 +215,30 @@ class ServiceRequestTest extends React.Component {
                                                     onChange={this.selectChangeHandler}
                                                 />
                                             </Form.Group>
-                                            <>
-                                                <Form.Group controlId="formSearchLimit">
-                                                    <Form.Label>Search Limit</Form.Label>
-                                                    <Form.Control type={"number"}
-                                                                  placeholder="Enter the search limit."
-                                                                  onChange={this.formChangeHandler}
-                                                                  name="limit"
-                                                                  value={this.state.limit}
-                                                    />
-                                                </Form.Group>
-                                            </>
-                                            <Form.Group controlId="formParameterName">
-                                                <Form.Label>Query</Form.Label>
-                                                <Form.Control
-                                                    placeholder="Enter the query"
-                                                    onChange={this.formChangeHandler}
-                                                    name="query"
-                                                    value={this.state.item_id}
-                                                />
+
+                                            <Form.Group controlId="formRequestType">
+                                                <button className={"btn btn-primary btn-sm"}
+                                                        onClick={this.addQueryParameter}
+                                                        type={"button"}>
+                                                    Add Query Parameter
+                                                </button>
                                             </Form.Group>
-                                            <Button variant="primary" type="submit">
-                                                Submit
-                                            </Button>
+
+                                            <Form.Group controlId="formRequestType">
+                                                {this.state.queryParameterList.map((item, index) => (
+                                                    <React.Fragment key={index.toString()}>
+                                                        {item}
+                                                    </React.Fragment>
+                                                ))}
+                                            </Form.Group>
+                                            <Form.Group controlId="formRequestType">
+                                                <Button variant="primary" type="submit">
+                                                    Submit
+                                                </Button>
+                                            </Form.Group>
                                         </Form>
                                     </Col>
-                                    <Col sm={12} md={10} lg={10}>
+                                    <Col sm={12} md={10} lg={8}>
                                             <textarea className={"request-results"}
                                                       value={this.state.request.resultString}
                                                       readOnly={true}>
