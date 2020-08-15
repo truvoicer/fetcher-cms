@@ -33,17 +33,17 @@ class DuplicateForm extends React.Component {
         return (
             <Form onSubmit={this.submitHandler}>
                 <Form.Group controlId="formItemLabel">
-                    <Form.Label>Item Label</Form.Label>
+                    <Form.Label>Label</Form.Label>
                     <Form.Control type="text"
-                                  placeholder="Enter the item label."
+                                  placeholder="Enter the label."
                                   onChange={this.formChangeHandler}
                                   name="item_label"
                                   value={this.state.item_label}/>
                 </Form.Group>
                 <Form.Group controlId="formItemName">
-                    <Form.Label>Item Name</Form.Label>
+                    <Form.Label>Name</Form.Label>
                     <Form.Control type="text"
-                                  placeholder="Enter the item name."
+                                  placeholder="Enter the name."
                                   onChange={this.formChangeHandler}
                                   name="item_name"
                                   value={this.state.item_name}/>
