@@ -38,7 +38,7 @@ export const getQuery = (queryObject, row, type = "dynamic") => {
                 return esc(k) + operator + esc(row[queryObject[k]])
             }
         }).join(joiner);
-    console.log(query)
+    // console.log(query)
 }
 
 export const getLinkQueryObject = (item, row) => {
@@ -50,12 +50,12 @@ export const getLinkQueryObject = (item, row) => {
     } else if (isSet(item.query.dynamic)) {
         if (isSet(item.query.dynamic.params)) {
             href += getQuery(item.query.dynamic.params, row, "dynamic");
-            console.log(href)
+            // console.log(href)
         } else {
             if (isSet(item.query.dynamic.brackets) && item.query.dynamic.brackets) {
                 href = sprintf(href, "[" + row.id + "]")
             } else {
-                console.log(row, item)
+                // console.log(row, item)
                 href = sprintf(href, row.id);
             }
             linkAs = href;

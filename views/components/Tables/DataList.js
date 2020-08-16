@@ -10,6 +10,9 @@ import ControlsDropdown from "./Components/ControlsDropdown";
 import Switcher from "./Fields/Switcher";
 import ControlsInlineButton from "./Components/ControlsInlineButton";
 import SelectField from "./Fields/SelectField";
+import ExpandedRow from "./Components/ExpandedRow";
+import {getColumnControls} from "../../../library/datalist/datalist-actions";
+import RowMenu from "./Components/RowMenu";
 
 export default class DataList extends React.Component {
     constructor(props) {
@@ -29,13 +32,18 @@ export default class DataList extends React.Component {
                 alertStatus: "",
                 responseMessage: ""
             },
+            rowClicked: false,
+            rowClickedStyle: {},
+            rowData: {}
         }
         this.setTableData = this.setTableData.bind(this);
         this.showModal = this.showModal.bind(this);
+        this.closeMenu = this.closeMenu.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.getModal = this.getModal.bind(this);
         this.formResponse = this.formResponse.bind(this);
         this.getTableDataResponseHandler = this.getTableDataResponseHandler.bind(this);
+        this.rowClickHandler = this.rowClickHandler.bind(this);
     }
 
     componentDidMount() {
@@ -68,7 +76,7 @@ export default class DataList extends React.Component {
         let processColumns = columns.map((column, index) => {
             if (isSet(column.controlsColumn) && column.controlsColumn) {
                 hasColumnsConfig = true;
-                column.cell = row => this.getColumnControls(dropdownControls, inlineControls, row)
+                column.cell = row => getColumnControls(dropdownControls, inlineControls, row, this.showModal)
             }
             if (isSet(column.editable)) {
                 column.cell = row => this.getColumnEditable(row,
@@ -79,30 +87,14 @@ export default class DataList extends React.Component {
         if (!hasColumnsConfig) {
             const controlObject = {
                 name: 'Controls',
-                right: false,
+                right: true,
                 allowOverflow: true,
-                cell: row => this.getColumnControls(dropdownControls, inlineControls, row)
+                // hide: "sm",
+                cell: row => getColumnControls(dropdownControls, inlineControls, row, this.showModal)
             }
             processColumns.push(controlObject);
         }
         return processColumns;
-    }
-
-    getColumnControls(dropdownControls = [], inlineControls = [], row) {
-        let controls = [];
-        inlineControls.map((config, index) => {
-           controls.push(
-               <ControlsInlineButton key={index}
-                                        config={config}
-                                        data={row}
-                                        callback={this.showModal} />
-           )
-        });
-        controls.push(
-            <ControlsDropdown key={"data_list_dropdown"} title={"Controls"} controls={dropdownControls}
-                              data={row} callback={this.showModal} />
-        )
-        return controls;
     }
 
     getColumnEditable(row, config) {
@@ -110,7 +102,7 @@ export default class DataList extends React.Component {
             case "switch":
                 return <Switcher config={config} data={row}
                                  updateCallback={this.editableFieldRequest}
-                                 formResponseCallback={this.formResponse} />
+                                 formResponseCallback={this.formResponse}/>
             case "text":
                 return <TextField config={config}
                                   data={row}
@@ -118,11 +110,11 @@ export default class DataList extends React.Component {
                                   formResponseCallback={this.formResponse}/>
             case "select":
                 return <SelectField config={config}
-                                  data={row}
-                                  updateCallback={this.editableFieldRequest}
-                                  formResponseCallback={this.formResponse}/>
+                                    data={row}
+                                    updateCallback={this.editableFieldRequest}
+                                    formResponseCallback={this.formResponse}/>
             default:
-                return (typeof row[config.field] === "string")? row[config.field]: null
+                return (typeof row[config.field] === "string") ? row[config.field] : null
         }
     }
 
@@ -151,10 +143,10 @@ export default class DataList extends React.Component {
                 modalTitle: (isSet(config.modal.modalTitle)) ? config.modal.modalTitle : null,
                 endpoint: (isSet(config.modal.endpoint)) ? config.modal.endpoint : null,
                 action: config.action,
-                itemName: (!row)? null : row[this.props.tableData.defaultColumnName],
-                itemLabel: (!row)? null : row[this.props.tableData.defaultColumnLabel],
-                itemId: (!row)? null : row.id,
-                item_id: (!row)? null : row.id,
+                itemName: (!row) ? null : row[this.props.tableData.defaultColumnName],
+                itemLabel: (!row) ? null : row[this.props.tableData.defaultColumnLabel],
+                itemId: (!row) ? null : row.id,
+                item_id: (!row) ? null : row.id,
                 modalFormName: (isSet(config.modal.modalFormName)) ? config.modal.modalFormName : null,
                 closeModalCallBack: this.handleClose
             }
@@ -198,6 +190,13 @@ export default class DataList extends React.Component {
         })
     }
 
+    closeMenu(e) {
+        e.preventDefault();
+        this.setState({
+            rowClicked: false
+        })
+    }
+
     getModal() {
         return (
             <Modal show={this.state.modal.showModal} onHide={this.handleClose}>
@@ -229,6 +228,19 @@ export default class DataList extends React.Component {
         );
     }
 
+    rowClickHandler(data, e) {
+        const datalist = document.getElementsByClassName("datalist")[0];
+        const rowStyle = {
+            top: e.clientY - datalist.getBoundingClientRect().top,
+            left: e.clientX - datalist.getBoundingClientRect().left
+        }
+        this.setState({
+            rowClicked: true,
+            rowClickedStyle: rowStyle,
+            rowData: data
+        })
+    }
+
     render() {
         return (
             <div>
@@ -242,15 +254,31 @@ export default class DataList extends React.Component {
                     className={"datalist"}
                     striped={true}
                     highlightOnHover={false}
-                    responsive={true}
+                    responsive={false}
                     overflowY={true}
                     pagination={true}
                     paginationPerPage={10}
-                    columns={this.getTableColumns(this.props.tableColumns, this.props.tableDropdownControls,
-                        this.props.tableInlineControls)}
-                    data={this.state.data}
+                    onRowClicked={this.rowClickHandler}
+                    expandableRows={false}
+                    expandableRowsComponent=
+                        <ExpandedRow inlineControls={this.props.tableInlineControls}
+                    dropdownControls={this.props.tableDropdownControls}
+                    showModalCallback={this.showModal}/>
+                columns={this.getTableColumns(this.props.tableColumns, this.props.tableDropdownControls,
+                this.props.tableInlineControls)}
+                data={this.state.data}
                 />
                 <this.getModal/>
+                {this.state.rowClicked &&
+                <RowMenu inlineControls={this.props.tableInlineControls}
+                         dropdownControls={this.props.tableDropdownControls}
+                         style={this.state.rowClickedStyle}
+                         data={this.state.rowData}
+                         closeMenuCallback={this.closeMenu}
+                         showModalCallback={this.showModal}/>
+
+                }
+
             </div>
         )
     }

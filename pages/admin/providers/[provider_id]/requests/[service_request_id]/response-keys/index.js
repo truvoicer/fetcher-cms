@@ -108,6 +108,7 @@ class ServiceRequestResponseKeys extends React.Component {
                 selector: 'key_value',
                 sortable: true,
                 editable: true,
+                grow: 1,
                 editableConfig: {
                     field: "key_value",
                     fieldType: "text",
@@ -124,6 +125,7 @@ class ServiceRequestResponseKeys extends React.Component {
                 selector: 'list_item',
                 sortable: true,
                 editable: true,
+                grow: 0,
                 editableConfig: {
                     field: "list_item",
                     fieldType: "switch",
@@ -140,6 +142,7 @@ class ServiceRequestResponseKeys extends React.Component {
                 selector: 'show_in_response',
                 sortable: true,
                 editable: true,
+                grow: 0,
                 editableConfig: {
                     field: "show_in_response",
                     fieldType: "switch",
@@ -211,7 +214,7 @@ class ServiceRequestResponseKeys extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestResponseKeys.pageName}>
                 <>
-                    <Col sm={12} md={6} lg={6}>
+                    <Col sm={12} md={8} lg={8}>
                     {this.state.showTable &&
                     <DataList
                         tableData={this.getTableData()}

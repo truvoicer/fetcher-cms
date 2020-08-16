@@ -30,6 +30,7 @@
 
   }
   .datalist-field {
+    width: 100%;
     &.editing {
       padding: 10px 0 0;
     }
@@ -67,5 +68,33 @@
   }
   .switchable-link {
     cursor: pointer;
+  }
+}
+.row-click-menu {
+  position: absolute;
+  max-width: 300px;
+  .popover-header {
+    a {
+      cursor: pointer;
+      float: right;
+    }
+  }
+  .popover-body {
+    padding: 0;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0px;
+    li {
+      a {
+        display: block;
+        padding: 5px 10px;
+        width: 100%;
+      }
+      &:hover, &:active {
+        background-color: #e7e7e7;
+      }
+    }
   }
 }

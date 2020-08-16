@@ -76,6 +76,7 @@ export default class ManageProviders extends React.Component {
                 right: false,
                 allowOverflow: true,
                 editable: true,
+                grow: 0,
                 editableConfig: {
                     field: "category",
                     fieldType: "select",
@@ -96,6 +97,7 @@ export default class ManageProviders extends React.Component {
                 sortable: true,
                 right: false,
                 editable: true,
+                grow: 0,
                 editableConfig: {
                     field: "provider_label",
                     fieldType: "text",
@@ -110,6 +112,9 @@ export default class ManageProviders extends React.Component {
                 sortable: true,
                 right: false,
                 editable: true,
+                grow: 1,
+                hide: "sm",
+                wrap: true,
                 editableConfig: {
                     field: "provider_api_base_url",
                     fieldType: "text",
@@ -123,6 +128,7 @@ export default class ManageProviders extends React.Component {
                 selector: 'provider_user_id',
                 sortable: true,
                 right: false,
+                hide: "md",
                 editable: true,
                 editableConfig: {
                     field: "provider_user_id",
@@ -137,23 +143,10 @@ export default class ManageProviders extends React.Component {
                 selector: 'provider_access_key',
                 sortable: true,
                 right: false,
+                hide: "md",
                 editable: true,
                 editableConfig: {
                     field: "provider_access_key",
-                    fieldType: "text",
-                    fieldConfig: {
-                        endpoint: "provider"
-                    }
-                },
-            },
-            {
-                name: 'Secret key',
-                selector: 'provider_secret_key',
-                sortable: true,
-                right: false,
-                editable: true,
-                editableConfig: {
-                    field: "provider_secret_key",
                     fieldType: "text",
                     fieldConfig: {
                         endpoint: "provider"
@@ -164,6 +157,11 @@ export default class ManageProviders extends React.Component {
     }
 
     getTableInlineControls() {
+        return [
+        ]
+    }
+
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -177,11 +175,6 @@ export default class ManageProviders extends React.Component {
                 size: "md",
                 classes: "outline-primary"
             },
-        ]
-    }
-
-    getTableDropdownControls() {
-        return [
             {
                 control: "link",
                 text: "Requests",

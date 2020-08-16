@@ -68,7 +68,7 @@ class ProviderRequests extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ProviderRequests.pageName}>
                 <>
-                    <Col sm={12} md={12} lg={8}>
+                    <Col sm={12} md={5} lg={5}>
                     {this.state.showTable &&
                     <ProviderRequestsTable provider_id={this.state.provider_id} baseUrl={this.getBaseUrl()}/>
                     }

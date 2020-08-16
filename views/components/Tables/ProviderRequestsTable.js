@@ -56,6 +56,7 @@ class ProviderRequestsTable extends React.Component {
                 name: 'Request Label',
                 selector: 'service_request_label',
                 sortable: true,
+                grow: 1,
                 editable: true,
                 editableConfig: {
                     field: "service_request_label",
@@ -72,6 +73,7 @@ class ProviderRequestsTable extends React.Component {
                 name: 'Request Name',
                 selector: 'service_request_name',
                 sortable: true,
+                grow: 1,
                 editable: true,
                 editableConfig: {
                     field: "service_request_name",
@@ -87,14 +89,18 @@ class ProviderRequestsTable extends React.Component {
             {
                 name: 'Controls',
                 controlsColumn: true,
-                right: false,
+                right: true,
                 allowOverflow: true,
-                grow: 2,
+                grow: 0,
             },
         ];
     }
 
     getTableInlineControls() {
+        return [
+        ];
+    }
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -132,10 +138,6 @@ class ProviderRequestsTable extends React.Component {
                 size: "md",
                 classes: "btn btn-outline-primary btn-md"
             },
-        ];
-    }
-    getTableDropdownControls() {
-        return [
             {
                 control: "link",
                 location: "dropdown",
