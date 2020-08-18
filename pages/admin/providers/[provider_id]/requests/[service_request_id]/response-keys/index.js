@@ -8,6 +8,7 @@ import Admin from "../../../../../../../views/layouts/Admin";
 import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/middleware";
+import Row from "react-bootstrap/Row";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -154,6 +155,23 @@ class ServiceRequestResponseKeys extends React.Component {
                     }
                 },
             },
+            {
+                name: 'Has Array Value?',
+                selector: 'has_array_value',
+                sortable: true,
+                editable: true,
+                grow: 0,
+                editableConfig: {
+                    field: "has_array_value",
+                    fieldType: "switch",
+                    fieldConfig: {
+                        endpoint: "service/request/response/key",
+                        extraData: {
+                            service_request_id: this.state.service_request_id,
+                        }
+                    }
+                },
+            },
         ];
     }
     getTableDropdownControls() {
@@ -214,7 +232,8 @@ class ServiceRequestResponseKeys extends React.Component {
         return (
             <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestResponseKeys.pageName}>
                 <>
-                    <Col sm={12} md={8} lg={8}>
+                    <Row>
+                    <Col sm={12} md={9} lg={9}>
                     {this.state.showTable &&
                     <DataList
                         tableData={this.getTableData()}
@@ -223,6 +242,7 @@ class ServiceRequestResponseKeys extends React.Component {
                         modalConfig={this.getModalConfig()}
                     />}
                     </Col>
+                    </Row>
                 </>
             </Admin>
         )

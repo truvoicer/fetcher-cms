@@ -91,3 +91,10 @@ export const getLinkData = (item, row) => {
         linkAs: linkAs
     }
 }
+
+export const uCaseFirst = (string) => {
+    if (!isSet(string) || string === null || string === "") {
+        return "";
+    }
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}

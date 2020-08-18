@@ -254,19 +254,19 @@ export default class DataList extends React.Component {
                     className={"datalist"}
                     striped={true}
                     highlightOnHover={false}
-                    responsive={false}
+                    responsive={true}
                     overflowY={true}
                     pagination={true}
-                    paginationPerPage={10}
-                    onRowClicked={this.rowClickHandler}
-                    expandableRows={false}
+                    paginationPerPage={100}
+                    columns={this.getTableColumns(this.props.tableColumns, this.props.tableDropdownControls,
+                             this.props.tableInlineControls)}
+                    data={this.state.data}
+                    // onRowClicked={this.rowClickHandler}
+                    expandableRows={true}
                     expandableRowsComponent=
                         <ExpandedRow inlineControls={this.props.tableInlineControls}
                     dropdownControls={this.props.tableDropdownControls}
                     showModalCallback={this.showModal}/>
-                columns={this.getTableColumns(this.props.tableColumns, this.props.tableDropdownControls,
-                this.props.tableInlineControls)}
-                data={this.state.data}
                 />
                 <this.getModal/>
                 {this.state.rowClicked &&

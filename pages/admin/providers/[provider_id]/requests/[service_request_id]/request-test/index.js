@@ -9,6 +9,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Select from "react-select";
+import FormList from "../../../../../../../views/components/Forms/Components/FormList";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -50,14 +51,13 @@ class ServiceRequestTest extends React.Component {
                 show: false,
                 resultString: ""
             },
-            queryParameterList: [],
             queryParameterData: []
         }
         this.submitHandler = this.submitHandler.bind(this)
         this.formChangeHandler = this.formChangeHandler.bind(this)
         this.selectChangeHandler = this.selectChangeHandler.bind(this)
         this.getRequestCallback = this.getRequestCallback.bind(this)
-        this.addQueryParameter = this.addQueryParameter.bind(this)
+        this.formListCallback = this.formListCallback.bind(this)
     }
 
     componentDidMount() {
@@ -130,15 +130,12 @@ class ServiceRequestTest extends React.Component {
 
     submitHandler(e) {
         e.preventDefault();
-        let parameterGroups = Array.from(document.getElementsByClassName("parameter-group"));
         let queryData = {
             request_type: this.state.request_type.value,
             provider: this.state.provider,
         }
-        parameterGroups.map((item, index) => {
-            let paramName = item.getElementsByClassName("parameter-name")[0];
-            let paramValue = item.getElementsByClassName("parameter-value")[0];
-            queryData[paramName.value] = paramValue.value
+        this.state.queryParameterData.map((item) => {
+            queryData[item.name] = item.value
         })
         responseHandler(fetchData(ApiConfig.endpoints.serviceApiRequest, queryData),
             this.getRequestCallback);
@@ -163,37 +160,10 @@ class ServiceRequestTest extends React.Component {
         })
     }
 
-    addQueryParameter() {
-        let queryParameters = this.state.queryParameterList;
-        queryParameters.push(this.parameterRow())
+    formListCallback(data) {
         this.setState({
-            queryParameterList: queryParameters
+            queryParameterData: data
         })
-    }
-
-    parameterRow() {
-        return (
-            <div className={"parameter-group"}>
-                <Row>
-                    <Col sm={12} md={6} lg={6}>
-                        <Form.Group controlId="formParameterName">
-                            <Form.Control
-                                className={"parameter-name"}
-                                placeholder="Parameter Name"
-                            />
-                        </Form.Group>
-                    </Col>
-                    <Col sm={12} md={6} lg={6}>
-                        <Form.Group controlId="formParameterValue">
-                            <Form.Control
-                                className={"parameter-value"}
-                                placeholder="Parameter Value"
-                            />
-                        </Form.Group>
-                    </Col>
-                </Row>
-            </div>
-        )
     }
 
     render() {
@@ -204,9 +174,9 @@ class ServiceRequestTest extends React.Component {
                         <Card>
                             <Card.Header>Request Test</Card.Header>
                             <Card.Body>
-                                <Row>
-                                    <Col sm={12} md={2} lg={4}>
-                                        <Form onSubmit={this.submitHandler}>
+                                <Form onSubmit={this.submitHandler}>
+                                    <Row>
+                                        <Col sm={12} md={3} lg={3}>
                                             <Form.Group controlId="formRequestType">
                                                 <Form.Label>Request Type</Form.Label>
                                                 <Select
@@ -215,30 +185,26 @@ class ServiceRequestTest extends React.Component {
                                                     onChange={this.selectChangeHandler}
                                                 />
                                             </Form.Group>
-
-                                            <Form.Group controlId="formRequestType">
-                                                <button className={"btn btn-primary btn-sm"}
-                                                        onClick={this.addQueryParameter}
-                                                        type={"button"}>
-                                                    Add Query Parameter
-                                                </button>
-                                            </Form.Group>
-
-                                            <Form.Group controlId="formRequestType">
-                                                {this.state.queryParameterList.map((item, index) => (
-                                                    <React.Fragment key={index.toString()}>
-                                                        {item}
-                                                    </React.Fragment>
-                                                ))}
-                                            </Form.Group>
-                                            <Form.Group controlId="formRequestType">
+                                            <Form.Group controlId="formRequestType"
+                                            className={"text-right"}>
                                                 <Button variant="primary" type="submit">
                                                     Submit
                                                 </Button>
                                             </Form.Group>
-                                        </Form>
-                                    </Col>
-                                    <Col sm={12} md={10} lg={8}>
+                                        </Col>
+                                        <Col sm={12} md={9} lg={9}>
+                                            <Form.Group controlId="formRequestType">
+                                                <FormList callback={this.formListCallback}
+                                                          listItemKeyLabel={"Parameter name"}
+                                                          listItemValueLabel={"Parameter value"}
+                                                          addRowLabel={"Add Parameter"}
+                                                />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </Form>
+                                <Row>
+                                    <Col sm={12} md={12} lg={12}>
                                             <textarea className={"request-results"}
                                                       value={this.state.request.resultString}
                                                       readOnly={true}>

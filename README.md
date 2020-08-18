@@ -1,3 +1,31 @@
+##  Response Keys Logic
+#### Api Array Values
+######Get a specific field in an array based on a value match:
+
+* [url=width>640]    
+url = field value to return    
+width = field key to compare    
+640 = field value to compare
+
+
+######Get a processed array based on keys
+* [image_width=width]  
+image_width is a custom key name (label), width is the key of object to be returned
+
+* [item_url=url]    
+item_url is a custom key name (label), url is the key of object to be returned
+
+
+######Get a custom array sub object
+* [category_id=category.id]    
+[category_name=category.name]   
+[image_url=image.href]    
+
+        {
+            category_id: "sffsd3434",
+            category_name: "Sports",
+            image_url: "http://image.com/dsfsdf.jpeg"
+        }
 ## Link Example
         {
             control: "link",

@@ -1,20 +1,33 @@
 .form-list {
-    margin-bottom: 1rem;
-    .form-label {
-        display: block;
+    padding: 10px;
+    .add-row-button {
+
     }
-    &--body {
-        margin-bottom: 1rem;
-        &--row {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            margin-top: 5px;
+    .form-list-items {
+        margin: 10px 0;
+        .form-list-row {
+            margin-bottom: 10px;
             input {
-                margin-left: 10px;
-                &:first-child {
-                    margin: 0;
-                }
+                padding: 10px 5px;
+                margin: 0;
+                height: 20px;
+                font-size: 12px;
+                width: 100%;
+            }
+            .form-list-item-key {
+
+            }
+            .form-list-item-value {
+
+            }
+            a {
+                display: block;
+            }
+            &--new {
+
+            }
+            &--remove {
+
             }
         }
     }

@@ -8,6 +8,7 @@ import Admin from "../../../../../../../views/layouts/Admin";
 import ServiceConfigForm from "../../../../../../../views/components/Forms/ServiceConfigForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/middleware";
+import {isSet} from "../../../../../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -122,18 +123,24 @@ class ServiceRequestConfig extends React.Component {
                 sortable: true,
                 cell: row => {
                     if (row.value_type === "list") {
-                        let decode = JSON.parse(row.item_value)
-                        return decode.map((item) => {
-                            return "[" + item.name + ": " + item.value + "]"
-                        }).join(", ")
+                        if (isSet(row.item_array_value) &&
+                            Array.isArray(row.item_array_value))
+                        return row.item_array_value.map((item, index) => {
+                            return sprintf("Item (%d): Name: %s, Value: %s", index, item.name, item.value);
+                        })
                     }
-                    return row.item_value
+                    return row.item_value;
                 }
             }
         ];
     }
 
     getTableInlineControls() {
+        return [
+        ]
+    }
+
+    getTableDropdownControls() {
         return [
             {
                 control: "button",
@@ -148,11 +155,6 @@ class ServiceRequestConfig extends React.Component {
                 size: "sm",
                 classes: "outline-primary"
             },
-        ]
-    }
-
-    getTableDropdownControls() {
-        return [
             {
                 control: "button",
                 location: "dropdown",

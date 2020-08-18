@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Select from "react-select";
+import FormList from "./Components/FormList";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -18,7 +19,7 @@ class ServiceConfigForm extends React.Component {
             service_request_id: this.props.config.service_request_id,
             item_name: "",
             item_value: "",
-            listItems: [],
+            item_array_value: [],
             selectedValueType: {
                 label: "Select a value type",
                 value: ""
@@ -39,7 +40,7 @@ class ServiceConfigForm extends React.Component {
         this.listFieldValueClass = "form-list-field-value"
         this.formChangeHandler = this.formChangeHandler.bind(this);
         this.selectChangeHandler = this.selectChangeHandler.bind(this);
-        this.addListRow = this.addListRow.bind(this);
+        this.formListCallback = this.formListCallback.bind(this);
         this.submitHandler = this.submitHandler.bind(this);
     }
 
@@ -51,59 +52,19 @@ class ServiceConfigForm extends React.Component {
                 this.setState({
                     id: data.id,
                     item_name: data.item_name,
-                    item_value: this.getItemValue(data.item_value, data.value_type),
+                    item_value: data.item_value,
                     service_request_id: data.service_request.id,
                     selectedValueType: {
                         value: data.value_type,
                         label: data.value_type.charAt(0).toUpperCase() + data.value_type.slice(1)
                     },
-                    listItems: this.getListItems(data.item_value, data.value_type)
+                    item_array_value: data.item_array_value
                 })
             })
         }
     }
-    getItemValue(itemValue, valueType) {
-        if (valueType === "list") {
-            return ""
-        }
-        return itemValue;
-    }
-
-    getListItems(itemValue, valueType) {
-        if (valueType === "list") {
-            return JSON.parse(itemValue).map((item, index) => {
-                return this.listRowElement(item.name, item.value)
-            })
-        }
-        return [];
-    }
-    listRowElement(nameValue = "", value = "") {
-        return (
-            <>
-                <Form.Control type="text"
-                              className={this.listFieldNameClass}
-                              placeholder="Enter list item name."
-                              defaultValue={nameValue}
-                />
-                <Form.Control type="text"
-                              className={this.listFieldValueClass}
-                              placeholder="Enter list item value."
-                              defaultValue={value}
-                />
-            </>
-        )
-    }
-    addListRow(e) {
-        e.preventDefault()
-        let listItems = this.state.listItems;
-         listItems.push(this.listRowElement())
-        this.setState({
-            listItems: listItems
-        })
-    }
 
     selectChangeHandler(data) {
-
         this.setState({
             selectedValueType: data
         })
@@ -115,35 +76,23 @@ class ServiceConfigForm extends React.Component {
         })
     }
 
-    getListArray() {
-        let listRows = Array.from(document.getElementsByClassName(this.listRowClass));
-        let listArray = listRows.map((row, index) => {
-            let nameField = row.getElementsByClassName(this.listFieldNameClass)[0];
-            let valueField = row.getElementsByClassName(this.listFieldValueClass)[0];
-            return {
-                name: nameField.value,
-                value: valueField.value
-            }
+    formListCallback(data) {
+        this.setState({
+            item_array_value: data
         })
-        return listArray;
     }
 
     submitHandler(e) {
         e.preventDefault();
-        let itemValue;
-        if (this.state.selectedValueType.value === "list") {
-            itemValue = this.getListArray();
-        } else if (this.state.selectedValueType.value === "text") {
-            itemValue = this.state.item_value
-        }
-
         let queryData = {
             id: this.state.id,
             service_request_id: this.state.service_request_id,
             selected_value_type: this.state.selectedValueType.value,
             item_name: this.state.item_name,
-            item_value: itemValue,
+            item_value: this.state.item_value,
+            item_array_value: this.state.item_array_value,
         }
+        console.log(queryData)
         responseHandler(sendData(this.state.action, "service/request/config", queryData),  this.props.formResponse);
     }
 
@@ -180,19 +129,15 @@ class ServiceConfigForm extends React.Component {
 
                 }
                 {this.state.selectedValueType.value === "list" &&
-                    <div className={"form-list"}>
-                        {this.state.listItems.length > 0 &&
-                        <Form.Label>List Items</Form.Label>
-                        }
-                        <div className={"form-list--body"}>
-                            {this.state.listItems.map((item, index) => (
-                                <div key={index} className={this.listRowClass}>{item}</div>
-                            ))}
-                        </div>
-                        <button className={"btn btn-primary btn-sm"} onClick={this.addListRow}>
-                            Add List Item
-                        </button>
-                    </div>
+
+                <Form.Group controlId="formConfigList">
+                    <FormList callback={this.formListCallback}
+                              listItemKeyLabel={"Key"}
+                              listItemValueLabel={"Value"}
+                              addRowLabel={"Add Parameter"}
+                              data={this.state.item_array_value}
+                    />
+                </Form.Group>
                 }
                 <Button variant="primary" type="submit">
                     Submit
