@@ -66,7 +66,8 @@ class RequestResponseKeysForm extends React.Component {
                 list_item: data.data.list_item,
                 has_array_value: data.data.has_array_value,
                 array_keys: data.data.array_keys,
-                return_data_type_select: this.getReturnDataType(data.data.return_data_type)
+                return_data_type_select: this.getReturnDataType(data.data.return_data_type),
+                return_data_type: (isSet(data.data.return_data_type) && data.data.return_data_type !== "")? data.data.return_data_type : this.state.return_data_type
             })
             console.log(data.data.id, this.state.id)
         }

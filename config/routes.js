@@ -27,7 +27,7 @@ export const Routes =
                     label: "Manage Categories",
                     name: "manage_categories",
                     route: "/admin/categories",
-                    parent: "dashboard",
+                    parent: "categories",
                     icon: "cil-wc",
                     sidebar: true
                 }
@@ -143,7 +143,7 @@ export const Routes =
                     label: "Manage Services",
                     name: "manage_services",
                     route: "/admin/services",
-                    parent: "dashboard",
+                    parent: "services",
                     icon: "cil-wc",
                     sidebar: true
                 },
@@ -151,8 +151,8 @@ export const Routes =
                     access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Response Keys",
                     name: "response_keys",
-                    route: "/admin/services/%(service.id)d/response-keys",
-                    parent: "manage_services",
+                    route: "/admin/services/%(services.id)d/response-keys",
+                    parent: "services",
                     icon: "cil-wc",
                     sidebar: false
                 }

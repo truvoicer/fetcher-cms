@@ -53,7 +53,7 @@ class ServiceResponseKeys extends React.Component {
         return {
             pageName: ServiceResponseKeys.pageName,
             data: {
-                manage_services: {
+                services: {
                     id: this.state.service_id,
                     name: this.state.service_name
                 }

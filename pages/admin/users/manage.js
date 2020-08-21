@@ -76,6 +76,11 @@ export default class ManageUsers extends React.Component {
 
     getTableInlineControls() {
         return [
+        ]
+    }
+
+    getTableDropdownControls() {
+        return [
             {
                 control: "link",
                 location: "inline",
@@ -95,11 +100,6 @@ export default class ManageUsers extends React.Component {
                 size: "md",
                 classes: "btn btn-outline-primary btn-md"
             },
-        ]
-    }
-
-    getTableDropdownControls() {
-        return [
             {
                 control: "button",
                 text: "Edit",

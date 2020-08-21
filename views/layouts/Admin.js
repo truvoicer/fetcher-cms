@@ -11,7 +11,6 @@ import Head from 'next/head'
 import {SiteConfig} from "../../config/site-config";
 import {BreadcrumbsContext} from "../components/Context/BreadcrumbsContext";
 import {Routes} from "../../config/routes";
-import ErrorPage403 from "../components/ErrorPages/403";
 
 class Admin extends React.Component {
     constructor(props) {

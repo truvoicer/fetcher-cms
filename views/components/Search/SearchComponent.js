@@ -67,9 +67,27 @@ class SearchComponent extends Component {
                 searchResults: this.getListData(data.data),
                 routeItem: getRouteItem(Routes.items, data.data.type)
             })
-            console.log(this.state)
+            // console.log(this.state)
             return false;
         }
+    }
+
+    buildDataObject(data, type) {
+        let dataObject = {};
+        dataObject[type] = {};
+        Object.keys(data).map((key) => {
+            if (Array.isArray(data[key]) || typeof data[key] === "object" && data[key] !== null) {
+                dataObject[key] = data[key];
+            } else {
+                dataObject[type][key] = data[key]
+            }
+        })
+        // console.log(dataObject)
+        return dataObject;
+    }
+
+    getItemKey(name, id) {
+        return sprintf("key-%s-%s", name, id.toString())
     }
 
     getListData(data) {
@@ -77,27 +95,31 @@ class SearchComponent extends Component {
             switch (data.type) {
                 case "provider":
                     return {
+                        key: this.getItemKey(item.provider_name, item.id),
                         name: item.provider_name,
                         label: item.provider_label,
-                        data: item
+                        data: this.buildDataObject(item, data.type)
                     }
                 case "service_requests":
                     return {
+                        key: this.getItemKey(item.service_request_name, item.id),
                         name: item.service_request_name,
-                        label: item.service_request_label,
-                        data: item
+                        label: sprintf("(%s): %s", item.provider.provider_label, item.service_request_label),
+                        data: this.buildDataObject(item, data.type)
                     }
                 case "categories":
                     return {
+                        key: this.getItemKey(item.category_name, item.id),
                         name: item.category_name,
                         label: item.category_label,
-                        data: item
+                        data: this.buildDataObject(item, data.type)
                     }
                 case "services":
                     return {
+                        key: this.getItemKey(item.service_name, item.id),
                         name: item.service_name,
                         label: item.service_label,
-                        data: item
+                        data: this.buildDataObject(item, data.type)
                     }
                 default:
                     return null;
@@ -105,38 +127,37 @@ class SearchComponent extends Component {
         });
     }
 
-    getItemRouteUrl(item) {
-
-        return item.route;
+    getItemRouteUrl(data, item) {
+        // console.log(data.data)
+        return sprintf(item.route, data.data);
     }
 
-    subItemsHtml(item, index) {
-        console.log(item)
+    subItemsHtml(data, item, index) {
+        // console.log(item.label, data, item)
         return (
                 <li key={index.toString()}>
-                    <a href={this.getItemRouteUrl(item)}>{item.label}</a>
+                    <a href={this.getItemRouteUrl(data, item)}>{item.label}</a>
                 </li>
         )
     }
 
-    buildSubItems(routeItem) {
+    buildSubItems(routeItem, data) {
         if (isSet(routeItem.subs)) {
             return routeItem.subs.map((item, index) => {
-                if (isSet(item.subs)) {
-                    return this.buildSubItems(item)
+                if(routeItem.name === item.parent) {
+                    return this.subItemsHtml(data, item, index)
                 }
-                return this.subItemsHtml(item, index)
             });
         }
     }
 
     listItemHandler(item, e) {
         e.preventDefault()
-        console.log(item)
+
         this.setState({
             showListSubItems: true,
-            subListItemName: item.name,
-            listSubItems: this.buildSubItems(this.state.routeItem)
+            subListItemKey: item.key,
+            listSubItems: this.buildSubItems(this.state.routeItem, item)
         })
     }
 
@@ -156,19 +177,18 @@ class SearchComponent extends Component {
                                 {this.state.searchResults.map((item, index) => (
                                     <li className={"admin-search--results--list--item" +
                                                 (!this.state.showListSubItems? " hover" : "") +
-                                                (this.state.showListSubItems && this.state.subListItemName !== item.name? " hover" : "")
+                                                (this.state.showListSubItems && this.state.subListItemKey !== item.key? " hover" : "")
                                     }
                                         key={index.toString()}
-                                        // onClick={this.listItemHandler.bind(this, item)}
-                                        // onMouseOver={this.listItemHandler.bind(this, item)}>
-                                        >
-                                        <a className={"admin-search--results--list--item--label"}>{item.label}</a>
-                                        {/*{this.state.showListSubItems && this.state.subListItemName === item.name &&*/}
+                                    >
+                                        <a className={"admin-search--results--list--item--label"}
+                                           onClick={this.listItemHandler.bind(this, item)}>{item.label}</a>
+                                        {this.state.showListSubItems && this.state.subListItemKey === item.key &&
 
-                                        {/*<ul className={"admin-search--results--list--subs"}>*/}
-                                        {/*    {this.state.listSubItems}*/}
-                                        {/*</ul>*/}
-                                        {/*}*/}
+                                        <ul className={"admin-search--results--list--subs"}>
+                                            {this.state.listSubItems}
+                                        </ul>
+                                        }
                                     </li>
                                 ))}
                             </ul>

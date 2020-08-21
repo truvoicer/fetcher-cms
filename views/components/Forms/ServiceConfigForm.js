@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Select from "react-select";
 import FormList from "./Components/FormList";
+import {isSet, uCaseFirst} from "../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -21,8 +22,8 @@ class ServiceConfigForm extends React.Component {
             item_value: "",
             item_array_value: [],
             selectedValueType: {
-                label: "Select a value type",
-                value: ""
+                label: "Text",
+                value: "text"
             },
             selectValueTypes: [
                 {
@@ -54,16 +55,22 @@ class ServiceConfigForm extends React.Component {
                     item_name: data.item_name,
                     item_value: data.item_value,
                     service_request_id: data.service_request.id,
-                    selectedValueType: {
-                        value: data.value_type,
-                        label: data.value_type.charAt(0).toUpperCase() + data.value_type.slice(1)
-                    },
+                    selectedValueType: this.getSelectedValueType(data.value_type),
                     item_array_value: data.item_array_value
                 })
             })
         }
     }
 
+    getSelectedValueType(value_type) {
+        if (isSet(value_type) && value_type !== "") {
+            return {
+                value: value_type,
+                label: uCaseFirst(value_type)
+            }
+        }
+        return this.state.selectedValueType;
+    }
     selectChangeHandler(data) {
         this.setState({
             selectedValueType: data

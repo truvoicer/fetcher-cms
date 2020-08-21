@@ -73,7 +73,7 @@ class ServiceRequestTest extends React.Component {
                 provider_id: response.data.data.id,
                 provider_name: response.data.data.provider_name,
                 provider: response.data.data.provider_name,
-                request_type_options: this.getRequestTypeOptions(response.data.data.serviceRequests)
+                request_type_options: this.getRequestTypeOptions(response.data.data.service_requests)
             })
         })
         fetchData(sprintf(ApiConfig.endpoints.serviceRequest, service_request_id)).then((response) => {
@@ -143,15 +143,16 @@ class ServiceRequestTest extends React.Component {
 
     getRequestCallback(status, message, data = null) {
         let result;
+        console.log(data)
         if (status === 200) {
-            if (data.contentType === "json") {
-                result = JSON.stringify(data.requestData, undefined, 4)
-            } else if (data.contentType === "xml") {
-                result = data.requestData
+            if (data.content_type === "json") {
+                result = JSON.stringify(data.request_data, undefined, 4)
+            } else if (data.content_type === "xml") {
+                result = data.request_data
             }
 
         } else {
-            result = message
+            result = "Error: " + message
         }
         this.setState({
             request: {

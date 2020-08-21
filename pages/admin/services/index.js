@@ -79,6 +79,11 @@ class ManageServices extends React.Component {
 
     getTableInlineControls() {
         return [
+        ]
+    }
+
+    getTableDropdownControls() {
+        return [
             {
                 control: "button",
                 text: "Edit",
@@ -91,11 +96,6 @@ class ManageServices extends React.Component {
                 size: "md",
                 classes: "outline-primary"
             },
-        ]
-    }
-
-    getTableDropdownControls() {
-        return [
             {
                 control: "link",
                 text: "Response Keys",
@@ -104,7 +104,7 @@ class ManageServices extends React.Component {
                 hrefConfig: {
                     replace: true,
                     data: {
-                        service: {
+                        services: {
                             dynamic: true,
                             column: "id",
                             key: "id"
