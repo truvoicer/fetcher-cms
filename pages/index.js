@@ -1,15 +1,7 @@
 import React from "react";
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.loggedIn = false;
-  }
+const Index = (props) => {
 
-  componentDidMount() {
-  }
-
-  render() {
       return null
-  }
 }
+export default Index;

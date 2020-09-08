@@ -1,81 +1,72 @@
-import React from "react";
-import Router from "next/router";
+import React, {useEffect, useState} from "react";
 import Admin from "../../../../../views/layouts/Admin";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
-import {GetStaticProps} from 'next';
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/middleware";
 import ApiConfig from "../../../../../config/api-config";
 import {getRouteItem} from "../../../../../library/session/authenticate";
 import {Routes} from "../../../../../config/routes";
+import {isSet} from "../../../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ProviderRequests extends React.Component {
+export const ProviderRequestsPageName = "service_requests";
 
-    static pageName = "service_requests";
-    static async getInitialProps(ctx) {
-        return {
-            props: {
+const ProviderRequests = (props) => {
 
-            }
-        }
-    }
+    const [showTable, setShowTable] = useState(false);
+    const [provider, setProvider] = useState({});
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            provider_id: "",
-            provider_name: "",
-            pageTitle: ""
-        }
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getBaseUrl = this.getBaseUrl.bind(this);
-    }
-
-    componentDidMount() {
-        const {provider_id} = Router.query;
-        this.setState({
-            showTable: true,
-            provider_id: provider_id
-        })
-        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
-            this.setState({
-                provider_id: response.data.data.id,
-                provider_name: response.data.data.provider_name
+    useEffect(() => {
+        if (isSet(props.provider_id)) {
+            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
+                setProvider(response.data.data)
+                setShowTable(true)
             })
-        })
-    }
+        }
+    }, [props.provider_id])
 
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: ProviderRequests.pageName,
+            pageName: ProviderRequestsPageName,
             data: {
                 provider: {
-                    id: this.state.provider_id,
-                    name: this.state.provider_name
+                    id: provider.id,
+                    name: provider.provider_name
                 }
             }
         }
     }
 
-    getBaseUrl() {
-        return getRouteItem(Routes.items, ProviderRequests.pageName).route;
+    const getBaseUrl = () => {
+        return getRouteItem(Routes.items, ProviderRequestsPageName).route;
     }
 
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ProviderRequests.pageName}>
-                <>
-                    <Col sm={12} md={5} lg={5}>
-                    {this.state.showTable &&
-                    <ProviderRequestsTable provider_id={this.state.provider_id} baseUrl={this.getBaseUrl()}/>
-                    }
-                    </Col>
-                </>
-            </Admin>
-        )
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ProviderRequestsPageName}>
+            <>
+                <Col sm={12} md={5} lg={5}>
+                {showTable &&
+                <ProviderRequestsTable provider_id={provider.id} baseUrl={getBaseUrl()}/>
+                }
+                </Col>
+            </>
+        </Admin>
+    )
+}
+
+export async function getStaticProps({params}) {
+    return {
+        props: {
+            provider_id: params.provider_id
+        },
+    }
+}
+
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true,
     }
 }
 

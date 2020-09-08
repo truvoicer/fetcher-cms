@@ -2,44 +2,28 @@ import ApiConfig from "../../../config/api-config";
 import React from "react";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
-import Admin from "../../../views/layouts/Admin";
 import ProviderPropertiesForm from "../../../views/components/Forms/ProviderPropertiesForm";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ProviderPropertiesTable extends React.Component {
+const ProviderPropertiesTable = (props) => {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            provider_id: false
-        }
-        this.provider_id = ""
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    componentDidMount() {
-    }
-
-    getTableData() {
+    const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.providerPropertyList, this.props.provider_id),
+            endpoint: sprintf(ApiConfig.endpoints.providerPropertyList, props.provider_id),
             defaultColumnName: "property_value",
             defaultColumnLabel: "property_value",
             query: {
                 count: 10,
                 order: "asc",
                 sort: "property_name",
-                service_id: this.props.provider_id
+                service_id: props.provider_id
             }
         };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Property Name',
@@ -57,7 +41,7 @@ class ProviderPropertiesTable extends React.Component {
                     fieldConfig: {
                         endpoint: "provider/property",
                         extraData: {
-                            provider_id: this.props.provider_id
+                            provider_id: props.provider_id
                         }
                     }
                 },
@@ -65,7 +49,7 @@ class ProviderPropertiesTable extends React.Component {
         ];
     }
 
-    getTableInlineControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -79,11 +63,6 @@ class ProviderPropertiesTable extends React.Component {
                 size: "md",
                 classes: "outline-primary"
             },
-        ]
-    }
-
-    getTableDropdownControls() {
-        return [
             {
                 control: "button",
                 text: "Delete",
@@ -100,41 +79,37 @@ class ProviderPropertiesTable extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: ProviderPropertiesForm,
                 config: {
-                    provider_id: this.props.provider_id
+                    provider_id: props.provider_id
                 }
             },
             providerProperty: {
                 modalForm: ProviderPropertiesForm,
                 config: {
-                    provider_id: this.props.provider_id
+                    provider_id: props.provider_id
                 }
             },
             delete: {
                 modalForm: DeleteForm,
                 config: {
-                    provider_id: this.props.provider_id
+                    provider_id: props.provider_id
                 }
             }
         };
     }
 
-
-    render() {
         return (
             <DataList
-                tableData={this.getTableData()}
-                tableColumns={this.getTableColumns()}
-                tableDropdownControls={this.getTableDropdownControls()}
-                tableInlineControls={this.getTableInlineControls()}
-                modalConfig={this.getModalConfig()}
+                tableData={getTableData()}
+                tableColumns={getTableColumns()}
+                tableDropdownControls={getTableDropdownControls()}
+                modalConfig={getModalConfig()}
             />
         )
-    }
 }
 
 export default ProviderPropertiesTable;

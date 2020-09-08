@@ -1,74 +1,70 @@
 import ApiConfig from "../../../../../config/api-config";
-import React from "react";
-import ServiceParametersForm from "../../../../../views/components/Forms/ServiceParametersForm";
-import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
-import DataList from "../../../../../views/components/Tables/DataList";
-import Router from "next/router";
+import React, {useEffect, useState} from "react";
 import Admin from "../../../../../views/layouts/Admin";
-import ProviderPropertiesForm from "../../../../../views/components/Forms/ProviderPropertiesForm";
 import ProviderPropertiesTable from "../../../../../views/components/Tables/ProviderPropertiesTable";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/middleware";
+import {isSet} from "../../../../../library/utils";
+import {error} from "next/dist/build/output/log";
 
-const sprintf = require("sprintf-js").sprintf
+const sprintf = require("sprintf-js").sprintf;
 
-class ProviderProperties extends React.Component {
-    static async getInitialProps(ctx) {
-        return {
-            props: {
+const ProviderProperties = (props) => {
+    ProviderProperties.PageName = "provider_properties";
+    const [provider, setProvider] = useState({});
+    const [showTable, setShowTable] = useState(false);
 
-            }
-        }
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            provider_id: false
-        }
-        this.pageName = "provider_properties";
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-    }
-
-    componentDidMount() {
-        const {provider_id} = Router.query;
-        this.setState({
-            showTable: true,
-            provider_id: provider_id
-        })
-        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
-            this.setState({
-                provider_id: response.data.data.id,
-                provider_name: response.data.data.provider_name
+    useEffect(() => {
+        if (isSet(props.provider_id)) {
+            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id))
+            .then((response) => {
+                setProvider(response.data.data)
+                setShowTable(true)
             })
-        })
-    }
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
+    }, [props.provider_id]);
 
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: this.pageName,
+            pageName: ProviderProperties.PageName,
             data: {
                 provider_properties: {
-                    id: this.state.provider_id,
-                    name: this.state.provider_name
+                    id: provider.id,
+                    name: provider.provider_name
                 }
             }
         }
     }
 
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
-                <>
-                    <Col sm={12} md={6} lg={6}>
-                    {this.state.showTable &&
-                        <ProviderPropertiesTable provider_id={this.state.provider_id}/>
-                    }
-                    </Col>
-                </>
-            </Admin>
-        )
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ProviderProperties.PageName}>
+            <>
+                <Col sm={12} md={6} lg={6}>
+                {showTable &&
+                    <ProviderPropertiesTable provider_id={provider.id}/>
+                }
+                </Col>
+            </>
+        </Admin>
+    )
+
+}
+
+export async function getStaticProps({params}) {
+    return {
+        props: {
+            provider_id: params.provider_id
+        },
+    }
+}
+
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true,
     }
 }
 

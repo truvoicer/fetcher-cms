@@ -6,25 +6,15 @@ import CategoryForm from "../../../views/components/Forms/CategoryForm";
 import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 
-class Categories extends React.Component {
-    static pageName = "manage_categories";
-    constructor(props) {
-        super(props);
+const Categories = (props) => {
+    Categories.PageName = "manage_categories";
 
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableInlineControls = this.getTableInlineControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
             pageName: Categories.pageName,
         }
     }
-
-    getTableData() {
+    const getTableData = () => {
         return {
             title: "",
             endpoint: ApiConfig.endpoints.categoryList,
@@ -38,7 +28,7 @@ class Categories extends React.Component {
         };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Category Label',
@@ -68,8 +58,7 @@ class Categories extends React.Component {
             },
         ];
     }
-
-    getTableInlineControls() {
+    const getTableInlineControls = () => {
         return [
             {
                 control: "button",
@@ -86,8 +75,7 @@ class Categories extends React.Component {
             }
         ]
     }
-
-    getTableDropdownControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -104,8 +92,7 @@ class Categories extends React.Component {
             }
         ];
     }
-
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: CategoryForm
@@ -119,24 +106,22 @@ class Categories extends React.Component {
         };
     }
 
-
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={Categories.pageName}>
-                <>
-                    <Col sm={12} md={6} lg={6}>
-                        <DataList
-                            tableData={this.getTableData()}
-                            tableColumns={this.getTableColumns()}
-                            tableDropdownControls={this.getTableDropdownControls()}
-                            tableInlineControls={this.getTableInlineControls()}
-                            modalConfig={this.getModalConfig()}
-                        />
-                    </Col>
-                </>
-            </Admin>
-        )
-    }
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Categories.PageName}>
+            <>
+                <Col sm={12} md={6} lg={6}>
+                    <DataList
+                        tableData={getTableData()}
+                        tableColumns={getTableColumns()}
+                        tableDropdownControls={getTableDropdownControls()}
+                        tableInlineControls={getTableInlineControls()}
+                        modalConfig={getModalConfig()}
+                    />
+                </Col>
+            </>
+        </Admin>
+    )
 }
+
 
 export default Categories

@@ -7,27 +7,18 @@ import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
-import ServiceResponseKeys from "./[service_id]/response-keys";
+import ServiceResponseKeys, {ServiceResponseKeysPageName} from "./[service_id]/response-keys";
 
-class ManageServices extends React.Component {
-    static pageName = "manage_services";
-    constructor(props) {
-        super(props);
+const ManageServices = (props) => {
+    ManageServices.PageName = "manage_services";
 
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableInlineControls = this.getTableInlineControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: ManageServices.pageName
+            pageName: ManageServices.PageName
         }
     }
 
-    getTableData() {
+    const getTableData = () => {
         return {
             title: "",
             endpoint: ApiConfig.endpoints.serviceList,
@@ -41,7 +32,7 @@ class ManageServices extends React.Component {
         };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Category',
@@ -77,12 +68,7 @@ class ManageServices extends React.Component {
         ];
     }
 
-    getTableInlineControls() {
-        return [
-        ]
-    }
-
-    getTableDropdownControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -100,7 +86,7 @@ class ManageServices extends React.Component {
                 control: "link",
                 text: "Response Keys",
                 action: "response_keys",
-                href: getRouteItem(Routes.items, ServiceResponseKeys.pageName).route,
+                href: getRouteItem(Routes.items, ServiceResponseKeysPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
@@ -130,7 +116,7 @@ class ManageServices extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: ServiceForm
@@ -144,23 +130,19 @@ class ManageServices extends React.Component {
         };
     }
 
-
-    render() {
-            return (
-                <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ManageServices.pageName}>
-                    <>
-                        <Col sm={12} md={7} lg={7}>
-                        <DataList
-                            tableData={this.getTableData()}
-                            tableColumns={this.getTableColumns()}
-                            tableDropdownControls={this.getTableDropdownControls()}
-                            tableInlineControls={this.getTableInlineControls()}
-                            modalConfig={this.getModalConfig()}
-                        />
-                        </Col>
-                    </>
-                </Admin>
-        )
-    }
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageServices.PageName}>
+            <>
+                <Col sm={12} md={7} lg={7}>
+                    <DataList
+                        tableData={getTableData()}
+                        tableColumns={getTableColumns()}
+                        tableDropdownControls={getTableDropdownControls()}
+                        modalConfig={getModalConfig()}
+                    />
+                </Col>
+            </>
+        </Admin>
+    )
 }
 export default ManageServices

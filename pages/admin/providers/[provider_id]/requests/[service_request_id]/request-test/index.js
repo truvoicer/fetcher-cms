@@ -1,5 +1,5 @@
 import ApiConfig from "../../../../../../../config/api-config";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Router from "next/router";
 import Admin from "../../../../../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
@@ -10,86 +10,55 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Select from "react-select";
 import FormList from "../../../../../../../views/components/Forms/Components/FormList";
+import {isSet} from "../../../../../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ServiceRequestTest extends React.Component {
+export const ServiceRequestTestPageName = "request_test";
 
-    static pageName = "request_test";
+const ServiceRequestTest = (props) => {
+    const [provider, setProvider] = useState({
+        data: {},
+        received: false
+    });
+    const [serviceRequest, setServiceRequest] = useState({
+        data: {},
+        received: false
+    });
+    const [requestTypeOptions, setRequestTypeOptions] = useState([]);
+    const [queryParameterData, setQueryParameterData] = useState([]);
+    const [request, setRequest] = useState({
+        show: false,
+        resultString: ""
+    });
+    const [requestType, setRequestType] = useState({
+        value: "",
+        label: "Select a Request Type"
+    });
 
-    static async getInitialProps(ctx) {
-        return {
-            props: {}
-        }
-    }
-
-    getStaticProps() {
-        return {
-            props: {}, // will be passed to the page component as props
-        }
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            service_request_id: "",
-            service_request_name: "",
-            provider_id: "",
-            provider_name: "",
-            provider: "",
-            request_type: {
-                value: "",
-                label: "Select a Request Type"
-            },
-            request_type_options: [],
-            service_request: {},
-            service_request_list: [],
-            query: "",
-            limit: "",
-            request: {
-                show: false,
-                resultString: ""
-            },
-            queryParameterData: []
-        }
-        this.submitHandler = this.submitHandler.bind(this)
-        this.formChangeHandler = this.formChangeHandler.bind(this)
-        this.selectChangeHandler = this.selectChangeHandler.bind(this)
-        this.getRequestCallback = this.getRequestCallback.bind(this)
-        this.formListCallback = this.formListCallback.bind(this)
-    }
-
-    componentDidMount() {
-        const {provider_id, service_request_id} = Router.query;
-        this.setState({
-            showTable: true,
-            service_request_id: service_request_id,
-            provider_id: provider_id,
-        })
-
-        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
-            this.setState({
-                provider_id: response.data.data.id,
-                provider_name: response.data.data.provider_name,
-                provider: response.data.data.provider_name,
-                request_type_options: this.getRequestTypeOptions(response.data.data.service_requests)
+    useEffect(() => {
+        if (isSet(props.provider_id) && isSet(props.service_request_id)) {
+            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
+                setProvider({
+                    received: true,
+                    data: response.data.data
+                })
+                setRequestTypeOptions(getRequestTypeOptions(response.data.data.service_requests))
             })
-        })
-        fetchData(sprintf(ApiConfig.endpoints.serviceRequest, service_request_id)).then((response) => {
-            this.setState({
-                service_request_name: response.data.data.service_request_name,
-                service_request: response.data.data
+            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.service_request_id)).then((response) => {
+                setServiceRequest({
+                    received: true,
+                    data: response.data.data
+                })
             })
-        })
+        }
+    }, [props.provider_id, props.service_request_id]);
 
-    }
-
-    getRequestTypeOptions(serviceRequests = []) {
-        if (serviceRequests.length === 0) {
+    const getRequestTypeOptions = (serviceRequestList = []) => {
+        if (serviceRequestList.length === 0) {
             return [];
         }
-        return serviceRequests.map((item) => {
+        return serviceRequestList.map((item) => {
             return {
                 value: item.service_request_name,
                 label: item.service_request_label
@@ -97,51 +66,43 @@ class ServiceRequestTest extends React.Component {
         })
     }
 
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: ServiceRequestTest.pageName,
+            pageName: ServiceRequestTestPageName,
             data: {
-                service_requests: {
-                    id: this.state.service_request_id,
-                    name: this.state.service_request_name
-                },
                 provider: {
-                    id: this.state.provider_id,
-                    name: this.state.provider_name
-                }
+                    id: provider.data.id,
+                    name: provider.data.provider_name
+                },
+                service_requests: {
+                    id: serviceRequest.data.id,
+                    name: serviceRequest.data.service_request_name
+                },
             }
         }
     }
 
-    selectChangeHandler(e) {
-        this.setState({
-            request_type: {
-                value: e.value,
-                label: e.label
-            }
+    const selectChangeHandler = (e) => {
+        setRequestType({
+            value: e.value,
+            label: e.label
         })
     }
 
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    submitHandler(e) {
+    const submitHandler = (e) => {
         e.preventDefault();
         let queryData = {
-            request_type: this.state.request_type.value,
-            provider: this.state.provider,
+            request_type: requestType.value,
+            provider: provider.data.provider_name,
         }
-        this.state.queryParameterData.map((item) => {
+        queryParameterData.map((item) => {
             queryData[item.name] = item.value
         })
         responseHandler(fetchData(ApiConfig.endpoints.serviceApiRequest, queryData),
-            this.getRequestCallback);
+            getRequestCallback);
     }
 
-    getRequestCallback(status, message, data = null) {
+    const getRequestCallback = (status, message, data = null) => {
         let result;
         console.log(data)
         if (status === 200) {
@@ -154,40 +115,38 @@ class ServiceRequestTest extends React.Component {
         } else {
             result = "Error: " + message
         }
-        this.setState({
-            request: {
-                resultString: result
-            }
+        setRequest({
+            show: true,
+            resultString: result
         })
     }
 
-    formListCallback(data) {
-        this.setState({
-            queryParameterData: data
-        })
+    const formListCallback = (data) => {
+        setQueryParameterData(data)
     }
 
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestTest.pageName}>
+    return (
+        <>
+            {serviceRequest.received && provider.received &&
+            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestTestPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                         <Card>
                             <Card.Header>Request Test</Card.Header>
                             <Card.Body>
-                                <Form onSubmit={this.submitHandler}>
+                                <Form onSubmit={submitHandler}>
                                     <Row>
                                         <Col sm={12} md={3} lg={3}>
                                             <Form.Group controlId="formRequestType">
                                                 <Form.Label>Request Type</Form.Label>
                                                 <Select
-                                                    value={this.state.request_type}
-                                                    options={this.state.request_type_options}
-                                                    onChange={this.selectChangeHandler}
+                                                    value={requestType}
+                                                    options={requestTypeOptions}
+                                                    onChange={selectChangeHandler}
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="formRequestType"
-                                            className={"text-right"}>
+                                                        className={"text-right"}>
                                                 <Button variant="primary" type="submit">
                                                     Submit
                                                 </Button>
@@ -195,7 +154,7 @@ class ServiceRequestTest extends React.Component {
                                         </Col>
                                         <Col sm={12} md={9} lg={9}>
                                             <Form.Group controlId="formRequestType">
-                                                <FormList callback={this.formListCallback}
+                                                <FormList callback={formListCallback}
                                                           listItemKeyLabel={"Parameter name"}
                                                           listItemValueLabel={"Parameter value"}
                                                           addRowLabel={"Add Parameter"}
@@ -207,7 +166,7 @@ class ServiceRequestTest extends React.Component {
                                 <Row>
                                     <Col sm={12} md={12} lg={12}>
                                             <textarea className={"request-results"}
-                                                      value={this.state.request.resultString}
+                                                      value={request.resultString}
                                                       readOnly={true}>
                                             </textarea>
                                     </Col>
@@ -217,7 +176,24 @@ class ServiceRequestTest extends React.Component {
                     </Col>
                 </>
             </Admin>
-        )
+            }
+        </>
+    )
+}
+
+export async function getStaticProps({params}) {
+    return {
+        props: {
+            provider_id: params.provider_id,
+            service_request_id: params.service_request_id
+        },
+    }
+}
+
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true,
     }
 }
 

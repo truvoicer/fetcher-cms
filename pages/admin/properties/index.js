@@ -2,33 +2,20 @@ import ApiConfig from '../../../config/api-config'
 import React from "react";
 import PropertyForm from "../../../views/components/Forms/PropertyForm";
 import DataList from "../../../views/components/Tables/DataList";
-import ProviderForm from "../../../views/components/Forms/ProviderForm";
-import ProviderPropertiesForm from "../../../views/components/Forms/ProviderPropertiesForm";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 
-export default class Index extends React.Component {
-    constructor(props) {
-        super(props)
+const Properties = (props) => {
+    Properties.PageName = "manage_properties";
 
-        this.pageName = "manage_properties";
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    componentDidMount() {
-    }
-
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = (props) => {
         return {
-            pageName: this.pageName
+            pageName: Properties.PageName
         }
     }
 
-    getTableData() {
+    const getTableData = (props) => {
         return {
             title: ApiConfig.endpoints.propertyList,
             endpoint: ApiConfig.endpoints.propertyList,
@@ -39,8 +26,7 @@ export default class Index extends React.Component {
             }
         };
     }
-
-    getTableColumns() {
+    const getTableColumns = (props) => {
         return [
             {
                 name: 'Property Name',
@@ -71,7 +57,7 @@ export default class Index extends React.Component {
         ];
     }
 
-    getTableDropdownControls() {
+    const getTableDropdownControls = (props) => {
         return [
             {
                 control: "button",
@@ -100,8 +86,7 @@ export default class Index extends React.Component {
             }
         ];
     }
-
-    getModalConfig() {
+    const getModalConfig = (props) => {
         return {
             default: {
                 modalForm: PropertyForm
@@ -115,22 +100,19 @@ export default class Index extends React.Component {
         };
     }
 
-
-
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
-                <>
-                    <Col sm={12} md={6} lg={6}>
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Properties.PageName}>
+            <>
+                <Col sm={12} md={6} lg={6}>
                     <DataList
-                        tableData={this.getTableData()}
-                        tableColumns={this.getTableColumns()}
-                        tableDropdownControls={this.getTableDropdownControls()}
-                        modalConfig={this.getModalConfig()}
+                        tableData={getTableData()}
+                        tableColumns={getTableColumns()}
+                        tableDropdownControls={getTableDropdownControls()}
+                        modalConfig={getModalConfig()}
                     />
-                    </Col>
-                </>
-            </Admin>
-        )
-    }
+                </Col>
+            </>
+        </Admin>
+    )
 }
+export default Properties;

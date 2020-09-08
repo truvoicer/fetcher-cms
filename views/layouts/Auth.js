@@ -4,30 +4,21 @@ import Col from "react-bootstrap/Col";
 import App from "../App";
 import React from "react";
 
-class Auth extends React.Component {
-    constructor(props) {
-        super(props)
-    }
+const Auth = (props) => {
 
-    componentDidMount() {
-    }
-
-
-    render() {
-        return (
-            <App>
-                <div className={"c-app align-items-center"}>
-                    <Container>
-                        <Row className="justify-content-md-center">
-                            <Col md="auto">
-                                {this.props.children}
-                            </Col>
-                        </Row>
-                    </Container>
-                </div>
-            </App>
-        )
-    }
+    return (
+        <App>
+            <div className={"c-app align-items-center"}>
+                <Container>
+                    <Row className="justify-content-md-center">
+                        <Col md="auto">
+                            {props.children}
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        </App>
+    )
 }
 
 export default Auth;

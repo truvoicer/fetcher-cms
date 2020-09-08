@@ -7,50 +7,33 @@ import DuplicateForm from "../Forms/DuplicateForm";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
 import ServiceRequestTest
-    from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/request-test";
+    , {ServiceRequestTestPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/request-test";
 import ServiceRequestParameters
-    from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/parameters";
+    , {ServiceRequestParametersPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/parameters";
 import ServiceRequestResponseKeys
-    from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/response-keys";
-import ServiceRequestConfig from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/config";
+    , {ServiceRequestResponseKeysPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/response-keys";
+import ServiceRequestConfig, {ServiceRequestConfigPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/config";
 import ProviderRequests from "../../../pages/admin/providers/[provider_id]/requests";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ProviderRequestsTable extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            provider_id: false
-        }
-        this.provider_id = ""
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableInlineControls = this.getTableInlineControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    componentDidMount() {
-    }
-
-    getTableData() {
+const ProviderRequestsTable = (props) => {
+    const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.serviceRequestList, this.props.provider_id),
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequestList, props.provider_id),
             defaultColumnName: "service_request_name",
             defaultColumnLabel: "service_request_label",
             query: {
                 count: 10,
                 order: "asc",
                 sort: "service_request_name",
-                provider_id: this.props.provider_id
+                provider_id: props.provider_id
             }
         };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Request Label',
@@ -64,7 +47,7 @@ class ProviderRequestsTable extends React.Component {
                     fieldConfig: {
                         endpoint: "service/request",
                         extraData: {
-                            provider_id: this.props.provider_id,
+                            provider_id: props.provider_id,
                         }
                     }
                 },
@@ -81,7 +64,7 @@ class ProviderRequestsTable extends React.Component {
                     fieldConfig: {
                         endpoint: "service/request",
                         extraData: {
-                            provider_id: this.props.provider_id,
+                            provider_id: props.provider_id,
                         }
                     }
                 },
@@ -96,11 +79,7 @@ class ProviderRequestsTable extends React.Component {
         ];
     }
 
-    getTableInlineControls() {
-        return [
-        ];
-    }
-    getTableDropdownControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -120,13 +99,13 @@ class ProviderRequestsTable extends React.Component {
                 location: "inline",
                 text: "Request Test",
                 action: "request_test",
-                href: getRouteItem(Routes.items, ServiceRequestTest.pageName).route,
+                href: getRouteItem(Routes.items, ServiceRequestTestPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
                         provider: {
                             dynamic: false,
-                            id: this.props.provider_id
+                            id: props.provider_id
                         },
                         service_requests: {
                             dynamic: true,
@@ -143,13 +122,13 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Response Keys",
                 action: "response_keys",
-                href: getRouteItem(Routes.items, ServiceRequestResponseKeys.pageName).route,
+                href: getRouteItem(Routes.items, ServiceRequestResponseKeysPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
                         provider: {
                             dynamic: false,
-                            id: this.props.provider_id
+                            id: props.provider_id
                         },
                         service_requests: {
                             dynamic: true,
@@ -166,13 +145,13 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Request Config",
                 action: "request_config",
-                href: getRouteItem(Routes.items, ServiceRequestConfig.pageName).route,
+                href: getRouteItem(Routes.items, ServiceRequestConfigPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
                         provider: {
                             dynamic: false,
-                            id: this.props.provider_id
+                            id: props.provider_id
                         },
                         service_requests: {
                             dynamic: true,
@@ -189,13 +168,13 @@ class ProviderRequestsTable extends React.Component {
                 location: "dropdown",
                 text: "Request Parameters",
                 action: "request_parameters",
-                href: getRouteItem(Routes.items, ServiceRequestParameters.pageName).route,
+                href: getRouteItem(Routes.items, ServiceRequestParametersPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
                         provider: {
                             dynamic: false,
-                            id: this.props.provider_id
+                            id: props.provider_id
                         },
                         service_requests: {
                             dynamic: true,
@@ -238,18 +217,18 @@ class ProviderRequestsTable extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: ServiceRequestForm,
                 config: {
-                    provider_id: this.props.provider_id
+                    provider_id: props.provider_id
                 }
             },
             serviceRequest: {
                 modalForm: ServiceRequestForm,
                 config: {
-                    provider_id: this.props.provider_id,
+                    provider_id: props.provider_id,
                 }
             },
             duplicateRequest: {
@@ -258,24 +237,20 @@ class ProviderRequestsTable extends React.Component {
             delete: {
                 modalForm: DeleteForm,
                 config: {
-                    provider_id: this.props.provider_id
+                    provider_id: props.provider_id
                 }
             }
         };
     }
 
-
-    render() {
-        return (
-            <DataList
-                tableData={this.getTableData()}
-                tableColumns={this.getTableColumns()}
-                tableDropdownControls={this.getTableDropdownControls()}
-                tableInlineControls={this.getTableInlineControls()}
-                modalConfig={this.getModalConfig()}
-            />
-        )
-    }
+    return (
+        <DataList
+            tableData={getTableData()}
+            tableColumns={getTableColumns()}
+            tableDropdownControls={getTableDropdownControls()}
+            modalConfig={getModalConfig()}
+        />
+    )
 }
 
 export default ProviderRequestsTable;

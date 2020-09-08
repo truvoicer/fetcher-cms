@@ -1,102 +1,80 @@
 import ApiConfig from "../../../../../../../config/api-config";
-import React from "react";
-import ServiceParametersForm from "../../../../../../../views/components/Forms/ServiceParametersForm";
+import React, {useEffect, useState} from "react";
 import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
-import Router from "next/router";
 import Admin from "../../../../../../../views/layouts/Admin";
 import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/middleware";
 import Row from "react-bootstrap/Row";
+import {isSet} from "../../../../../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ServiceRequestResponseKeys extends React.Component {
-    static pageName = "requests_response_keys";
-    static async getInitialProps(ctx) {
-        return {
-            props: {
+export const ServiceRequestResponseKeysPageName = "requests_response_keys";
+const ServiceRequestResponseKeys = (props) => {
 
-            }
-        }
-    }
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            service_request_id: "",
-            service_request_name: "",
-            provider_id: "",
-            provider_name: ""
-        }
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
+    const [provider, setProvider] = useState({
+        data: {},
+        received: false
+    });
+    const [serviceRequest, setServiceRequest] = useState({
+        data: {},
+        received: false
+    });
+    const [showTable, setShowTable] = useState(false);
 
-    componentDidMount() {
-        const {provider_id, service_request_id} = Router.query;
-        this.setState({
-            showTable: true,
-            service_request_id: service_request_id,
-            provider_id: provider_id
-        })
-
-        fetchData(sprintf(ApiConfig.endpoints.provider, provider_id)).then((response) => {
-            this.setState({
-                provider_id: response.data.data.id,
-                provider_name: response.data.data.provider_name
+    useEffect(() => {
+        if (isSet(props.provider_id) && isSet(props.service_request_id)) {
+            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
+                setProvider({
+                    received: true,
+                    data: response.data.data
+                })
             })
-        })
-        fetchData(sprintf(ApiConfig.endpoints.serviceRequest, service_request_id)).then((response) => {
-            this.setState({
-                service_request_name: response.data.data.service_request_name
+            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.service_request_id)).then((response) => {
+                setServiceRequest({
+                    received: true,
+                    data: response.data.data
+                })
             })
-        })
-
-    }
-
-    getStaticProps() {
-        return {
-            props: {}, // will be passed to the page component as props
         }
-    }
+    }, [props.provider_id, props.service_request_id]);
 
-    getBreadcrumbsConfig() {
+
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: ServiceRequestResponseKeys.pageName,
+            pageName: ServiceRequestResponseKeysPageName,
             data: {
                 provider: {
-                    id: this.state.provider_id,
-                    name: this.state.provider_name
+                    id: provider.data.id,
+                    name: provider.data.provider_name
                 },
                 service_requests: {
-                    id: this.state.service_request_id,
-                    name: this.state.service_request_name
+                    id: serviceRequest.data.id,
+                    name: serviceRequest.data.service_request_name
                 },
             }
         }
     }
 
-    getTableData(service_id) {
-            return {
-                title: "",
-                endpoint: sprintf(ApiConfig.endpoints.requestResponseKeyList, this.state.service_request_id),
-                defaultColumnName: "key_name",
-                defaultColumnLabel: "key_value",
-                query: {
-                    count: 10,
-                    order: "asc",
-                    sort: "key_name",
-                    service_request_id: this.state.service_request_id,
-                    provider_id: this.state.provider_id
-                }
-            };
+    const getTableData = () => {
+        return {
+            title: "",
+            endpoint: sprintf(ApiConfig.endpoints.requestResponseKeyList, serviceRequest.data.id),
+            defaultColumnName: "key_name",
+            defaultColumnLabel: "key_value",
+            query: {
+                count: 10,
+                order: "asc",
+                sort: "key_name",
+                service_request_id: serviceRequest.data.id,
+                provider_id: provider.data.id
+            }
+        };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Key Name',
@@ -116,7 +94,7 @@ class ServiceRequestResponseKeys extends React.Component {
                     fieldConfig: {
                         endpoint: "service/request/response/key",
                         extraData: {
-                            service_request_id: this.state.service_request_id,
+                            service_request_id: serviceRequest.data.id,
                         }
                     }
                 },
@@ -133,7 +111,7 @@ class ServiceRequestResponseKeys extends React.Component {
                     fieldConfig: {
                         endpoint: "service/request/response/key",
                         extraData: {
-                            service_request_id: this.state.service_request_id,
+                            service_request_id: serviceRequest.data.id,
                         }
                     }
                 },
@@ -150,7 +128,7 @@ class ServiceRequestResponseKeys extends React.Component {
                     fieldConfig: {
                         endpoint: "service/request/response/key",
                         extraData: {
-                            service_request_id: this.state.service_request_id,
+                            service_request_id: serviceRequest.data.id,
                         }
                     }
                 },
@@ -167,14 +145,15 @@ class ServiceRequestResponseKeys extends React.Component {
                     fieldConfig: {
                         endpoint: "service/request/response/key",
                         extraData: {
-                            service_request_id: this.state.service_request_id,
+                            service_request_id: serviceRequest.data.id,
                         }
                     }
                 },
             },
         ];
     }
-    getTableDropdownControls() {
+
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -204,48 +183,65 @@ class ServiceRequestResponseKeys extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: RequestResponseKeysForm,
                 config: {
-                    service_request_id: this.state.service_request_id
+                    service_request_id: serviceRequest.data.id
                 }
             },
             requestResponseKeys: {
                 modalForm: RequestResponseKeysForm,
                 config: {
-                    service_request_id: this.state.service_request_id
+                    service_request_id: serviceRequest.data.id
                 }
             },
             delete: {
                 modalForm: DeleteForm,
                 config: {
-                    service_request_id: this.state.service_request_id
+                    service_request_id: serviceRequest.data.id
                 }
             }
         };
     }
 
-
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceRequestResponseKeys.pageName}>
+    return (
+        <>
+            {serviceRequest.received && provider.received &&
+            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestResponseKeysPageName}>
                 <>
                     <Row>
-                    <Col sm={12} md={9} lg={9}>
-                    {this.state.showTable &&
-                    <DataList
-                        tableData={this.getTableData()}
-                        tableColumns={this.getTableColumns()}
-                        tableDropdownControls={this.getTableDropdownControls()}
-                        modalConfig={this.getModalConfig()}
-                    />}
-                    </Col>
+                        <Col sm={12} md={9} lg={9}>
+                            <DataList
+                                tableData={getTableData()}
+                                tableColumns={getTableColumns()}
+                                tableDropdownControls={getTableDropdownControls()}
+                                modalConfig={getModalConfig()}
+                            />
+                        </Col>
                     </Row>
                 </>
             </Admin>
-        )
+            }
+        </>
+    )
+}
+
+export async function getStaticProps({params}) {
+    return {
+        props: {
+            provider_id: params.provider_id,
+            service_request_id: params.service_request_id
+        }
     }
 }
+
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true,
+    }
+}
+
 export default ServiceRequestResponseKeys;

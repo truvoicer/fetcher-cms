@@ -1,27 +1,20 @@
-
-import {withRouter} from "next/router";
 import Admin from '../../../views/layouts/Admin'
 import React from "react";
 
-export default class Dashboard extends React.Component {
-    constructor(props) {
-        super(props)
-        this.props = props;
-        this.pageName = "dashboard";
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-    }
-    getBreadcrumbsConfig() {
+const Dashboard = (props) => {
+    Dashboard.PageName = "dashboard";
+
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: this.pageName
+            pageName: Dashboard.PageName
         }
     }
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
-                <>
-                    <h1>Dashboard</h1>
-                </>
-            </Admin>
-        )
-    }
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Dashboard.PageName}>
+            <>
+                <h1>Dashboard</h1>
+            </>
+        </Admin>
+    )
 }
+export default Dashboard;

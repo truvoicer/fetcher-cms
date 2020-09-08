@@ -1,81 +1,75 @@
-import Router from 'next/router'
+import Router, {useRouter} from 'next/router'
 import Auth from '../../views/layouts/Auth'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import {responseHandler} from "../../library/api/middleware";
 import Alert from "react-bootstrap/Alert";
 import {setSession} from "../../library/session/authenticate";
-import React from "react";
+import React, {useState} from "react";
+import {responseHandler} from "../../library/api/middleware";
 
 
 const {getToken} = require("../../library/session/authenticate")
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: "",
-            password: "",
-            remember_me: "",
-            response: {
-                submitted: false,
-                alertStatus: "",
-                message: ""
-            }
+const Login = (props) => {
+    Login.PageName = "login";
+
+    const router = useRouter();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [response, setResponse] = useState({
+        submitted: false,
+        alertStatus: "",
+        message: ""
+    });
+
+    const formChangeHandler = (e) => {
+        if (e.target.name === "email") {
+            setEmail(e.target.value)
         }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-        this.responseHandler = this.responseHandler.bind(this);
+        if (e.target.name === "password") {
+            setPassword(e.target.value)
+        }
     }
 
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
-    }
-
-    submitHandler(e) {
+    const submitHandler = (e) => {
         e.preventDefault();
-        responseHandler(getToken(this.state), this.responseHandler);
+        responseHandler(getToken({email: email, password: password}), loginResponseHandler);
     }
 
-    responseHandler(status, message, data = null) {
+    const loginResponseHandler = (status, message, data = null) => {
         let alertStatus = "danger";
         if (status === 200) {
             alertStatus = "success";
             setSession(data)
         }
-        this.setState({
-            response: {
-                submitted: true,
-                alertStatus: alertStatus,
-                message: message
-            }
-        });
+        setResponse({
+            submitted: true,
+            alertStatus: alertStatus,
+            message: message
+        })
         if (status === 200) {
-            Router.replace('/admin/dashboard')
+            router.push('/admin/dashboard')
         }
     }
+    return (
+        <Auth>
+            <>
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-md-8">
+                            {response.submitted &&
+                            <Alert variant={response.alertStatus}>
+                                {response.message}
+                            </Alert>
+                            }
+                            <div className="card-group">
+                                <div className="card p-4">
+                                    <div className="card-body">
+                                        <h1>Login</h1>
+                                        <p className="text-muted">Sign In to your account</p>
 
-    render() {
-        return (
-            <Auth>
-                <>
-                    <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-md-8">
-                                {this.state.response.submitted &&
-                                <Alert variant={this.state.response.alertStatus}>
-                                    {this.state.response.message}
-                                </Alert>
-                                }
-                                <div className="card-group">
-                                    <div className="card p-4">
-                                        <div className="card-body">
-                                            <h1>Login</h1>
-                                            <p className="text-muted">Sign In to your account</p>
-
-                                            <Form onSubmit={this.submitHandler}>
+                                        <Form onSubmit={submitHandler}>
                                             <div className="input-group mb-3">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">
@@ -85,40 +79,41 @@ class Login extends React.Component {
                                                     </span>
                                                 </div>
                                                 <Form.Control type="email" placeholder="Enter email" name="email"
-                                                              onChange={this.formChangeHandler}/>
+                                                              onChange={formChangeHandler}/>
                                             </div>
                                             <div className="input-group mb-4">
                                                 <div className="input-group-prepend">
                                                     <span className="input-group-text">
                                                         <svg className="c-icon">
-                                                          <use xlinkHref="/images/icons/sprites/free.svg#cil-lock-locked"/>
+                                                          <use
+                                                              xlinkHref="/images/icons/sprites/free.svg#cil-lock-locked"/>
                                                         </svg>
                                                     </span>
                                                 </div>
                                                 <Form.Control type="password" placeholder="Password" name="password"
-                                                              onChange={this.formChangeHandler}/>
+                                                              onChange={formChangeHandler}/>
                                                 <Form.Text className="text-muted">
                                                     We'll never share your email with anyone else.
                                                 </Form.Text>
                                             </div>
                                             <div className="row">
                                                 <div className="col-6">
-                                                    <Button bsPrefix={"btn btn-primary px-4"} variant="primary" type="submit">
+                                                    <Button bsPrefix={"btn btn-primary px-4"} variant="primary"
+                                                            type="submit">
                                                         Submit
                                                     </Button>
                                                 </div>
                                             </div>
-                                            </Form>
-                                        </div>
+                                        </Form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </>
-            </Auth>
-        )
-    }
+                </div>
+            </>
+        </Auth>
+    )
 }
 
 export default Login;

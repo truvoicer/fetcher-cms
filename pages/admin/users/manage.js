@@ -7,30 +7,18 @@ import UserForm from "../../../views/components/Forms/UserForm";
 import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
-import ApiTokens from "./[user_id]/api-tokens";
+import ApiTokens, {ApiTokensPageName} from "./[user_id]/api-tokens";
 
-export default class ManageUsers extends React.Component {
-    constructor(props) {
-        super(props)
+export const ManageUsersPageName = "manage_users";
+const ManageUsers = (props) => {
 
-        this.pageName = "manage_users";
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableInlineControls = this.getTableInlineControls.bind(this);
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    componentDidMount() {
-    }
-
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: this.pageName
+            pageName: ManageUsersPageName
         }
     }
 
-    getTableData() {
+    const getTableData = () => {
         return {
             title: "Users",
             endpoint: ApiConfig.endpoints.getUserList,
@@ -44,7 +32,7 @@ export default class ManageUsers extends React.Component {
         };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Username',
@@ -74,19 +62,14 @@ export default class ManageUsers extends React.Component {
         ];
     }
 
-    getTableInlineControls() {
-        return [
-        ]
-    }
-
-    getTableDropdownControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "link",
                 location: "inline",
                 text: "Access Tokens",
                 action: "access_tokens",
-                href: getRouteItem(Routes.items, ApiTokens.pageName).route,
+                href: getRouteItem(Routes.items, ApiTokensPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
@@ -128,7 +111,7 @@ export default class ManageUsers extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: UserForm
@@ -142,23 +125,19 @@ export default class ManageUsers extends React.Component {
         };
     }
 
-
-
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={this.pageName}>
-                <>
-                    <Col sm={12} md={12} lg={12}>
+    return (
+        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageUsersPageName}>
+            <>
+                <Col sm={12} md={12} lg={12}>
                     <DataList
-                        tableData={this.getTableData()}
-                        tableColumns={this.getTableColumns()}
-                        tableDropdownControls={this.getTableDropdownControls()}
-                        tableInlineControls={this.getTableInlineControls()}
-                        modalConfig={this.getModalConfig()}
+                        tableData={getTableData()}
+                        tableColumns={getTableColumns()}
+                        tableDropdownControls={getTableDropdownControls()}
+                        modalConfig={getModalConfig()}
                     />
-                    </Col>
-                </>
-            </Admin>
-        )
-    }
+                </Col>
+            </>
+        </Admin>
+    )
 }
+export default ManageUsers;

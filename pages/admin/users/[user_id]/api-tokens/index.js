@@ -1,73 +1,46 @@
-import React from "react";
-import Router from "next/router";
+import React, {useEffect, useState} from "react";
 import Admin from "../../../../../views/layouts/Admin";
-import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
-import {GetStaticProps} from 'next';
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/middleware";
 import ApiConfig from "../../../../../config/api-config";
-import {getRouteItem} from "../../../../../library/session/authenticate";
-import {Routes} from "../../../../../config/routes";
 import DataList from "../../../../../views/components/Tables/DataList";
-import ServiceResponseKeys from "../../../services/[service_id]/response-keys";
-import ServiceForm from "../../../../../views/components/Forms/ServiceForm";
 import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
-import {formatDate} from "../../../../../library/utils";
+import {formatDate, isSet} from "../../../../../library/utils";
 import ApiTokenForm from "../../../../../views/components/Forms/ApiTokenForm";
-import ServiceRequestForm from "../../../../../views/components/Forms/ServiceRequestForm";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ApiTokens extends React.Component {
+export const ApiTokensPageName = "api_tokens";
+const ApiTokens = (props) => {
 
-    static pageName = "api_tokens";
-    static async getInitialProps(ctx) {
-        return {
-            props: {
+    const [user, setUser] = useState({});
+    const [showTable, setShowTable] = useState(false);
 
-            }
+    useEffect(() => {
+        if (isSet(props.user_id)) {
+            fetchData(sprintf(ApiConfig.endpoints.getUser, props.user_id)).then((response) => {
+                setUser(response.data.data);
+                setShowTable(true);
+            });
         }
-    }
+    }, [props.user_id]);
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            user_id: "",
-            user: "",
-        }
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-    }
-
-    componentDidMount() {
-        const {user_id} = Router.query;
-        this.setState({
-            showTable: true,
-            user_id: user_id
-        })
-        fetchData(sprintf(ApiConfig.endpoints.getUser, user_id)).then((response) => {
-            this.setState({
-                user: response.data.data,
-            })
-        })
-    }
-
-    getBreadcrumbsConfig() {
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: ApiTokens.pageName,
+            pageName: ApiTokensPageName,
             data: {
                 user: {
-                    id: this.state.user_id,
-                    name: this.state.user.username
+                    id: user.id,
+                    name: user.username
                 }
             }
         }
     }
 
-    getTableData() {
+    const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.getApiTokenList, this.state.user_id),
+            endpoint: sprintf(ApiConfig.endpoints.getApiTokenList, user.id),
             defaultColumnName: "token",
             defaultColumnLabel: "token",
             query: {
@@ -78,7 +51,7 @@ class ApiTokens extends React.Component {
         };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Token',
@@ -96,7 +69,7 @@ class ApiTokens extends React.Component {
         ];
     }
 
-    getTableInlineControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -110,11 +83,6 @@ class ApiTokens extends React.Component {
                 size: "md",
                 classes: "outline-primary"
             },
-        ]
-    }
-
-    getTableDropdownControls() {
-        return [
             {
                 control: "button",
                 text: "Delete",
@@ -131,18 +99,18 @@ class ApiTokens extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: ApiTokenForm,
                 config: {
-                    userId: this.state.user_id,
+                    userId: user.id,
                 }
             },
             apiToken: {
                 modalForm: ApiTokenForm,
                 config: {
-                    userId: this.state.user_id,
+                    userId: user.id,
                 }
             },
             delete: {
@@ -151,24 +119,39 @@ class ApiTokens extends React.Component {
         };
     }
 
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ApiTokens.pageName}>
+    return (
+        <>
+            {showTable &&
+            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ApiTokensPageName}>
                 <>
                     <Col sm={12} md={12} lg={8}>
-                    {this.state.showTable &&
-                    <DataList
-                        tableData={this.getTableData()}
-                        tableColumns={this.getTableColumns()}
-                        tableDropdownControls={this.getTableDropdownControls()}
-                        tableInlineControls={this.getTableInlineControls()}
-                        modalConfig={this.getModalConfig()}
-                    />
-                    }
+                        <DataList
+                            tableData={getTableData()}
+                            tableColumns={getTableColumns()}
+                            tableDropdownControls={getTableDropdownControls()}
+                            modalConfig={getModalConfig()}
+                        />
+
                     </Col>
                 </>
             </Admin>
-        )
+            }
+        </>
+    )
+}
+
+export async function getStaticProps({params}) {
+    return {
+        props: {
+            user_id: params.user_id,
+        },
+    }
+}
+
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true,
     }
 }
 

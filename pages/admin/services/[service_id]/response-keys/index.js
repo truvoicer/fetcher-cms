@@ -1,82 +1,59 @@
 import ApiConfig from "../../../../../config/api-config";
-import React from "react";
-import ServiceParametersForm from "../../../../../views/components/Forms/ServiceParametersForm";
+import React, {useEffect, useState} from "react";
 import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../views/components/Tables/DataList";
-import Router from "next/router";
 import Admin from "../../../../../views/layouts/Admin";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/middleware";
+import {isSet} from "../../../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf
 
-class ServiceResponseKeys extends React.Component {
+export const ServiceResponseKeysPageName = "response_keys";
 
-    static pageName = "response_keys";
-    static async getInitialProps(ctx) {
-        return {
-            props: {
+const ServiceResponseKeys = (props) => {
+    const [service, setService] = useState({});
+    const [showTable, setShowTable] = useState(false);
 
-            }
-        }
-    }
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            showTable: false,
-            service_id: "",
-            service_name: ""
-        }
-        this.service_id = ""
-        this.getBreadcrumbsConfig = this.getBreadcrumbsConfig.bind(this);
-        this.getTableDropdownControls = this.getTableDropdownControls.bind(this);
-        this.getTableColumns = this.getTableColumns.bind(this);
-        this.getTableData = this.getTableData.bind(this);
-    }
-
-    componentDidMount() {
-        const {service_id} = Router.query;
-        this.setState({
-            showTable: true,
-            service_id: service_id
-        })
-        fetchData(sprintf(ApiConfig.endpoints.service, service_id)).then((response) => {
-            this.setState({
-                service_name: response.data.data.service_name,
+    useEffect(() => {
+        if (isSet(props.service_id)) {
+            fetchData(sprintf(ApiConfig.endpoints.service, props.service_id)).then((response) => {
+                setService(response.data.data);
+                setShowTable(true);
             })
-        })
-    }
+        }
+    }, [props.service_id]);
 
-    getBreadcrumbsConfig() {
+
+    const getBreadcrumbsConfig = () => {
         return {
-            pageName: ServiceResponseKeys.pageName,
+            pageName: ServiceResponseKeysPageName,
             data: {
                 services: {
-                    id: this.state.service_id,
-                    name: this.state.service_name
+                    id: service.id,
+                    name: service.service_name
                 }
             }
         }
     }
 
-    getTableData(service_id) {
-            return {
-                title: "",
-                endpoint: ApiConfig.endpoints.serviceResponseKeyList,
-                defaultColumnName: "key_name",
-                defaultColumnLabel: "key_value",
-                query: {
-                    count: 10,
-                    order: "asc",
-                    sort: "key_name",
-                    service_id: this.state.service_id
-                }
-            };
+    const getTableData = () => {
+        return {
+            title: "",
+            endpoint: ApiConfig.endpoints.serviceResponseKeyList,
+            defaultColumnName: "key_name",
+            defaultColumnLabel: "key_value",
+            query: {
+                count: 10,
+                order: "asc",
+                sort: "key_name",
+                service_id: service.id
+            }
+        };
     }
 
-    getTableColumns() {
+    const getTableColumns = () => {
         return [
             {
                 name: 'Response Key Name',
@@ -89,7 +66,7 @@ class ServiceResponseKeys extends React.Component {
                     fieldConfig: {
                         endpoint: "service/response/key",
                         extraData: {
-                            service_id: this.state.service_id
+                            service_id: service.id
                         }
                     }
                 },
@@ -105,7 +82,7 @@ class ServiceResponseKeys extends React.Component {
                     fieldConfig: {
                         endpoint: "service/response/key",
                         extraData: {
-                            service_id: this.state.service_id
+                            service_id: service.id
                         }
                     }
                 },
@@ -113,7 +90,7 @@ class ServiceResponseKeys extends React.Component {
         ];
     }
 
-    getTableDropdownControls() {
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -143,18 +120,18 @@ class ServiceResponseKeys extends React.Component {
         ];
     }
 
-    getModalConfig() {
+    const getModalConfig = () => {
         return {
             default: {
                 modalForm: ServiceResponseKeysForm,
                 config: {
-                    service_id: this.state.service_id
+                    service_id: service.id
                 }
             },
             responseKeys: {
                 modalForm: ServiceResponseKeysForm,
                 config: {
-                    service_id: this.state.service_id
+                    service_id: service.id
                 }
             },
             delete: {
@@ -163,24 +140,39 @@ class ServiceResponseKeys extends React.Component {
         };
     }
 
-
-    render() {
-        return (
-            <Admin breadcrumbsConfig={this.getBreadcrumbsConfig()} pageName={ServiceResponseKeys.pageName}>
+    return (
+        <>
+            {showTable &&
+            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceResponseKeysPageName}>
                 <>
                     <Col sm={12} md={6} lg={6}>
-                    {this.state.showTable &&
-                    <DataList
-                        tableData={this.getTableData()}
-                        tableColumns={this.getTableColumns()}
-                        tableDropdownControls={this.getTableDropdownControls()}
-                        modalConfig={this.getModalConfig()}
-                    />}
+                        <DataList
+                            tableData={getTableData()}
+                            tableColumns={getTableColumns()}
+                            tableDropdownControls={getTableDropdownControls()}
+                            modalConfig={getModalConfig()}
+                        />
                     </Col>
                 </>
             </Admin>
-        )
+            }
+        </>
+    )
+}
+
+
+export async function getStaticProps({params}) {
+    return {
+        props: {
+            service_id: params.service_id
+        },
     }
 }
 
+export async function getStaticPaths() {
+    return {
+        paths: [],
+        fallback: true,
+    }
+}
 export default ServiceResponseKeys;
