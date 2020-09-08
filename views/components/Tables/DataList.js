@@ -147,12 +147,16 @@ const DataList = (props) => {
             alertStatus = "danger"
         }
         setTableData();
+        handleClose();
+        showAlert(alertStatus, message, true);
+    }
+
+    const showAlert = (status, message, show) => {
         setAlert({
-            showAlert: true,
-            alertStatus: alertStatus,
+            showAlert: show,
+            alertStatus: status,
             responseMessage: message
         });
-        handleClose();
     }
 
     const handleClose = () => {
@@ -161,6 +165,7 @@ const DataList = (props) => {
             modalTitle: "",
             action: "",
         })
+
     }
 
     const closeMenu = (e) => {

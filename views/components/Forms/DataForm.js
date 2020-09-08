@@ -1,6 +1,7 @@
 import React, {Component, useState} from 'react';
 import {Field, Formik} from "formik";
 import {isSet} from "../../../library/utils";
+import Select from "react-select";
 
 const DataForm = (props) => {
 
@@ -32,7 +33,7 @@ const DataForm = (props) => {
                 }
                 break;
             case "alphanumeric":
-                if (!/^[\w]+$/.test(values[key])) {
+                if (!/^[\w_ ]+$/.test(values[key])) {
                     return 'Can only contain letters and numbers';
                 }
                 break;
@@ -87,6 +88,9 @@ const DataForm = (props) => {
         let ignoredFields = [];
         Object.keys(values).map((key) => {
             const field = getFieldByName(key);
+            if (field.fieldType === "select") {
+                ignoredFields.push(field.name);
+            }
             field.subFields?.map((subField) => {
                 if ((field.fieldType === "checkbox" && !values[field.name]) ||
                     (field.fieldType === "checkbox" && values[field.name] === "")) {
@@ -99,6 +103,7 @@ const DataForm = (props) => {
     const validateForm = (values) => {
         const errors = {};
         const ignoredFields = getIgnoredFields(values);
+        console.log(ignoredFields)
         Object.keys(values).map((key) => {
             const field = getFieldByName(key);
             if (!ignoredFields.includes(field.name)) {
@@ -134,6 +139,40 @@ const DataForm = (props) => {
         props.submitCallback(values);
     }
 
+    const selectChangeHandler = (e) => {
+        console.log(e);
+    }
+
+    const getSelectRow = (field, errors, touched, handleBlur, handleChange, values) => {
+        let selectData;
+        if (!isSet(props.selectData[field.name])) {
+            return <p>Select error...</p>
+        }
+        selectData = props.selectData[field.name];
+        return (
+            <div className="row form-group form-group-text">
+                <div className="col-md-12">
+                    {field.label &&
+                    <>
+                        {field.label}
+                        <label className="text-black" htmlFor={field.name}>
+                        <span className={"site-form--error--field"}>
+                            {errors[field.name] && touched[field.name] && errors[field.name]}
+                        </span>
+                        </label>
+                    </>
+                    }
+                    <Select
+                        isMulti={selectData.multi && selectData.multi}
+                        options={selectData.options}
+                        value={values[field.name]}
+                        onChange={handleChange}
+                    />
+                </div>
+            </div>
+        )
+    }
+
     const getInputRow = (field, errors, touched, handleBlur, handleChange, values) => {
         return (
             <div className="row form-group form-group-text">
@@ -158,11 +197,6 @@ const DataForm = (props) => {
                         onBlur={handleBlur}
                         value={values[field.name]}
                     />
-                    {!isSet(field.label) &&
-                    <span className={"site-form--error--field"}>
-                            {errors[field.name] && touched[field.name] && errors[field.name]}
-                        </span>
-                    }
                 </div>
             </div>
         )
@@ -189,6 +223,9 @@ const DataForm = (props) => {
                             <React.Fragment key={index}>
                                 {field.fieldType === "text" &&
                                 getInputRow(field, errors, touched, handleBlur, handleChange, values)
+                                }
+                                {field.fieldType === "select" &&
+                                getSelectRow(field, errors, touched, handleBlur, handleChange, values)
                                 }
                                 {field.fieldType === "checkbox" &&
                                 <div className={"form-check-group"}>

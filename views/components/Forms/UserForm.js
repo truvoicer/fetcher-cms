@@ -1,25 +1,25 @@
-import Form from "react-bootstrap/Form";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
-import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
-import Alert from "react-bootstrap/Alert";
-import Select from 'react-select'
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {UserFormData} from "../../../library/forms/user-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-export default class UserForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            formSubmitted: false,
-            action: this.props.data.action,
-            user_id: "",
-            username: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            defaultRoles: [
+const UserForm = (props) => {
+
+    const [user, setUser] = useState({});
+    const [showForm, setShowForm] = useState(false);
+    const [formError, setFormError] = useState({
+        showError: false,
+        message: ""
+    });
+
+    const [selectData, setSelectData] = useState({
+        roles: {
+            select_name: "roles",
+            options: [
                 {
                     value: "ROLE_SUPER_ADMIN",
                     label: "ROLE_SUPER_ADMIN"
@@ -33,37 +33,25 @@ export default class UserForm extends React.Component {
                     label: "ROLE_USER"
                 },
             ],
-            selectedRoles: "",
-            formError: {
-                showError: false,
-                message: ""
-            }
+            selected: []
         }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-        this.selectChangeHandler = this.selectChangeHandler.bind(this);
-    }
+    });
 
-    componentDidMount() {
-        this.setState({
-            formSubmitted: false
-        })
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.getUser, this.props.data.itemId)).then((response) => {
-                this.setState({
-                    user_id: response.data.data.id,
-                    username: response.data.data.username,
-                    email: response.data.data.email,
-                    password: response.data.data.password,
-                    selectedRoles: this.getRoles(response.data.data.roles)
-                })
+    const addUserButtonLabel = "Add User";
+    const updateUserButtonLabel = "Update User";
+
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.getUser, props.data.itemId)).then((response) => {
+                setUser(response.data.data);
+                setSelectedRoles(getRoles(response.data.data.roles));
+                setShowForm(true);
             })
         }
-    }
+    }, [props.data.itemId, props.data.action])
 
-    getRoles(roles) {
+    const getRoles = (roles) => {
         return roles.map((item, index) => {
-
             return {
                 value: item,
                 label: item
@@ -71,120 +59,40 @@ export default class UserForm extends React.Component {
         })
     }
 
-    selectChangeHandler(e) {
-        this.setState({
-            selectedRoles: e,
-        })
+    const selectChangeHandler = (e) => {
+        setSelectedRoles(e);
     }
 
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    validatePassword(password = "", confirmPassword = "") {
-        if (password !== "" || confirmPassword !== "") {
-            if (password !== confirmPassword) {
-                this.setState({
-                    formError: {
-                        showError: true,
-                        message: "Password and confirm password don't match"
-                    }
-                })
-                return false;
-            }
-            this.setState({
-                formError: {
-                    showError: false
-                }
-            })
-            return password;
-        }
-        return password;
-    }
-
-    submitHandler(e) {
+    const submitHandler = (values) => {
+        console.log(values)
         e.preventDefault();
-        let userData = {
-            user_id: this.state.user_id,
-            email: this.state.email,
-            username: this.state.username,
-        }
-        let password = this.validatePassword(this.state.password, this.state.confirmPassword);
-        if (password === false) {
-            return false;
-        }
-        if (this.state.user_id === "" && password === "") {
-            this.setState({
-                formError: {
-                    showError: true,
-                    message: "Password hasnt been set"
-                }
-            })
-            return false;
-        }
-        userData.password = password;
-        let selectedRoles = this.state.selectedRoles.map((item) => {
-            return item.value;
-        })
-        userData.roles = JSON.stringify(selectedRoles);
-        responseHandler(sendData(this.state.action, "admin/user", userData), this.props.formResponse);
+        // let selectedRoles = this.state.selectedRoles.map((item) => {
+        //     return item.value;
+        // })
+        // userData.roles = JSON.stringify(selectedRoles);
+        // values.id = props.data.itemId;
+        // responseHandler(sendData(props.data.action, "admin/user", values), props.formResponse);
     }
 
-    render() {
-        return (
-            <div>
-                {this.state.formError.showError &&
-                <Alert variant={"danger"}>
-                    {this.state.formError.message}
-                </Alert>
-                }
-                <Form onSubmit={this.submitHandler}>
-
-                    <Form.Group controlId="formEmail">
-                        <Form.Label>Email</Form.Label>
-                        <Form.Control type="text"
-                                      placeholder="Enter the email."
-                                      onChange={this.formChangeHandler}
-                                      name="email"
-                                      value={this.state.email}/>
-                    </Form.Group>
-                    <Form.Group controlId="formUsername">
-                        <Form.Label>Username</Form.Label>
-                        <Form.Control type="text"
-                                      placeholder="Enter the username."
-                                      onChange={this.formChangeHandler}
-                                      name="username"
-                                      value={this.state.username}/>
-                    </Form.Group>
-                    <Form.Group controlId="formPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="text"
-                                      placeholder="Enter the password."
-                                      onChange={this.formChangeHandler}
-                                      name="password"
-                                      value={this.state.password}/>
-                    </Form.Group>
-                    <Form.Group controlId="formConfirmPassword">
-                        <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control type="text"
-                                      placeholder="Confirm password."
-                                      onChange={this.formChangeHandler}
-                                      name="confirmPassword"
-                                      value={this.state.confirmPassword}/>
-                    </Form.Group>
-                    <Form.Group controlId="formRoles">
-                        <Form.Label>Roles</Form.Label>
-                        <Select isMulti={true} options={this.state.defaultRoles} value={this.state.selectedRoles} onChange={this.selectChangeHandler}/>
-                    </Form.Group>
-                    <Button variant="primary" type="submit">
-                        Submit
-                    </Button>
-                </Form>
-            </div>
-        );
-    }
-
-
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+            <DataForm
+                data={UserFormData(user?.username, user?.email, true)}
+                selectData={selectData}
+                submitCallback={submitHandler}
+                submitButtonText={updateUserButtonLabel}
+            />
+            }
+            {props.data.action !== "update" &&
+            <DataForm
+                data={UserFormData()}
+                selectData={selectData}
+                submitCallback={submitHandler}
+                submitButtonText={addUserButtonLabel}
+            />
+            }
+        </>
+    );
 }
+export default UserForm;
