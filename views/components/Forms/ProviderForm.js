@@ -1,173 +1,104 @@
-import Form from "react-bootstrap/Form";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
-import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
-import Select from "react-select";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {ProviderFormData} from "../../../library/forms/provider-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-export default class PropertyForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            formSubmitted: false,
-            action: this.props.data.action,
-            id: "",
-            provider_label: "",
-            provider_name: "",
-            provider_user_id: "",
-            provider_api_base_url: "",
-            provider_access_key: "",
-            provider_secret_key: "",
-            selectedCategories: [],
-            allCategories: []
-        }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-        this.selectChangeHandler = this.selectChangeHandler.bind(this);
-    }
+const ProviderForm = (props) => {
+    const [provider, setProvider] = useState({});
+    const [showForm, setShowForm] = useState(false);
+    const [selectData, setSelectData] = useState({
+        categories: []
+    });
 
-    componentDidMount() {
+    const [selectOptions, setSelectOptions] = useState({
+        categories: [],
+    });
 
-        this.setState({
-            formSubmitted: false
-        })
+    const addButtonLabel = "Add Provider";
+    const updateButtonLabel = "Update Provider";
 
+    useEffect(() => {
         fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
-            this.setState({
-                allCategories: this.getCategoriesSelect(response.data.data),
+            setSelectOptions({
+                categories: getCategoriesSelect(response.data.data)
             })
         })
+    }, [])
 
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.provider, this.props.data.itemId)).then((response) => {
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.provider, props.data.itemId)).then((response) => {
                 console.log(response);
-                this.setState({
-                    id: response.data.data.id,
-                    provider_label: response.data.data.provider_label,
-                    provider_name: response.data.data.provider_name,
-                    provider_user_id: response.data.data.provider_user_id,
-                    provider_api_base_url: response.data.data.provider_api_base_url,
-                    provider_access_key: response.data.data.provider_access_key,
-                    provider_secret_key: response.data.data.provider_secret_key,
-                    selectedCategories: this.getCategoriesSelect(response.data.data.category)
+                setProvider(response.data.data);
+                setSelectData({
+                    categories: getCategoriesSelect(response.data.data.category)
                 })
+                setShowForm(true);
             })
-        }
-    }
 
-    getCategoriesSelect(data) {
+        }
+    }, [props.data.itemId, props.data.action])
+
+
+    const getCategoriesSelect = (data) => {
         return data.map((item, index) => {
             return {
                 value: item.id,
                 label: item.category_label
             }
         })
-
     }
 
-    selectChangeHandler(e) {
-        this.setState({
-            selectedCategories: e,
+    const submitHandler = (values) => {
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
+        }
+
+        const categories = values.categories.map((item) => {
+            console.log(item.value)
+            return {
+                id: item.value
+            }
         })
+        values.categories = categories;
+        responseHandler(sendData(props.data.action, "provider", values), props.formResponse);
     }
 
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    submitHandler(e) {
-        e.preventDefault();
-        console.log(this.state)
-        responseHandler(sendData(this.state.action, "provider", this.state), this.props.formResponse);
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.submitHandler}>
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formProviderLabel">
-                            <Form.Label>Provider Label</Form.Label>
-                            <Form.Control type="text"
-                                          placeholder="Enter the providers label."
-                                          onChange={this.formChangeHandler}
-                                          name="provider_label"
-                                          value={this.state.provider_label}/>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group controlId="formProviderName">
-                            <Form.Label>Provider Name</Form.Label>
-                            <Form.Control type="text"
-                                          placeholder="Enter the providers name."
-                                          onChange={this.formChangeHandler}
-                                          name="provider_name"
-                                          value={this.state.provider_name}/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formProviderUserId">
-                            <Form.Label>Provider User Id</Form.Label>
-                            <Form.Control type="text"
-                                          placeholder="Enter the providers user id."
-                                          onChange={this.formChangeHandler}
-                                          name="provider_user_id"
-                                          value={this.state.provider_user_id}/>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group controlId="formCategories">
-                            <Form.Label>Categories</Form.Label>
-                            <Select
-                                value={this.state.selectedCategories}
-                                onChange={this.selectChangeHandler}
-                                name={"category_id"}
-                                options={this.state.allCategories}
-                                isMulti={true}/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Form.Group controlId="formProviderApiUrl">
-                    <Form.Label>Provider Api Base Url</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers api base url."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_api_base_url"
-                                  value={this.state.provider_api_base_url}/>
-                </Form.Group>
-
-
-                <Form.Group controlId="formProviderAccessKey">
-                    <Form.Label>Provider Access Key</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers api access key."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_access_key"
-                                  value={this.state.provider_access_key}/>
-                </Form.Group>
-                <Form.Group controlId="formProviderSecretKey">
-                    <Form.Label>Provider Api Secret Key</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the providers api secret key."
-                                  onChange={this.formChangeHandler}
-                                  name="provider_secret_key"
-                                  value={this.state.provider_secret_key}/>
-                </Form.Group>
-
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        );
-    }
-
-
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+            <DataForm
+                data={
+                    ProviderFormData(
+                        true,
+                        provider.provider_label,
+                        provider.provider_name,
+                        provider.provider_user_id,
+                        provider.provider_api_base_url,
+                        provider.provider_access_key,
+                        provider.provider_secret_key,
+                    )
+                }
+                selectData={selectData}
+                selectOptions={selectOptions}
+                submitCallback={submitHandler}
+                submitButtonText={updateButtonLabel}
+            />
+            }
+            {props.data.action !== "update" &&
+            <DataForm
+                data={ProviderFormData()}
+                selectData={selectData}
+                selectOptions={selectOptions}
+                submitCallback={submitHandler}
+                submitButtonText={addButtonLabel}
+            />
+            }
+        </>
+    );
 }
+export default ProviderForm;

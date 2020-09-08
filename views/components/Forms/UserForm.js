@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
+import {fetchData, responseHandler, sendData} from '../../../library/api/middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -11,30 +11,26 @@ const UserForm = (props) => {
 
     const [user, setUser] = useState({});
     const [showForm, setShowForm] = useState(false);
-    const [formError, setFormError] = useState({
-        showError: false,
-        message: ""
-    });
 
     const [selectData, setSelectData] = useState({
-        roles: {
-            select_name: "roles",
-            options: [
-                {
-                    value: "ROLE_SUPER_ADMIN",
-                    label: "ROLE_SUPER_ADMIN"
-                },
-                {
-                    value: "ROLE_ADMIN",
-                    label: "ROLE_ADMIN"
-                },
-                {
-                    value: "ROLE_USER",
-                    label: "ROLE_USER"
-                },
-            ],
-            selected: []
-        }
+        roles: []
+    });
+
+    const [selectOptions, setSelectOptions] = useState({
+        roles: [
+            {
+                value: "ROLE_SUPER_ADMIN",
+                label: "ROLE_SUPER_ADMIN"
+            },
+            {
+                value: "ROLE_ADMIN",
+                label: "ROLE_ADMIN"
+            },
+            {
+                value: "ROLE_USER",
+                label: "ROLE_USER"
+            },
+        ],
     });
 
     const addUserButtonLabel = "Add User";
@@ -44,7 +40,7 @@ const UserForm = (props) => {
         if (isSet(props.data.action) && props.data.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.getUser, props.data.itemId)).then((response) => {
                 setUser(response.data.data);
-                setSelectedRoles(getRoles(response.data.data.roles));
+                setSelectData({roles: getRoles(response.data.data.roles)});
                 setShowForm(true);
             })
         }
@@ -59,27 +55,23 @@ const UserForm = (props) => {
         })
     }
 
-    const selectChangeHandler = (e) => {
-        setSelectedRoles(e);
-    }
-
     const submitHandler = (values) => {
-        console.log(values)
-        e.preventDefault();
-        // let selectedRoles = this.state.selectedRoles.map((item) => {
-        //     return item.value;
-        // })
-        // userData.roles = JSON.stringify(selectedRoles);
-        // values.id = props.data.itemId;
-        // responseHandler(sendData(props.data.action, "admin/user", values), props.formResponse);
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
+        }
+        values.roles = values.roles.map((item) => {
+            return item.value;
+        });
+        responseHandler(sendData(props.data.action, "admin/user", values), props.formResponse);
     }
 
     return (
         <>
             {props.data.action === "update" && showForm &&
             <DataForm
-                data={UserFormData(user?.username, user?.email, true)}
+                data={UserFormData(true, user?.username, user?.email)}
                 selectData={selectData}
+                selectOptions={selectOptions}
                 submitCallback={submitHandler}
                 submitButtonText={updateUserButtonLabel}
             />
@@ -88,6 +80,7 @@ const UserForm = (props) => {
             <DataForm
                 data={UserFormData()}
                 selectData={selectData}
+                selectOptions={selectOptions}
                 submitCallback={submitHandler}
                 submitButtonText={addUserButtonLabel}
             />

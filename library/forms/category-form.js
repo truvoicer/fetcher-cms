@@ -1,4 +1,8 @@
-export const CategoryFormData = (categoryName = null, categoryLabel = null) => {
+export const CategoryFormData = (
+    update = false,
+    categoryName = null,
+    categoryLabel = null
+) => {
     return {
         fields: [
             {

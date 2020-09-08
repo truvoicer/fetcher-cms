@@ -31,7 +31,7 @@ const CategoryForm = (props) => {
         <>
             {props.data.action === "update" && showForm &&
                 <DataForm
-                    data={CategoryFormData(category?.category_name, category?.category_label)}
+                    data={CategoryFormData(true, category?.category_name, category?.category_label)}
                     submitCallback={submitCallbackHandler}
                     submitButtonText={updateCategoryButtonLabel}
                 />

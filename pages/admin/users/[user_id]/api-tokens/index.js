@@ -124,7 +124,7 @@ const ApiTokens = (props) => {
             {showTable &&
             <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ApiTokensPageName}>
                 <>
-                    <Col sm={12} md={12} lg={8}>
+                    <Col sm={12} md={12} lg={12}>
                         <DataList
                             tableData={getTableData()}
                             tableColumns={getTableColumns()}

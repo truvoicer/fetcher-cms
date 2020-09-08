@@ -1,4 +1,8 @@
-export const UserFormData = (username = null, email = null, update = false) => {
+export const UserFormData = (
+    update = false,
+    username = null,
+    email = null
+) => {
     let data = {
         fields: [
             {
@@ -40,7 +44,7 @@ export const UserFormData = (username = null, email = null, update = false) => {
                 name: "roles",
                 label: "User Roles",
                 fieldType: "select",
-                multi: true,
+                multi: true
             },
         ]
     };
@@ -48,7 +52,7 @@ export const UserFormData = (username = null, email = null, update = false) => {
     if (!update) {
         data.fields.push(
             {
-                name: "password",
+                name: "new_password",
                 label: "Password",
                 type: "password",
                 fieldType: "text",
@@ -77,7 +81,7 @@ export const UserFormData = (username = null, email = null, update = false) => {
                     rules: [
                         {
                             type: "match",
-                            matchField: "password",
+                            matchField: "new_password",
                         },
                     ]
                 }
@@ -85,14 +89,6 @@ export const UserFormData = (username = null, email = null, update = false) => {
         );
     } else {
         data.fields.push(
-            {
-                name: "current_password",
-                label: "Current Password",
-                type: "password",
-                fieldType: "text",
-                field: "input",
-                placeHolder: "",
-            },
             {
                 label: "Change Password?",
                 name: "change_password",

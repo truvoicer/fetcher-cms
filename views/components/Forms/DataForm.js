@@ -8,7 +8,15 @@ const DataForm = (props) => {
     const getInitialDataObject = () => {
         let initialValues = {};
         props.data.fields.map((item) => {
-            initialValues[item.name] = isSet(item.value) && item.fieldType === "text" ? item.value : "";
+            if (item.fieldType === "text") {
+                initialValues[item.name] = isSet(item.value) ? item.value : "";
+            }
+            else if (item.fieldType === "select") {
+                initialValues[item.name] = isSet(props.selectData[item.name])? props.selectData[item.name] : [];
+            }
+            else if (item.fieldType === "checkbox") {
+                initialValues[item.name] = "";
+            }
             if (isSet(item.subFields)) {
                 item.subFields.map((subItem) => {
                     initialValues[subItem.name] = isSet(subItem.value) && subItem.fieldType === "text" ? subItem.value : "";
@@ -18,11 +26,24 @@ const DataForm = (props) => {
         return initialValues;
     }
 
+    const getSelectDefaults = () => {
+        let selectDefaults = {};
+        props.data.fields.map((item) => {
+            if (item.fieldType === "select") {
+                selectDefaults[item.name] = props.selectData[item.name];
+            }
+        });
+        return selectDefaults;
+    }
+
     const [initialValues, setInitialValues] = useState(getInitialDataObject())
+    const [selected, setSelected] = useState(getSelectDefaults())
+
 
     const validationRules = (rule, values, key) => {
         switch (rule.type) {
             case "required":
+                const field = getFieldByName(key);
                 if (!values[key]) {
                     return 'Required';
                 }
@@ -88,9 +109,6 @@ const DataForm = (props) => {
         let ignoredFields = [];
         Object.keys(values).map((key) => {
             const field = getFieldByName(key);
-            if (field.fieldType === "select") {
-                ignoredFields.push(field.name);
-            }
             field.subFields?.map((subField) => {
                 if ((field.fieldType === "checkbox" && !values[field.name]) ||
                     (field.fieldType === "checkbox" && values[field.name] === "")) {
@@ -103,7 +121,6 @@ const DataForm = (props) => {
     const validateForm = (values) => {
         const errors = {};
         const ignoredFields = getIgnoredFields(values);
-        console.log(ignoredFields)
         Object.keys(values).map((key) => {
             const field = getFieldByName(key);
             if (!ignoredFields.includes(field.name)) {
@@ -114,7 +131,6 @@ const DataForm = (props) => {
                 ) {
                     field.validation?.rules?.map((rule) => {
                         const validate = validationRules(rule, values, key);
-                        // console.log(validate)
                         if (validate !== true) {
                             errors[key] = validate
                         }
@@ -139,16 +155,20 @@ const DataForm = (props) => {
         props.submitCallback(values);
     }
 
-    const selectChangeHandler = (e) => {
-        console.log(e);
+    const selectChangeHandler = (name, values, e) => {
+        setSelected({
+            [name]: e
+        })
+        values[name] = e;
+        validateForm(values)
     }
 
     const getSelectRow = (field, errors, touched, handleBlur, handleChange, values) => {
-        let selectData;
-        if (!isSet(props.selectData[field.name])) {
+        let selectOptions;
+        if (!isSet(props.selectOptions[field.name])) {
             return <p>Select error...</p>
         }
-        selectData = props.selectData[field.name];
+        selectOptions = props.selectOptions[field.name];
         return (
             <div className="row form-group form-group-text">
                 <div className="col-md-12">
@@ -157,16 +177,16 @@ const DataForm = (props) => {
                         {field.label}
                         <label className="text-black" htmlFor={field.name}>
                         <span className={"site-form--error--field"}>
-                            {errors[field.name] && touched[field.name] && errors[field.name]}
+                            {errors[field.name]}
                         </span>
                         </label>
                     </>
                     }
                     <Select
-                        isMulti={selectData.multi && selectData.multi}
-                        options={selectData.options}
-                        value={values[field.name]}
-                        onChange={handleChange}
+                        isMulti={field.multi && field.multi}
+                        options={selectOptions}
+                        value={selected[field.name]}
+                        onChange={selectChangeHandler.bind(this, field.name, values)}
                     />
                 </div>
             </div>
