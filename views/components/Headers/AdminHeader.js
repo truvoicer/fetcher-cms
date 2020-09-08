@@ -3,20 +3,15 @@ import Link from "next/link";
 import {UserContext} from "../Context/UserContext";
 import Breadcrumbs from "./Breadcrumbs";
 import {logout} from "../../../library/session/authenticate";
+import React, {useContext} from "react";
 
-class AdminHeader extends React.Component {
-    constructor(props) {
-        super(props)
-        this.logout = this.logout.bind(this);
-    }
+const AdminHeader = (props) => {
+    const userContext = useContext(UserContext);
 
-    componentDidMount() {
-    }
-
-    logout() {
+    const logoutHandler = () => {
         logout()
     }
-    showUserDropdown(e) {
+    const showUserDropdown = (e) => {
         e.preventDefault();
         let ele = document.getElementById("userDropdownMenu")
         if (ele.classList.contains("show")) {
@@ -26,7 +21,7 @@ class AdminHeader extends React.Component {
         }
     }
 
-    ListItems() {
+    const ListItems = () => {
         return Routes.items.map(function (item, index) {
             if (item.header) {
                 return (
@@ -40,13 +35,13 @@ class AdminHeader extends React.Component {
                 return null;
             }
 
-        }.bind(this))
+        })
     }
-    render() {
+
         return (
             <header className="c-header c-header-light c-header-fixed c-header-with-subheader">
                 <ul className="c-header-nav d-md-down-none">
-                    <this.ListItems/>
+                    <ListItems/>
                 </ul>
                 <ul className="c-header-nav ml-auto mr-4">
                     <li className="c-header-nav-item dropdown">
@@ -56,12 +51,12 @@ class AdminHeader extends React.Component {
                            role="button"
                            aria-haspopup="true"
                            aria-expanded="false"
-                            onClick={this.showUserDropdown}>
-                            {this.context.user.username}
+                            onClick={showUserDropdown}>
+                            {userContext.user.username}
                         </a>
                         <div id={"userDropdownMenu"} className="dropdown-menu dropdown-menu-right pt-0">
                             <div className="dropdown-header bg-light py-2"><strong>Account</strong></div>
-                            <a className="dropdown-item" href="#" onClick={this.logout}>
+                            <a className="dropdown-item" href="#" onClick={logoutHandler}>
                                 <svg className="c-icon mr-2">
                                     <use xlinkHref={"/images/icons/sprites/free.svg#cil-account-logout"}/>
                                 </svg>
@@ -73,8 +68,5 @@ class AdminHeader extends React.Component {
                 <Breadcrumbs />
             </header>
         )
-    }
 }
-
-AdminHeader.contextType = UserContext;
 export default AdminHeader;

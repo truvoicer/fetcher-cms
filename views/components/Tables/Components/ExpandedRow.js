@@ -1,19 +1,20 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {getColumnControls} from "../../../../library/datalist/datalist-actions";
 
-class ExpandedRow extends Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        console.log(this.props)
-        return (
-            <div>
-                {getColumnControls(this.props.inlineControls, this.props.dropdownControls, this.props.data, this.props.showModalCallback, true, "inline")}
-            </div>
-        );
-    }
+const ExpandedRow = (props) => {
+    console.log(props)
+    return (
+        <div>
+            {getColumnControls(
+                props.inlineControls,
+                props.dropdownControls,
+                props.data,
+                props.showModalCallback,
+                true,
+                "inline"
+            )}
+        </div>
+    );
 }
 
 export default ExpandedRow;

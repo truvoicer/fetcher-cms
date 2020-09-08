@@ -58,7 +58,8 @@ const Categories = (props) => {
             },
         ];
     }
-    const getTableInlineControls = () => {
+
+    const getTableDropdownControls = () => {
         return [
             {
                 control: "button",
@@ -72,11 +73,7 @@ const Categories = (props) => {
                 },
                 size: "md",
                 classes: "outline-primary"
-            }
-        ]
-    }
-    const getTableDropdownControls = () => {
-        return [
+            },
             {
                 control: "button",
                 text: "Delete",
@@ -114,7 +111,6 @@ const Categories = (props) => {
                         tableData={getTableData()}
                         tableColumns={getTableColumns()}
                         tableDropdownControls={getTableDropdownControls()}
-                        tableInlineControls={getTableInlineControls()}
                         modalConfig={getModalConfig()}
                     />
                 </Col>

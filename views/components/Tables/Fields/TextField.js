@@ -1,69 +1,53 @@
-import React from "react";
+import React, {useState} from "react";
 
-class TextField extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            editing: false,
-            showControls: false,
-            fieldValue: ""
-        }
-        this.textFieldClick = this.textFieldClick.bind(this)
-        this.textFieldChangeEvent = this.textFieldChangeEvent.bind(this)
-        this.saveEvent = this.saveEvent.bind(this)
-        this.cancelEvent = this.cancelEvent.bind(this)
+const TextField = (props) => {
+
+    const [editing, setEditing] = useState(false);
+    const [showControls, setShowControls] = useState(false);
+    const [fieldValue, setFieldValue] = useState("");
+
+    const textFieldChangeEvent = (e) => {
+        setFieldValue(e.target.value);
     }
 
-    textFieldChangeEvent(e) {
-        this.setState({
-            fieldValue: e.target.value
-        })
+    const saveEvent = (row, config, e) => {
+        row[config.field] = fieldValue;
+        cancelEvent();
+        props.updateCallback(row, config, props.formResponseCallback)
     }
 
-    saveEvent(row, config, e) {
-        row[config.field] = this.state.fieldValue;
-        this.cancelEvent();
-        this.props.updateCallback(row, config, this.props.formResponseCallback)
+    const cancelEvent = (row, config, e) => {
+        setEditing(false);
+        setShowControls(false);
     }
 
-    cancelEvent(row, config, e) {
-        this.setState({
-            editing: false,
-            showControls: false,
-        })
+    const textFieldClick = (row, config, e) => {
+        setEditing(true);
+        setShowControls(true);
+        setFieldValue(row[config.field]);
     }
 
-    textFieldClick(row, config, e) {
-        this.setState({
-            editing: true,
-            showControls: true,
-            fieldValue: row[config.field]
-        })
-    }
-
-    render() {
         return (
-            <div className={"datalist-field datalist-text-field" + (this.state.editing? " editing" : "")}>
+            <div className={"datalist-field datalist-text-field" + (editing? " editing" : "")}>
 
                 <input className={"text-field--input datalist-field-border"} type={"text"}
-                       placeholder={this.props.data[this.props.config.field]}
-                       value={this.state.fieldValue}
-                       onChange={this.textFieldChangeEvent}
-                       onClick={this.textFieldClick.bind(this, this.props.data, this.props.config)}
+                       placeholder={props.data[props.config.field]}
+                       value={fieldValue}
+                       onChange={textFieldChangeEvent}
+                       onClick={textFieldClick.bind(this, props.data, props.config)}
                 />
-                {this.state.showControls &&
+                {showControls &&
                 <div className={"datalist-field-controls"}>
-                    <a className={"save"} onClick={this.saveEvent.bind(this, this.props.data, this.props.config)}>
+                    <a className={"save"} onClick={saveEvent.bind(this, props.data, props.config)}>
                         <i className="fas fa-check"/>
                     </a>
-                    <a className={"cancel"} onClick={this.cancelEvent.bind(this, this.props.data, this.props.config)}>
+                    <a className={"cancel"} onClick={cancelEvent.bind(this, props.data, props.config)}>
                         <i className="fas fa-times"/>
                     </a>
                 </div>
                 }
             </div>
         )
-    }
 }
 
 export default TextField;

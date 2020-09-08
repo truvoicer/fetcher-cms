@@ -1,91 +1,49 @@
-import Form from "react-bootstrap/Form";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
-import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
-import Select from 'react-select';
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {CategoryFormData} from "../../../library/forms/category-form";
+
 const sprintf = require("sprintf-js").sprintf;
 
-export default class ServiceForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            action: this.props.data.action,
-            id: "",
-            category_name: "",
-            category_label: "",
-        }
-        this.submitHandler = this.submitHandler.bind(this);
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-    }
+const CategoryForm = (props) => {
+    const [category, setCategory] = useState({})
+    const [showForm, setShowForm] = useState(false)
+    const addCategoryButtonLabel = "Add Category";
+    const updateCategoryButtonLabel = "Update Category";
 
-    componentDidMount() {
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.category, this.props.data.itemId)).then((response) => {
-                this.setState({
-                    id: response.data.data.id,
-                    category_name: response.data.data.category_name,
-                    category_label: response.data.data.category_label,
-                })
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.category, props.data.itemId)).then((response) => {
+                setCategory(response.data.data);
+                setShowForm(true);
             })
         }
+    }, [props.data.itemId, props.data.action])
+
+    const submitCallbackHandler = (values) => {
+        values.id = props.data.itemId;
+        responseHandler(sendData(props.data.action, "category", values), props.formResponse);
     }
 
-    getProvidersSelect(providerData) {
-        return providerData.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.provider_name
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+                <DataForm
+                    data={CategoryFormData(category?.category_name, category?.category_label)}
+                    submitCallback={submitCallbackHandler}
+                    submitButtonText={updateCategoryButtonLabel}
+                />
             }
-        })
-
-    }
-
-
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    submitHandler(e) {
-        e.preventDefault();
-        responseHandler(sendData(this.state.action, "category", this.state),  this.props.formResponse);
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.submitHandler}>
-                <Row>
-                    <Col>
-                        <Form.Group controlId="formCategoryLabel">
-                            <Form.Label>Category Label</Form.Label>
-                            <Form.Control type="text"
-                                          placeholder="Enter the category label."
-                                          onChange={this.formChangeHandler}
-                                          name="category_label"
-                                          value={this.state.category_label}/>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group controlId="formCategoryName">
-                            <Form.Label>Category Name</Form.Label>
-                            <Form.Control type="text"
-                                          placeholder="Enter the category name."
-                                          onChange={this.formChangeHandler}
-                                          name="category_name"
-                                          value={this.state.category_name}/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        );
-    }
-
-
+            {props.data.action !== "update" &&
+                <DataForm
+                    data={CategoryFormData()}
+                    submitCallback={submitCallbackHandler}
+                    submitButtonText={addCategoryButtonLabel}
+                />
+            }
+        </>
+    );
 }
+export default CategoryForm;

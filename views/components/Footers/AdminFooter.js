@@ -1,22 +1,12 @@
 import {SiteConfig} from "../../../config/site-config";
+import React from "react";
 
-class AdminFooter extends React.Component {
+const AdminFooter = (props) => {
 
-  constructor(props) {
-    super(props)
-
-  }
-
-  componentDidMount() {
-  }
-
-
-  render() {
     return (
         <footer className="c-footer">
           <div>{SiteConfig.siteName} © 2020</div>
         </footer>
     )
-  }
 }
 export default AdminFooter

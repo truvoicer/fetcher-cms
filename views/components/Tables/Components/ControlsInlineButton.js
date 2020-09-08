@@ -1,36 +1,31 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Link from "next/link";
-import {getLinkData, isSet} from "../../../../library/utils";
+import {getLinkData} from "../../../../library/utils";
 import Button from "react-bootstrap/Button";
 
-class ControlsInlineButton extends Component {
-    constructor(props) {
-        super(props);
+const ControlsInlineButton = (props) => {
+    if (props.config.control === "link") {
+        let linkData = getLinkData(props.config, props.data)
+        return (
+            <Link href={linkData.href} as={linkData.linkAs}>
+                <a className={props.config.classes}>
+                    {props.config.text}
+                </a>
+            </Link>
+        )
+    } else if (props.config.control === "button") {
+        return (
+            <Button
+                variant={props.config.classes}
+                size={props.config.size}
+                onClick={props.callback.bind(this, props.config, props.data)}
+            >
+                {props.config.text}
+            </Button>
+        )
     }
+    return null;
 
-    render() {
-        if (this.props.config.control === "link") {
-            let linkData = getLinkData(this.props.config, this.props.data)
-            return (
-                    <Link href={linkData.href} as={linkData.linkAs}>
-                        <a className={this.props.config.classes}>
-                            {this.props.config.text}
-                        </a>
-                    </Link>
-            )
-        } else if (this.props.config.control === "button") {
-            return (
-                    <Button
-                        variant={this.props.config.classes}
-                        size={this.props.config.size}
-                        onClick={this.props.callback.bind(this, this.props.config, this.props.data)}
-                    >
-                        {this.props.config.text}
-                    </Button>
-            )
-        }
-        return null;
-    }
 }
 
 export default ControlsInlineButton;

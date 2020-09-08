@@ -2,25 +2,14 @@ import {Routes} from '../../../config/routes'
 import {SiteConfig} from '../../../config/site-config'
 import {checkAccessControl, getRouteItem, getSessionObject} from '../../../library/session/authenticate'
 import Link from "next/link";
-import React from "react";
+import React, {useContext} from "react";
 import {UserContext} from "../Context/UserContext";
 import SearchComponent from "../Search/SearchComponent";
 
-class Sidebar extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            sidebarNav: []
-        }
-        this.menuClick = this.menuClick.bind(this)
-        this.getSidebarNav = this.getSidebarNav.bind(this)
-        this.ListItems = this.ListItems.bind(this)
-    }
+const Sidebar = (props) => {
+    const userContext = useContext(UserContext);
 
-    componentDidMount() {
-    }
-
-    menuClick(e) {
+    const menuClick = (e) => {
         if (e.target.classList.contains("c-linkable")) {
             return null;
         }
@@ -33,17 +22,17 @@ class Sidebar extends React.Component {
         }
     }
 
-    getSidebarNav() {
+    const GetSidebarNav = () => {
         return (
             <ul className="c-sidebar-nav">
-                <this.ListItems/>
+                <ListItems/>
             </ul>
         )
     }
 
-    ListItems() {
+    const ListItems = () => {
         return Routes.items.map(function (item, index) {
-            if(checkAccessControl(getRouteItem(Routes.items, item.name), this.context.user)) {
+            if(checkAccessControl(getRouteItem(Routes.items, item.name), userContext.user)) {
                 let i = 0;
                 return (
                     <div key={index.toString()}>
@@ -58,7 +47,7 @@ class Sidebar extends React.Component {
                                     : "c-sidebar-nav-link c-linkable"
                                 }
                                    id={item.name}
-                                   onClick={this.menuClick}>
+                                   onClick={menuClick}>
                                     <svg className="c-sidebar-nav-icon">
                                         <use xlinkHref={"/images/icons/sprites/free.svg#" + item.icon}/>
                                     </svg>
@@ -89,21 +78,19 @@ class Sidebar extends React.Component {
                     </div>
                 )
             }
-        }.bind(this))
+        })
     }
 
-    render() {
-        return (
-            <div className="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
-                <div className="c-sidebar-brand d-lg-down-none">
-                    {SiteConfig.siteName}
-                </div>
-
-                <SearchComponent />
-                <this.getSidebarNav/>
+    return (
+        <div className="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
+            <div className="c-sidebar-brand d-lg-down-none">
+                {SiteConfig.siteName}
             </div>
-        )
-    }
+
+            <SearchComponent />
+            <GetSidebarNav/>
+        </div>
+    )
+
 }
-Sidebar.contextType = UserContext;
 export default Sidebar
