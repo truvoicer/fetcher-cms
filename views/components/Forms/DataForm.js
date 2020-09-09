@@ -47,7 +47,10 @@ const DataForm = (props) => {
         let selectDefaults = {};
         props.data.fields.map((item) => {
             if (item.fieldType === "select") {
-                selectDefaults[item.name] = props.selectData[item.name];
+                const value = getInitialValue(item);
+                if (value !== null) {
+                    selectDefaults[item.name] = value;
+                }
             }
             if (isSet(item.subFields)) {
                 item.subFields.map((subItem) => {
@@ -64,8 +67,9 @@ const DataForm = (props) => {
     const getDatesDefaults = () => {
         let datesDefaults = {};
         props.data.fields.map((item) => {
-            if (item.fieldType === "date") {
-                datesDefaults[item.name] = isSet(item.value) ? item.value : "";
+            const value = getInitialValue(item);
+            if (value !== null) {
+                datesDefaults[item.name] = value;
             }
         });
         return datesDefaults;
@@ -202,7 +206,7 @@ const DataForm = (props) => {
         setSelected({
             [name]: e
         })
-        values[name] = e;
+        values[name] = e? e : [];
         validateForm(values)
     }
 

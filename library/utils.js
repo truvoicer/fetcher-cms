@@ -98,3 +98,11 @@ export const uCaseFirst = (string) => {
     }
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export const isObjectEmpty = (object) => {
+    return Object.keys(object).length === 0 && object.constructor === Object
+}
+
+export const isObject = (object) => {
+    return typeof object === "object";
+}

@@ -11,11 +11,11 @@ const ProviderForm = (props) => {
     const [provider, setProvider] = useState({});
     const [showForm, setShowForm] = useState(false);
     const [selectData, setSelectData] = useState({
-        categories: []
+        category: []
     });
 
     const [selectOptions, setSelectOptions] = useState({
-        categories: [],
+        category: [],
     });
 
     const addButtonLabel = "Add Provider";
@@ -24,7 +24,7 @@ const ProviderForm = (props) => {
     useEffect(() => {
         fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
             setSelectOptions({
-                categories: getCategoriesSelect(response.data.data)
+                category: getCategoriesSelect(response.data.data)
             })
         })
     }, [])
@@ -34,7 +34,7 @@ const ProviderForm = (props) => {
             fetchData(sprintf(ApiConfig.endpoints.provider, props.data.itemId)).then((response) => {
                 setProvider(response.data.data);
                 setSelectData({
-                    categories: getCategoriesSelect(response.data.data.category)
+                    category: getCategoriesSelect(response.data.data.category)
                 })
                 setShowForm(true);
             })
@@ -57,13 +57,12 @@ const ProviderForm = (props) => {
             values.id = props.data.itemId;
         }
 
-        const categories = values.categories.map((item) => {
-            console.log(item.value)
+        const category = values.category.map((item) => {
             return {
                 id: item.value
             }
         })
-        values.categories = categories;
+        values.category = category;
         responseHandler(sendData(props.data.action, "provider", values), props.formResponse);
     }
 

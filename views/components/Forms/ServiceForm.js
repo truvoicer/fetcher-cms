@@ -1,14 +1,8 @@
-import Form from "react-bootstrap/Form";
 import React, {useEffect, useState} from "react";
 import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
-import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
-import Select from 'react-select';
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
-import {ProviderFormData} from "../../../library/forms/provider-form";
 import {ServiceFormData} from "../../../library/forms/service-form";
 
 const sprintf = require("sprintf-js").sprintf;
@@ -17,11 +11,11 @@ const ServiceForm = (props) => {
     const [service, setService] = useState({});
     const [showForm, setShowForm] = useState(false);
     const [selectData, setSelectData] = useState({
-        categories: {}
+        category: {}
     });
 
     const [selectOptions, setSelectOptions] = useState({
-        categories: [],
+        category: [],
     });
 
     const addButtonLabel = "Add Service";
@@ -30,7 +24,7 @@ const ServiceForm = (props) => {
     useEffect(() => {
         fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
             setSelectOptions({
-                categories: getCategoriesSelect(response.data.data)
+                category: getCategoriesSelect(response.data.data)
             })
         })
     }, [])
@@ -40,7 +34,7 @@ const ServiceForm = (props) => {
             fetchData(sprintf(ApiConfig.endpoints.service, props.data.itemId)).then((response) => {
                 setService(response.data.data);
                 setSelectData({
-                    categories: {
+                    category: {
                         value: response.data.data.category.id,
                         label: response.data.data.category.category_label
                     }
@@ -63,7 +57,7 @@ const ServiceForm = (props) => {
         if (props.data.action === "update") {
             values.id = props.data.itemId;
         }
-        values.categories.id = values.categories.value;
+        values.category.id = values.category.value;
         responseHandler(sendData(props.data.action, "service", values), props.formResponse);
     }
 

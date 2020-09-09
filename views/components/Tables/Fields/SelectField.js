@@ -11,7 +11,7 @@ const SelectField = (props) => {
     const [selectOptions, setSelectOptions] = useState([]);
 
     const selectChangeHandler = (e) => {
-        setSelectValue(e)
+        setSelectValue(e? e : [])
     }
 
     const getItemDataById = (id) => {

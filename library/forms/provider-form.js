@@ -56,14 +56,6 @@ export const ProviderFormData = (
                 type: "text",
                 placeHolder: "Enter a provider user id",
                 value: provider_user_id ? provider_user_id : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "length",
-                            min: 2
-                        }
-                    ]
-                }
             },
             {
                 name: "provider_api_base_url",
@@ -72,14 +64,6 @@ export const ProviderFormData = (
                 type: "text",
                 placeHolder: "Enter a provider api base url",
                 value: provider_api_base_url ? provider_api_base_url : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "length",
-                            min: 2
-                        }
-                    ]
-                }
             },
             {
                 name: "provider_access_key",
@@ -88,14 +72,6 @@ export const ProviderFormData = (
                 type: "text",
                 placeHolder: "Enter a provider access key",
                 value: provider_access_key ? provider_access_key : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "length",
-                            min: 2
-                        }
-                    ]
-                }
             },
             {
                 name: "provider_secret_key",
@@ -104,17 +80,9 @@ export const ProviderFormData = (
                 type: "text",
                 placeHolder: "Enter a provider secret key",
                 value: provider_secret_key ? provider_secret_key : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "length",
-                            min: 2
-                        }
-                    ]
-                }
             },
             {
-                name: "categories",
+                name: "category",
                 label: "Provider Categories",
                 fieldType: "select",
                 multi: true
