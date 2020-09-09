@@ -4,28 +4,43 @@ import {isSet} from "../../../library/utils";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import {error} from "next/dist/build/output/log";
+import FormList from "./Components/FormList";
 
 const DataForm = (props) => {
 
     const getInitialDataObject = () => {
         let initialValues = {};
         props.data.fields.map((item) => {
-            if (item.fieldType === "text") {
-                initialValues[item.name] = isSet(item.value) ? item.value : "";
-            } else if (item.fieldType === "select") {
-                initialValues[item.name] = isSet(props.selectData[item.name]) ? props.selectData[item.name] : [];
-            } else if (item.fieldType === "checkbox") {
-                initialValues[item.name] = "";
-            } else if (item.fieldType === "date") {
-                initialValues[item.name] = isSet(item.value) ? item.value : "";
+            const value = getInitialValue(item);
+            if (value !== null) {
+                initialValues[item.name] = value;
             }
             if (isSet(item.subFields)) {
                 item.subFields.map((subItem) => {
-                    initialValues[subItem.name] = isSet(subItem.value) && subItem.fieldType === "text" ? subItem.value : "";
+                    const subValue = getInitialValue(subItem);
+                    if (subValue !== null) {
+                        initialValues[subItem.name] = subValue;
+                    }
                 })
             }
         })
         return initialValues;
+    }
+
+    const getInitialValue = (item) => {
+        let value;
+        if (item.fieldType === "text") {
+            value = isSet(item.value) ? item.value : "";
+        } else if (item.fieldType === "select") {
+            value = isSet(props.selectData[item.name]) ? props.selectData[item.name] : [];
+        } else if (item.fieldType === "checkbox") {
+            value = "";
+        } else if (item.fieldType === "date") {
+            value = isSet(item.value) ? item.value : "";
+        } else if (item.fieldType === "list") {
+            value = isSet(props.listData[item.name]) ? props.listData[item.name] : [];
+        }
+        return value;
     }
 
     const getSelectDefaults = () => {
@@ -168,6 +183,7 @@ const DataForm = (props) => {
         props.submitCallback(values);
     }
 
+
     const dateChangeHandler = (values, key, date, e) => {
         setDates({
             [key]: date
@@ -183,35 +199,135 @@ const DataForm = (props) => {
         validateForm(values)
     }
 
+    const listFieldCallback = (values, name, data) => {
+        values[name] = data;
+    }
+
+    const dependsOnCheck = (field, values) => {
+        let show = false;
+        if (isSet(field.dependsOn) && field.dependsOn.value === values[field.dependsOn.field].value) {
+            show = true;
+        } else if (!isSet(field.dependsOn)) {
+            show = true;
+        }
+        return show;
+    }
+
+    const getFieldRow = (field, errors, touched, handleBlur, handleChange, values) => {
+        return (
+            <>
+                {field.fieldType === "text" &&
+                getInputRow(field, errors, touched, handleBlur, handleChange, values)
+                }
+                {field.fieldType === "select" &&
+                getSelectRow(field, errors, touched, handleBlur, handleChange, values)
+                }
+                {field.fieldType === "date" &&
+                getDateRow(field, errors, touched, handleBlur, handleChange, values)
+                }
+                {field.fieldType === "checkbox" &&
+                getCheckboxRow(field, errors, touched, handleBlur, handleChange, values)
+                }
+                {field.fieldType === "list" &&
+                getListRow(field, errors, touched, handleBlur, handleChange, values)
+                }
+            </>
+        )
+    }
+
     const getDateRow = (field, errors, touched, handleBlur, handleChange, values) => {
         return (
-            <div className="row form-group form-group-text">
-                <div className="col-md-12">
-                    {field.label &&
-                    <>
-                        {field.label}
-                        <label className="text-black" htmlFor={field.name}>
+            <>
+                {dependsOnCheck(field, values) &&
+                <div className="row form-group form-group-text">
+                    <div className="col-md-12">
+                        {field.label &&
+                        <>
+                            {field.label}
+                            <label className="text-black" htmlFor={field.name}>
                         <span className={"site-form--error--field"}>
                             {errors[field.name]}
                         </span>
-                        </label>
-                    </>
-                    }
-                    <div className={"row"}>
-                        <div className={"col-12"}>
-                            <DatePicker
-                                id={field.name}
-                                name={field.name}
-                                dateFormat={field.format}
-                                className={"filter-datepicker"}
-                                selected={dates[field.name]}
-                                showTimeInput
-                                onChange={dateChangeHandler.bind(this, values, field.name)}
-                            />
+                            </label>
+                        </>
+                        }
+                        <div className={"row"}>
+                            <div className={"col-12"}>
+                                <DatePicker
+                                    id={field.name}
+                                    name={field.name}
+                                    dateFormat={field.format}
+                                    className={"filter-datepicker"}
+                                    selected={dates[field.name]}
+                                    showTimeInput
+                                    onChange={dateChangeHandler.bind(this, values, field.name)}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                }
+            </>
+        )
+    }
+
+    const getListRow = (field, errors, touched, handleBlur, handleChange, values) => {
+        return (
+            <>
+                {dependsOnCheck(field, values) &&
+                <div className="row form-group form-group-text">
+                    <div className="col-md-12">
+                        {field.label &&
+                        <>
+                            {field.label}
+                            <label className="text-black" htmlFor={field.name}>
+                        <span className={"site-form--error--field"}>
+                            {errors[field.name] && touched[field.name] && errors[field.name]}
+                        </span>
+                            </label>
+                        </>
+                        }
+                        <FormList callback={listFieldCallback.bind(this, values, field.name)}
+                                  listItemKeyLabel={"Key"}
+                                  listItemValueLabel={"Value"}
+                                  addRowLabel={"Add Parameter"}
+                                  data={values[field.name]}
+                          />
+                    </div>
+                </div>
+                }
+            </>
+        )
+    }
+
+    const getCheckboxRow = (field, errors, touched, handleBlur, handleChange, values) => {
+        return (
+            <>
+                {dependsOnCheck(field, values) &&
+                <div className={"form-check-group"}>
+                    <div className="form-check">
+                        <label>
+                            <Field
+                                className="form-check-input"
+                                type="checkbox"
+                                name={field.name}
+                                // value={field.value}
+                            />
+                            {field.label}
+                        </label>
+                    </div>
+                    {field.subFields && values[field.name] &&
+                    <div className={"form-subfields"}>
+                        {field.subFields.map((subField, subFieldIndex) => (
+                            <React.Fragment key={subFieldIndex}>
+                                {getFieldRow(subField, errors, touched, handleBlur, handleChange, values)}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                    }
+                </div>
+                }
+            </>
         )
     }
 
@@ -222,55 +338,73 @@ const DataForm = (props) => {
         }
         selectOptions = props.selectOptions[field.name];
         return (
-            <div className="row form-group form-group-text">
-                <div className="col-md-12">
-                    {field.label &&
-                    <>
-                        {field.label}
-                        <label className="text-black" htmlFor={field.name}>
+            <>
+                {dependsOnCheck(field, values) &&
+                <div className={"select-wrapper"}>
+                    <div className="row form-group form-group-text">
+                        <div className="col-md-12">
+                            {field.label &&
+                            <>
+                                {field.label}
+                                <label className="text-black" htmlFor={field.name}>
                         <span className={"site-form--error--field"}>
                             {errors[field.name]}
                         </span>
-                        </label>
-                    </>
+                                </label>
+                            </>
+                            }
+                            <Select
+                                isMulti={field.multi && field.multi}
+                                options={selectOptions}
+                                value={selected[field.name]}
+                                onChange={selectChangeHandler.bind(this, field.name, values)}
+                            />
+                        </div>
+                    </div>
+                    {field.subFields && values[field.name] &&
+                    <div className={"form-subfields"}>
+                        {field.subFields.map((subField, subFieldIndex) => (
+                            <React.Fragment key={subFieldIndex}>
+                                {getFieldRow(subField, errors, touched, handleBlur, handleChange, values)}
+                            </React.Fragment>
+                        ))}
+                    </div>
                     }
-                    <Select
-                        isMulti={field.multi && field.multi}
-                        options={selectOptions}
-                        value={selected[field.name]}
-                        onChange={selectChangeHandler.bind(this, field.name, values)}
-                    />
                 </div>
-            </div>
+                }
+            </>
         )
     }
-
     const getInputRow = (field, errors, touched, handleBlur, handleChange, values) => {
         return (
-            <div className="row form-group form-group-text">
-                <div className="col-md-12">
-                    {field.label &&
-                    <>
-                        {field.label}
-                        <label className="text-black" htmlFor={field.name}>
+            <>
+                {dependsOnCheck(field, values) &&
+                <div className="row form-group form-group-text">
+                    <div className="col-md-12">
+                        {field.label &&
+                        <>
+                            {field.label}
+                            <label className="text-black" htmlFor={field.name}>
                         <span className={"site-form--error--field"}>
                             {errors[field.name] && touched[field.name] && errors[field.name]}
                         </span>
-                        </label>
-                    </>
-                    }
-                    <input
-                        id={field.name}
-                        type={field.type}
-                        name={field.name}
-                        className="form-control text-input"
-                        placeholder={field.placeHolder}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        value={values[field.name]}
-                    />
+                            </label>
+                        </>
+                        }
+                        <input
+                            id={field.name}
+                            type={field.type}
+                            name={field.name}
+                            className="form-control text-input"
+                            placeholder={field.placeHolder}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values[field.name]}
+                        />
+                    </div>
                 </div>
-            </div>
+                }
+            </>
         )
     }
 
@@ -293,41 +427,7 @@ const DataForm = (props) => {
                           onSubmit={handleSubmit}>
                         {props.data.fields.map((field, index) => (
                             <React.Fragment key={index}>
-                                {field.fieldType === "text" &&
-                                getInputRow(field, errors, touched, handleBlur, handleChange, values)
-                                }
-                                {field.fieldType === "select" &&
-                                getSelectRow(field, errors, touched, handleBlur, handleChange, values)
-                                }
-                                {field.fieldType === "date" &&
-                                getDateRow(field, errors, touched, handleBlur, handleChange, values)
-                                }
-                                {field.fieldType === "checkbox" &&
-                                <div className={"form-check-group"}>
-                                    <div className="form-check">
-                                        <label>
-                                            <Field
-                                                className="form-check-input"
-                                                type="checkbox"
-                                                name={field.name}
-                                                // value={field.value}
-                                            />
-                                            {field.label}
-                                        </label>
-                                    </div>
-                                    {field.subFields && values[field.name] &&
-                                    <div className={"form-subfields"}>
-                                        {field.subFields.map((subField, subFieldIndex) => (
-                                            <React.Fragment key={subFieldIndex}>
-                                                {subField.fieldType === "text" &&
-                                                getInputRow(subField, errors, touched, handleBlur, handleChange, values)
-                                                }
-                                            </React.Fragment>
-                                        ))}
-                                    </div>
-                                    }
-                                </div>
-                                }
+                                {getFieldRow(field, errors, touched, handleBlur, handleChange, values)}
                             </React.Fragment>
                         ))}
 

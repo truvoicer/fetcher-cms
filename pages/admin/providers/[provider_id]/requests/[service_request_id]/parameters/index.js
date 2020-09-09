@@ -19,7 +19,6 @@ const ServiceRequestParameters = (props) => {
         data: {},
         received: false
     });
-    const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
@@ -77,6 +76,7 @@ const ServiceRequestParameters = (props) => {
                 selector: 'parameter_name',
                 sortable: true,
                 editable: true,
+                maxWidth: "200px",
                 editableConfig: {
                     field: "parameter_name",
                     fieldType: "text",
@@ -93,6 +93,7 @@ const ServiceRequestParameters = (props) => {
                 selector: 'parameter_value',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "parameter_value",
                     fieldType: "text",
@@ -162,7 +163,7 @@ const ServiceRequestParameters = (props) => {
             {serviceRequest.received && provider.received &&
             <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestParametersPageName}>
                 <>
-                    <Col sm={12} md={6} lg={5}>
+                    <Col sm={12} md={12} lg={12}>
                         <DataList
                             tableData={getTableData()}
                             tableColumns={getTableColumns()}

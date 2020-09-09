@@ -1,84 +1,62 @@
 import ApiConfig from '../../../config/api-config'
 import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
-import React from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Select from "react-select";
+import React, {useEffect, useState} from "react";
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {ServiceRequestParameterFormData} from "../../../library/forms/service-request-parameter-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-class ServiceParametersForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            action: this.props.data.action,
-            id: "",
-            service_request_id: this.props.config.service_request_id,
-            parameter_name: "",
-            parameter_value: ""
-        }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-        console.log(this.props)
-    }
+const ServiceParametersForm = (props) => {
 
-    componentDidMount() {
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequestParameter, this.props.data.itemId)).then((response) => {
-                this.setState({
-                    id: response.data.data.id,
-                    parameter_name: response.data.data.parameter_name,
-                    parameter_value: response.data.data.parameter_value,
-                    service_request_id: response.data.data.service_request.id
-                })
+    const addButtonLabel = "Add Request Parameter";
+    const updateButtonLabel = "Update Request Parameter";
+
+    const [serviceRequestParameter, setServiceRequestParameter] = useState({});
+    const [showForm, setShowForm] = useState(false);
+
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.serviceRequestParameter, props.data.itemId)).then((response) => {
+                setServiceRequestParameter(response.data.data);
+                setShowForm(true);
             })
+
         }
+    }, [props.data.itemId, props.data.action])
+
+    const submitHandler = (values) => {
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
+        }
+        values.service_request_id = props.config.service_request_id;
+        responseHandler(sendData(props.data.action, "service/request/parameter", values),  props.formResponse);
     }
 
-
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    submitHandler(e) {
-        e.preventDefault();
-        console.log(this.state)
-
-        responseHandler(sendData(this.state.action, "service/request/parameter", this.state),  this.props.formResponse);
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.submitHandler}>
-
-                <Form.Group controlId="formParameterName">
-                    <Form.Label>Parameter Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the parameter name."
-                                  onChange={this.formChangeHandler}
-                                  name="parameter_name"
-                                  value={this.state.parameter_name}/>
-                </Form.Group>
-                <Form.Group controlId="formParameterValue">
-                    <Form.Label>Parameter Value</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the parameter value."
-                                  onChange={this.formChangeHandler}
-                                  name="parameter_value"
-                                  value={this.state.parameter_value}/>
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        );
-    }
-
-
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+            <DataForm
+                data={
+                    ServiceRequestParameterFormData(
+                        true,
+                        serviceRequestParameter.parameter_name,
+                        serviceRequestParameter.parameter_value,
+                    )
+                }
+                submitCallback={submitHandler}
+                submitButtonText={updateButtonLabel}
+            />
+            }
+            {props.data.action !== "update" &&
+            <DataForm
+                data={ServiceRequestParameterFormData()}
+                submitCallback={submitHandler}
+                submitButtonText={addButtonLabel}
+            />
+            }
+        </>
+    );
 }
 
 export default ServiceParametersForm;

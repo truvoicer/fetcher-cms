@@ -1,108 +1,98 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {isSet} from "../../../../library/utils";
 
-class FormList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            formList: (isSet(this.props.data) &&
-                Array.isArray(this.props.data) &&
-                this.props.data.length > 0)? this.props.data : [],
-            formListData: [],
-            listClass: "form-list",
-            listGroupClass: "form-list-items",
-            listRowClass: "form-list-row",
-            listItemKeyClass: "form-list-item-key",
-            listItemValueClass: "form-list-item-value",
-            addRowLabel: "Add New",
-            listItemKeyLabel: "Key",
-            listItemValueLabel: "Value"
+const FormList = (props) => {
+    const listClass = "form-list";
+    const listGroupClass = "form-list-items";
+    const listRowClass = "form-list-row";
+    const listItemKeyClass = "form-list-item-key";
+    const listItemValueClass = "form-list-item-value";
+    const addRowLabel = "Add New";
+    const listItemKeyLabel = "Key";
+    const listItemValueLabel = "Value";
 
-        }
-        this.addFormListRow = this.addFormListRow.bind(this)
-        this.removeFormListRow = this.removeFormListRow.bind(this)
-        this.formChangeHandler = this.formChangeHandler.bind(this)
+    let getFormList = [];
+    if ((isSet(props.data) && Array.isArray(props.data) && props.data.length > 0)) {
+        getFormList = props.data;
+    }
+    const [formList, setFormList] = useState(getFormList);
+
+    const addFormListRow = (e) => {
+        let formListState = [...formList];
+        formListState.push(formListRow())
+        setFormList(formListState)
     }
 
-    addFormListRow(e) {
-        let formList = this.state.formList;
-        formList.push(this.formListRow())
-        this.setState({
-            formList: formList
-        })
-    }
-
-    removeFormListRow(index, e) {
+    const removeFormListRow = (index, e) => {
         const itemRow = document.getElementsByClassName("list-item-" + index.toString())
         itemRow[0].remove()
-        this.formChangeHandler()
+        formChangeHandler()
     }
 
-    formListRow(index) {
+    const formListRow = (index) => {
         return {
             name: "",
             value: ""
         }
     }
 
-    formChangeHandler(e) {
-        let listRows = Array.from(document.getElementsByClassName(this.state.listRowClass));
+    const formChangeHandler = (e) => {
+        let listRows = Array.from(document.getElementsByClassName(listRowClass));
         let queryData = [];
         listRows.map((item, index) => {
-            let itemKey = item.getElementsByClassName(this.state.listItemKeyClass)[0];
-            let itemValue = item.getElementsByClassName(this.state.listItemValueClass)[0];
+            let itemKey = item.getElementsByClassName(listItemKeyClass)[0];
+            let itemValue = item.getElementsByClassName(listItemValueClass)[0];
             queryData.push({
                 name: itemKey.value,
                 value: itemValue.value
             })
         })
-
-        this.props.callback(queryData);
+        props.callback(queryData);
     }
-
-    render() {
-        return (
-            <div className={this.state.listClass}>
-                <button className={"btn btn-primary btn-sm add-row-button"}
-                        onClick={this.addFormListRow}
-                        type={"button"}>
-                    {this.props.addRowLabel ? this.props.addRowLabel : this.state.addRowLabel}
-                </button>
-                <div className={this.state.listGroupClass}>
-                    {this.state.formList.map((item, index) => (
-                        <div className={this.state.listRowClass + " list-item-" + index.toString()}
-                            key={index.toString()}>
-                            <Row>
-                                <Col sm={12} md={12} lg={5}>
-                                    <input
-                                        className={this.state.listItemKeyClass}
-                                        placeholder={this.props.listItemKeyLabel ? this.props.listItemKeyLabel : this.state.listItemKeyLabel}
-                                        defaultValue={item.name}
-                                        onChange={this.formChangeHandler}
-                                    />
-                                </Col>
-                                <Col sm={12} md={12} lg={5}>
-                                    <input
-                                        className={this.state.listItemValueClass}
-                                        placeholder={this.props.listItemValueLabel ? this.props.listItemValueLabel : this.state.listItemValueLabel}
-                                        defaultValue={item.value}
-                                        onChange={this.formChangeHandler}
-                                    />
-                                </Col>
-                                <Col sm={12} md={12} lg={2}>
-                                    <a className={"form-list-row--new"} onClick={this.addFormListRow}><i className="fas fa-plus-circle"/></a>
-                                    <a className={"form-list-row--remove"} onClick={this.removeFormListRow.bind(this, index)}><i className="fas fa-trash-alt"/></a>
-                                </Col>
-                            </Row>
-                        </div>
-                    ))}
-                </div>
+    return (
+        <div className={listClass}>
+            <button className={"btn btn-primary btn-sm add-row-button"}
+                    onClick={addFormListRow}
+                    type={"button"}>
+                {props.addRowLabel ? addRowLabel : addRowLabel}
+            </button>
+            <div className={listGroupClass}>
+                {formList.map((item, index) => (
+                    <div className={listRowClass + " list-item-" + index.toString()}
+                         key={index.toString()}>
+                        <Row>
+                            <Col sm={12} md={12} lg={5}>
+                                <input
+                                    className={listItemKeyClass}
+                                    placeholder={listItemKeyLabel ? listItemKeyLabel : listItemKeyLabel}
+                                    defaultValue={item.name}
+                                    onChange={formChangeHandler}
+                                />
+                            </Col>
+                            <Col sm={12} md={12} lg={5}>
+                                <input
+                                    className={listItemValueClass}
+                                    placeholder={listItemValueLabel ? listItemValueLabel : listItemValueLabel}
+                                    defaultValue={item.value}
+                                    onChange={formChangeHandler}
+                                />
+                            </Col>
+                            <Col sm={12} md={12} lg={2}>
+                                <a className={"form-list-row--new"} onClick={addFormListRow}><i
+                                    className="fas fa-plus-circle"/></a>
+                                <a className={"form-list-row--remove"}
+                                   onClick={removeFormListRow.bind(this, index)}><i className="fas fa-trash-alt"/></a>
+                            </Col>
+                        </Row>
+                    </div>
+                ))}
             </div>
+        </div>
 
-        );
-    }
+    );
+
 }
 
 export default FormList;

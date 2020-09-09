@@ -79,6 +79,7 @@ const ServiceRequestConfig = (props) => {
                 selector: 'item_name',
                 sortable: true,
                 editable: true,
+                maxWidth: "200px",
                 editableConfig: {
                     field: "item_name",
                     fieldType: "text",
@@ -94,6 +95,7 @@ const ServiceRequestConfig = (props) => {
                 name: 'item Value',
                 selector: 'item_value',
                 sortable: true,
+                maxWidth: "300px",
                 cell: row => {
                     if (row.value_type === "list") {
                         if (isSet(row.item_array_value) &&
@@ -166,7 +168,7 @@ const ServiceRequestConfig = (props) => {
             {serviceRequest.received && provider.received &&
             <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestConfigPageName}>
                 <>
-                    <Col sm={12} md={6} lg={6}>
+                    <Col sm={12} md={12} lg={12}>
                         <DataList
                             tableData={getTableData()}
                             tableColumns={getTableColumns()}
