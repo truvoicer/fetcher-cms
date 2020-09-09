@@ -1,185 +1,179 @@
 import ApiConfig from '../../../config/api-config'
 import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
-import React from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import FormList from "./Components/FormList";
-import Select from "react-select";
+import React, {useEffect, useState} from "react";
 import {isSet, uCaseFirst} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {ServiceRequestConfigFormData} from "../../../library/forms/service-request-config-form";
+import {ServiceRequestResponseKeysFormData} from "../../../library/forms/service-request-response-keys-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-class RequestResponseKeysForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            action: this.props.data.action,
-            id: "",
-            key_name: "",
-            key_value: "",
-            show_in_response: false,
-            list_item: false,
-            has_array_value: false,
-            return_data_type_options: [
-                {
-                    value: "text",
-                    label: "Text"
-                },
-                {
-                    value: "object",
-                    label: "Object"
-                },
-                {
-                    value: "array",
-                    label: "Array"
-                },
-            ],
-            return_data_type_select: {
+const RequestResponseKeysForm = (props) => {
+
+    const addButtonLabel = "Add Request Config";
+    const updateButtonLabel = "Update Request Config";
+
+    const [selectData, setSelectData] = useState({
+        return_data_type: {
+            value: "text",
+            label: "Text"
+        }
+    });
+
+    const [selectOptions, setSelectOptions] = useState({
+        return_data_type: [
+            {
                 value: "text",
                 label: "Text"
             },
-            return_data_type: "text",
-            array_keys: [],
-            service_request_id: this.props.config.service_request_id
-        };
+            {
+                value: "object",
+                label: "Object"
+            },
+            {
+                value: "array",
+                label: "Array"
+            },
+        ],
+    });
 
-        this.formSubmitHandler = this.formSubmitHandler.bind(this);
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.formSelectHandler = this.formSelectHandler.bind(this);
-        this.formListCallback = this.formListCallback.bind(this);
-        this.fetchRequestResponseResponse = this.fetchRequestResponseResponse.bind(this);
-    }
+    const [requestResponseKey, setRequestResponseKey] = useState({});
+    const [listData, setListData] = useState({
+        array_keys: []
+    });
+    const [showForm, setShowForm] = useState(false);
 
-    componentDidMount() {
-        responseHandler(fetchData(
-            sprintf(ApiConfig.endpoints.requestResponseKey, this.props.config.service_request_id, this.props.data.itemId)),
-            this.fetchRequestResponseResponse);
-    }
-
-    fetchRequestResponseResponse(status, message, data) {
-        if (status === 200) {
-            this.setState({
-                id: data.data.id,
-                key_name: data.data.key_name,
-                key_value: data.data.key_value,
-                show_in_response: data.data.show_in_response,
-                list_item: data.data.list_item,
-                has_array_value: data.data.has_array_value,
-                array_keys: data.data.array_keys,
-                return_data_type_select: this.getReturnDataType(data.data.return_data_type),
-                return_data_type: (isSet(data.data.return_data_type) && data.data.return_data_type !== "")? data.data.return_data_type : this.state.return_data_type
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.requestResponseKey, props.config.service_request_id, props.data.itemId))
+            .then((response) => {
+                setRequestResponseKey(response.data.data);
+                const returnDataType = getReturnDataType(response.data.data.return_data_type);
+                if (returnDataType !== null) {
+                    setSelectData({
+                        return_data_type: returnDataType
+                    })
+                }
+                setListData({
+                    array_keys: response.data.data.array_keys
+                });
+                setShowForm(true);
             })
-            console.log(data.data.id, this.state.id)
-        }
-    }
 
-    getReturnDataType(data) {
-        console.log(data)
+        }
+    }, [props.data.itemId, props.data.action])
+
+    const getReturnDataType = (data) => {
         if (isSet(data) && data !== "" && data !== null && data !== false) {
             return {
                 value: data,
                 label: uCaseFirst(data)
             }
         }
-        return this.state.return_data_type_select;
+        return null;
     }
 
-    formChangeHandler(e) {
-        let value = e.target.value;
-        if ((e.target.id === "show_in_response" && e.target.checked) ||
-            (e.target.id === "list_item" && e.target.checked) ||
-            (e.target.id === "has_array_value" && e.target.checked)
-        ) {
-            value = true;
-        } else if ((e.target.id === "show_in_response" && !e.target.checked) ||
-            (e.target.id === "list_item" && !e.target.checked) ||
-            (e.target.id === "has_array_value" && !e.target.checked)) {
-            value = false;
+    const submitHandler = (values) => {
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
         }
-        this.setState({
-            [e.target.name]: value
-        })
-    }
-    formSelectHandler(e) {
-        this.setState({
-            return_data_type_select: {
-                value: e.value,
-                label: e.label
-            },
-            return_data_type: e.value
-        })
-    }
-    formSubmitHandler(e) {
-        e.preventDefault();
-        console.log(this.state)
-        responseHandler(sendData(this.state.action, "service/request/response/key", this.state), this.props.formResponse);
+        values.service_request_id = props.config.service_request_id;
+        values.return_data_type = values.return_data_type.value;
+        responseHandler(sendData(props.data.action, "service/request/response/key", values), props.formResponse);
     }
 
-    formListCallback(data) {
-        this.setState({
-            array_keys: data
-        })
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.formSubmitHandler}>
-                <Form.Group>
-                    <Form.Label>{this.state.key_name}</Form.Label>
-                    <Form.Control
-                        name={"key_value"}
-                        value={this.state.key_value}
-                        onChange={this.formChangeHandler}/>
-                </Form.Group>
-                    <Form.Group controlId="formShowInResponseCheckbox">
-                        <Form.Check
-                            checked={this.state.show_in_response ? "checked" : ""}
-                            type={"checkbox"}
-                            id={"show_in_response"}
-                            label={"Show in Response?"}
-                            name="show_in_response"
-                            onChange={this.formChangeHandler}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="formListItemCheckbox">
-                        <Form.Check
-                            checked={this.state.list_item ? "checked" : ""}
-                            type={"checkbox"}
-                            id={"list_item"}
-                            label={"List Item?"}
-                            name="list_item"
-                            onChange={this.formChangeHandler}
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="formHasArrayValueCheckbox">
-                        <Form.Check
-                            checked={this.state.has_array_value ? "checked" : ""}
-                            type={"checkbox"}
-                            id={"has_array_value"}
-                            label={"Has Array Value?"}
-                            name="has_array_value"
-                            onChange={this.formChangeHandler}
-                        />
-                    </Form.Group>
-                    {this.state.has_array_value &&
-                    <>
-                        <Form.Group>
-                            <Form.Label>Return Data Type</Form.Label>
-                            <Select
-                                value={this.state.return_data_type_select}
-                                options={this.state.return_data_type_options}
-                                onChange={this.formSelectHandler}
-                            />
-                        </Form.Group>
-                        <FormList callback={this.formListCallback} data={this.state.array_keys}/>
-                    </>
-                    }
-                    <Button variant="primary" type="submit">
-                        Update
-                    </Button>
-            </Form>
-    )
-    }
-    }
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+            <DataForm
+                data={
+                    ServiceRequestResponseKeysFormData(
+                        true,
+                        requestResponseKey.key_name,
+                        requestResponseKey.key_value,
+                        requestResponseKey.show_in_response,
+                        requestResponseKey.list_item,
+                        requestResponseKey.has_array_value,
+                    )
+                }
+                selectData={selectData}
+                selectOptions={selectOptions}
+                listData={listData}
+                submitCallback={submitHandler}
+                submitButtonText={updateButtonLabel}
+            />
+            }
+            {props.data.action !== "update" &&
+            <DataForm
+                data={ServiceRequestResponseKeysFormData()}
+                selectData={selectData}
+                selectOptions={selectOptions}
+                listData={listData}
+                submitCallback={submitHandler}
+                submitButtonText={addButtonLabel}
+            />
+            }
+        </>
+    );
+    // render() {
+    //     return (
+    //         <Form onSubmit={this.formSubmitHandler}>
+    //             <Form.Group>
+    //                 <Form.Label>{this.state.key_name}</Form.Label>
+    //                 <Form.Control
+    //                     name={"key_value"}
+    //                     value={this.state.key_value}
+    //                     onChange={this.formChangeHandler}/>
+    //             </Form.Group>
+    //                 <Form.Group controlId="formShowInResponseCheckbox">
+    //                     <Form.Check
+    //                         checked={this.state.show_in_response ? "checked" : ""}
+    //                         type={"checkbox"}
+    //                         id={"show_in_response"}
+    //                         label={"Show in Response?"}
+    //                         name="show_in_response"
+    //                         onChange={this.formChangeHandler}
+    //                     />
+    //                 </Form.Group>
+    //                 <Form.Group controlId="formListItemCheckbox">
+    //                     <Form.Check
+    //                         checked={this.state.list_item ? "checked" : ""}
+    //                         type={"checkbox"}
+    //                         id={"list_item"}
+    //                         label={"List Item?"}
+    //                         name="list_item"
+    //                         onChange={this.formChangeHandler}
+    //                     />
+    //                 </Form.Group>
+    //                 <Form.Group controlId="formHasArrayValueCheckbox">
+    //                     <Form.Check
+    //                         checked={this.state.has_array_value ? "checked" : ""}
+    //                         type={"checkbox"}
+    //                         id={"has_array_value"}
+    //                         label={"Has Array Value?"}
+    //                         name="has_array_value"
+    //                         onChange={this.formChangeHandler}
+    //                     />
+    //                 </Form.Group>
+    //                 {this.state.has_array_value &&
+    //                 <>
+    //                     <Form.Group>
+    //                         <Form.Label>Return Data Type</Form.Label>
+    //                         <Select
+    //                             value={this.state.return_data_type_select}
+    //                             options={this.state.return_data_type_options}
+    //                             onChange={this.formSelectHandler}
+    //                         />
+    //                     </Form.Group>
+    //                     <FormList callback={this.formListCallback} data={this.state.array_keys}/>
+    //                 </>
+    //                 }
+    //                 <Button variant="primary" type="submit">
+    //                     Update
+    //                 </Button>
+    //         </Form>
+    // )
+    // }
+}
 
     export default RequestResponseKeysForm;

@@ -1,5 +1,5 @@
 import React, {Component, useState} from 'react';
-import {Field, Formik} from "formik";
+import {Field, Formik, isObject} from "formik";
 import {isSet} from "../../../library/utils";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
@@ -34,7 +34,7 @@ const DataForm = (props) => {
         } else if (item.fieldType === "select") {
             value = isSet(props.selectData[item.name]) ? props.selectData[item.name] : [];
         } else if (item.fieldType === "checkbox") {
-            value = "";
+            value = !!(isSet(item.checked) && item.checked);
         } else if (item.fieldType === "date") {
             value = isSet(item.value) ? item.value : "";
         } else if (item.fieldType === "list") {
@@ -48,6 +48,14 @@ const DataForm = (props) => {
         props.data.fields.map((item) => {
             if (item.fieldType === "select") {
                 selectDefaults[item.name] = props.selectData[item.name];
+            }
+            if (isSet(item.subFields)) {
+                item.subFields.map((subItem) => {
+                    const subValue = getInitialValue(subItem);
+                    if (subValue !== null) {
+                        selectDefaults[subItem.name] = subValue;
+                    }
+                })
             }
         });
         return selectDefaults;
@@ -183,7 +191,6 @@ const DataForm = (props) => {
         props.submitCallback(values);
     }
 
-
     const dateChangeHandler = (values, key, date, e) => {
         setDates({
             [key]: date
@@ -205,8 +212,12 @@ const DataForm = (props) => {
 
     const dependsOnCheck = (field, values) => {
         let show = false;
-        if (isSet(field.dependsOn) && field.dependsOn.value === values[field.dependsOn.field].value) {
-            show = true;
+        if (isSet(field.dependsOn)) {
+            if (isObject(values[field.dependsOn.field]) && field.dependsOn.value === values[field.dependsOn.field].value) {
+                show = true;
+            } else if (field.dependsOn.value === values[field.dependsOn.field]) {
+                show = true;
+            }
         } else if (!isSet(field.dependsOn)) {
             show = true;
         }
