@@ -64,8 +64,8 @@ const DataList = (props) => {
         if (!hasColumnsConfig) {
             const controlObject = {
                 name: 'Controls',
-                right: true,
                 allowOverflow: true,
+                maxWidth: "200px",
                 // hide: "sm",
                 cell: row => getColumnControls(dropdownControls, inlineControls, row, showModal)
             }

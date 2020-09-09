@@ -10,8 +10,8 @@ const sprintf = require("sprintf-js").sprintf;
 const CategoryForm = (props) => {
     const [category, setCategory] = useState({})
     const [showForm, setShowForm] = useState(false)
-    const addCategoryButtonLabel = "Add Category";
-    const updateCategoryButtonLabel = "Update Category";
+    const addButtonLabel = "Add Category";
+    const updateButtonLabel = "Update Category";
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
@@ -23,7 +23,9 @@ const CategoryForm = (props) => {
     }, [props.data.itemId, props.data.action])
 
     const submitCallbackHandler = (values) => {
-        values.id = props.data.itemId;
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
+        }
         responseHandler(sendData(props.data.action, "category", values), props.formResponse);
     }
 
@@ -33,14 +35,14 @@ const CategoryForm = (props) => {
                 <DataForm
                     data={CategoryFormData(true, category?.category_name, category?.category_label)}
                     submitCallback={submitCallbackHandler}
-                    submitButtonText={updateCategoryButtonLabel}
+                    submitButtonText={updateButtonLabel}
                 />
             }
             {props.data.action !== "update" &&
                 <DataForm
                     data={CategoryFormData()}
                     submitCallback={submitCallbackHandler}
-                    submitButtonText={addCategoryButtonLabel}
+                    submitButtonText={addButtonLabel}
                 />
             }
         </>

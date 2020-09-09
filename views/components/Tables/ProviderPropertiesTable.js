@@ -29,12 +29,14 @@ const ProviderPropertiesTable = (props) => {
                 name: 'Property Name',
                 selector: 'property_name',
                 sortable: true,
+                maxWidth: "300px"
             },
             {
                 name: 'Property Value',
                 selector: 'property_value',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "property_value",
                     fieldType: "text",

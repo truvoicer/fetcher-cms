@@ -39,8 +39,8 @@ const ProviderRequestsTable = (props) => {
                 name: 'Request Label',
                 selector: 'service_request_label',
                 sortable: true,
-                grow: 1,
                 editable: true,
+                maxWidth: "200px",
                 editableConfig: {
                     field: "service_request_label",
                     fieldType: "text",
@@ -56,8 +56,8 @@ const ProviderRequestsTable = (props) => {
                 name: 'Request Name',
                 selector: 'service_request_name',
                 sortable: true,
-                grow: 1,
                 editable: true,
+                maxWidth: "200px",
                 editableConfig: {
                     field: "service_request_name",
                     fieldType: "text",
@@ -72,9 +72,8 @@ const ProviderRequestsTable = (props) => {
             {
                 name: 'Controls',
                 controlsColumn: true,
-                right: true,
                 allowOverflow: true,
-                grow: 0,
+                maxWidth: "200px"
             },
         ];
     }

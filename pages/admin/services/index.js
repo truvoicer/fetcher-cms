@@ -38,12 +38,14 @@ const ManageServices = (props) => {
                 name: 'Category',
                 selector: 'category.category_label',
                 sortable: true,
+                maxWidth: "300px",
             },
             {
                 name: 'Service Label',
                 selector: 'service_label',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "service_label",
                     fieldType: "text",
@@ -57,6 +59,7 @@ const ManageServices = (props) => {
                 selector: 'service_name',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "service_name",
                     fieldType: "text",
@@ -133,7 +136,7 @@ const ManageServices = (props) => {
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageServices.PageName}>
             <>
-                <Col sm={12} md={7} lg={7}>
+                <Col sm={12} md={12} lg={12}>
                     <DataList
                         tableData={getTableData()}
                         tableColumns={getTableColumns()}

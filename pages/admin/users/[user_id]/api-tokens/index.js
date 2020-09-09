@@ -57,13 +57,14 @@ const ApiTokens = (props) => {
                 name: 'Token',
                 selector: 'token',
                 sortable: true,
+                maxWidth: "300px",
             },
             {
                 name: 'Expires At',
-                selector: 'expiresAt',
+                selector: 'expires_at',
                 sortable: true,
                 cell: row => {
-                    return formatDate(row.expiresAt, "dd mmmm yyyy H:M:ss")
+                    return formatDate(row.expires_at, "dd mmmm yyyy H:M:ss")
                 }
             },
         ];

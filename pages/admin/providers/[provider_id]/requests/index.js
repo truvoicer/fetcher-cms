@@ -45,7 +45,7 @@ const ProviderRequests = (props) => {
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ProviderRequestsPageName}>
             <>
-                <Col sm={12} md={5} lg={5}>
+                <Col sm={12} md={12} lg={12}>
                 {showTable &&
                 <ProviderRequestsTable provider_id={provider.id} baseUrl={getBaseUrl()}/>
                 }

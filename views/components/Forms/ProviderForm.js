@@ -32,7 +32,6 @@ const ProviderForm = (props) => {
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.provider, props.data.itemId)).then((response) => {
-                console.log(response);
                 setProvider(response.data.data);
                 setSelectData({
                     categories: getCategoriesSelect(response.data.data.category)

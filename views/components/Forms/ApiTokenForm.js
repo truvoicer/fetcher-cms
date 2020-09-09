@@ -1,5 +1,5 @@
 import Form from "react-bootstrap/Form";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
@@ -9,88 +9,75 @@ import Col from "react-bootstrap/Col";
 
 const dateFormat = require('dateformat');
 import DatePicker from "react-datepicker";
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {ProviderFormData} from "../../../library/forms/provider-form";
+import {ApiTokenFormData} from "../../../library/forms/api-token-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-export default class ApiTokenForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            action: this.props.data.action,
-            id: "",
-            apiToken: "",
-            expiresAtTimestamp: "",
-            expiresAt: "",
-        }
-        this.submitHandler = this.submitHandler.bind(this);
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.generateApiToken = this.generateApiToken.bind(this);
-    }
+const ApiTokenForm = (props) => {
 
-    componentDidMount() {
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.getApiToken, this.props.data.itemId)).then((response) => {
-                this.setState({
-                    id: response.data.data.id,
-                    expiresAtTimestamp: new Date(response.data.data.expiresAt).getTime(),
-                    apiToken: response.data.data
-                })
+    const [apiToken, setApiToken] = useState({});
+    const [expiresAt, setExpiresAt] = useState("");
+    const [showForm, setShowForm] = useState(false);
+
+    const updateButtonLabel = "Update Token";
+
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.getApiToken, props.data.itemId)).then((response) => {
+                setApiToken(response.data.data);
+                setExpiresAt(response.data.data.expires_at);
+                setShowForm(true);
             })
         }
+    }, [props.data.itemId, props.data.action])
+
+    const submitHandler = (values) => {
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
+        }
+        responseHandler(sendData(props.data.action, sprintf("admin/user/api-token",), values), props.formResponse);
     }
 
-    formChangeHandler(date) {
-        this.setState({
-            expiresAtTimestamp: new Date(date).getTime(),
-            expiresAt: date
-        });
-    }
-
-    submitHandler(e) {
-        e.preventDefault();
-        responseHandler(sendData(this.state.action, sprintf("admin/user/api-token",), this.state), this.props.formResponse);
-    }
-
-    generateApiToken(e) {
+    const generateApiToken = (e) => {
         e.preventDefault()
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.generateApiToken, this.props.config.userId)), this.props.formResponse);
+        responseHandler(fetchData(sprintf(ApiConfig.endpoints.generateApiToken, props.config.userId)), props.formResponse);
     }
 
-    render() {
-        return (
-            <Form onSubmit={this.submitHandler}>
-                <Row>
-                    {this.state.action === "update" ?
-                        <Col>
-                            <Form.Group controlId="formApiToken">
-                                <p>Token</p>
-                                <textarea defaultValue={this.state.apiToken.token} readOnly={true}/>
-                            </Form.Group>
-                            <Form.Group controlId="formApiTokenExpiryDate">
-                                <p>Expiry Date</p>
-                                <DatePicker
-                                    dateFormat="dd MMMM yyyy H:mm:s"
-                                    className={"filter-datepicker"}
-                                    selected={this.state.expiresAtTimestamp}
-                                    showTimeInput
-                                    onChange={this.formChangeHandler}
-                                />
-                            </Form.Group>
-                            <Button variant="primary" type="submit">
-                                Submit
-                            </Button>
-                        </Col>
-                        :
-                        <Col>
-                            <Button variant="primary" onClick={this.generateApiToken}>
-                                Generate New Api Token
-                            </Button>
-                        </Col>
+    return (
+        <Row>
+            {props.data.action === "update" && showForm &&
+            <Col sm={12}>
+                <h4>Token</h4>
+                <textarea
+                    className={"mb-3"}
+                    defaultValue={apiToken.token}
+                    readOnly={true}
+                    rows={5}
+                    style={{width: "100%"}}
+                />
+                <DataForm
+                    data={
+                        ApiTokenFormData(
+                            true,
+                            new Date(expiresAt).getTime()
+                        )
                     }
-                </Row>
-            </Form>
-        );
-    }
-
-
+                    submitCallback={submitHandler}
+                    submitButtonText={updateButtonLabel}
+                />
+            </Col>
+            }
+            {props.data.action !== "update" &&
+            <Col sm={12}>
+                <Button variant="primary" onClick={generateApiToken}>
+                    Generate New Api Token
+                </Button>
+            </Col>
+            }
+        </Row>
+    );
 }
+export default ApiTokenForm;

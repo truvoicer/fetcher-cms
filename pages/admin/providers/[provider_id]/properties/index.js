@@ -42,7 +42,7 @@ const ProviderProperties = (props) => {
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ProviderProperties.PageName}>
             <>
-                <Col sm={12} md={6} lg={6}>
+                <Col sm={12} md={12} lg={12}>
                 {showTable &&
                     <ProviderPropertiesTable provider_id={provider.id}/>
                 }

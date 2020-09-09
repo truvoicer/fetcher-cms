@@ -33,6 +33,7 @@ const Properties = (props) => {
                 selector: 'property_name',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "property_name",
                     fieldType: "text",
@@ -46,6 +47,7 @@ const Properties = (props) => {
                 selector: 'property_label',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "property_label",
                     fieldType: "text",
@@ -103,7 +105,7 @@ const Properties = (props) => {
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Properties.PageName}>
             <>
-                <Col sm={12} md={6} lg={6}>
+                <Col sm={12} md={12} lg={12}>
                     <DataList
                         tableData={getTableData()}
                         tableColumns={getTableColumns()}

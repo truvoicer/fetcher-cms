@@ -60,6 +60,7 @@ const ServiceResponseKeys = (props) => {
                 selector: 'key_name',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "key_name",
                     fieldType: "text",
@@ -76,6 +77,7 @@ const ServiceResponseKeys = (props) => {
                 selector: 'key_value',
                 sortable: true,
                 editable: true,
+                maxWidth: "300px",
                 editableConfig: {
                     field: "key_value",
                     fieldType: "text",
@@ -145,7 +147,7 @@ const ServiceResponseKeys = (props) => {
             {showTable &&
             <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceResponseKeysPageName}>
                 <>
-                    <Col sm={12} md={6} lg={6}>
+                    <Col sm={12} md={12} lg={12}>
                         <DataList
                             tableData={getTableData()}
                             tableColumns={getTableColumns()}

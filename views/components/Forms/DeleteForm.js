@@ -5,34 +5,26 @@ import {sendData, responseHandler} from "../../../library/api/middleware";
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 
-class DeleteForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            endpoint: "",
-            item_id: ""
-        }
-        this.deleteItem = this.deleteItem.bind(this);
+const DeleteForm = (props) => {
+
+    const deleteItem = (e) => {
+        let data = props.data;
+        data.extra = props.config;
+        responseHandler(sendData("delete", props.data.endpoint, data), props.formResponse);
     }
 
-    deleteItem() {
-        const data = this.props.data;
-        data.extra = this.props.config;
-        responseHandler(sendData("delete", this.props.data.endpoint, data), this.props.formResponse);
-    }
-    render() {
-        return (
-            <Row>
-                <Col>
-                    <Alert variant={"warning"}>
-                        Are you sure you want to delete ({this.props.data.itemLabel})?
-                    </Alert>
-                    <Button variant="primary" onClick={this.props.data.closeModalCallBack}>Cancel</Button>
-                    <Button variant="danger" onClick={this.deleteItem} >Confirm</Button>
-                </Col>
-            </Row>
-        )
-    }
+    return (
+        <Row>
+            <Col>
+                <Alert variant={"warning"} style={{overflow: "hidden"}}>
+                    Are you sure you want to delete ({props.data.itemLabel})?
+                </Alert>
+                <Button variant="primary" onClick={props.data.closeModalCallBack}>Cancel</Button>
+                <Button variant="danger" onClick={deleteItem} >Confirm</Button>
+            </Col>
+        </Row>
+    )
+
 }
 
 export default DeleteForm;

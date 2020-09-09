@@ -2,6 +2,8 @@ import React, {Component, useState} from 'react';
 import {Field, Formik} from "formik";
 import {isSet} from "../../../library/utils";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
+import {error} from "next/dist/build/output/log";
 
 const DataForm = (props) => {
 
@@ -10,12 +12,12 @@ const DataForm = (props) => {
         props.data.fields.map((item) => {
             if (item.fieldType === "text") {
                 initialValues[item.name] = isSet(item.value) ? item.value : "";
-            }
-            else if (item.fieldType === "select") {
-                initialValues[item.name] = isSet(props.selectData[item.name])? props.selectData[item.name] : [];
-            }
-            else if (item.fieldType === "checkbox") {
+            } else if (item.fieldType === "select") {
+                initialValues[item.name] = isSet(props.selectData[item.name]) ? props.selectData[item.name] : [];
+            } else if (item.fieldType === "checkbox") {
                 initialValues[item.name] = "";
+            } else if (item.fieldType === "date") {
+                initialValues[item.name] = isSet(item.value) ? item.value : "";
             }
             if (isSet(item.subFields)) {
                 item.subFields.map((subItem) => {
@@ -36,8 +38,19 @@ const DataForm = (props) => {
         return selectDefaults;
     }
 
+    const getDatesDefaults = () => {
+        let datesDefaults = {};
+        props.data.fields.map((item) => {
+            if (item.fieldType === "date") {
+                datesDefaults[item.name] = isSet(item.value) ? item.value : "";
+            }
+        });
+        return datesDefaults;
+    }
+
     const [initialValues, setInitialValues] = useState(getInitialDataObject())
     const [selected, setSelected] = useState(getSelectDefaults())
+    const [dates, setDates] = useState(getDatesDefaults())
 
 
     const validationRules = (rule, values, key) => {
@@ -155,12 +168,51 @@ const DataForm = (props) => {
         props.submitCallback(values);
     }
 
+    const dateChangeHandler = (values, key, date, e) => {
+        setDates({
+            [key]: date
+        })
+        values[key] = date;
+    }
+
     const selectChangeHandler = (name, values, e) => {
         setSelected({
             [name]: e
         })
         values[name] = e;
         validateForm(values)
+    }
+
+    const getDateRow = (field, errors, touched, handleBlur, handleChange, values) => {
+        return (
+            <div className="row form-group form-group-text">
+                <div className="col-md-12">
+                    {field.label &&
+                    <>
+                        {field.label}
+                        <label className="text-black" htmlFor={field.name}>
+                        <span className={"site-form--error--field"}>
+                            {errors[field.name]}
+                        </span>
+                        </label>
+                    </>
+                    }
+                    <div className={"row"}>
+                        <div className={"col-12"}>
+                            <DatePicker
+                                id={field.name}
+                                name={field.name}
+                                dateFormat={field.format}
+                                className={"filter-datepicker"}
+                                selected={dates[field.name]}
+                                showTimeInput
+                                onChange={dateChangeHandler.bind(this, values, field.name)}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     const getSelectRow = (field, errors, touched, handleBlur, handleChange, values) => {
@@ -246,6 +298,9 @@ const DataForm = (props) => {
                                 }
                                 {field.fieldType === "select" &&
                                 getSelectRow(field, errors, touched, handleBlur, handleChange, values)
+                                }
+                                {field.fieldType === "date" &&
+                                getDateRow(field, errors, touched, handleBlur, handleChange, values)
                                 }
                                 {field.fieldType === "checkbox" &&
                                 <div className={"form-check-group"}>

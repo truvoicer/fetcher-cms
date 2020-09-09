@@ -1,77 +1,54 @@
-import Form from "react-bootstrap/Form";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {sendData, responseHandler, fetchData} from '../../../library/api/middleware'
-import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {PropertyFormData} from "../../../library/forms/property-form";
 const sprintf = require("sprintf-js").sprintf;
 
-export default class ProviderForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            formSubmitted: false,
-            action: this.props.data.action,
-            property_id: "",
-            property_name: "",
-            property_label: "",
-        }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-    }
+const PropertyForm = (props) => {
 
-    componentDidMount() {
-        this.setState({
-            formSubmitted: false
-        })
+    const [property, setProperty] = useState({})
+    const [showForm, setShowForm] = useState(false)
+    const addButtonLabel = "Add Property";
+    const updateButtonLabel = "Update Property";
 
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.property, this.props.data.itemId)).then((response) => {
-                this.setState({
-                    property_id: response.data.data.id,
-                    property_name: response.data.data.property_name ,
-                    property_label: response.data.data.property_label ,
-                })
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.property, props.data.itemId)).then((response) => {
+                setProperty(response.data.data);
+                setShowForm(true);
             })
         }
-    }
+    }, [props.data.itemId, props.data.action])
 
-    formChangeHandler(e) {
-        this.setState({
-            [e.target.name]: e.target.value
-        })
-    }
-
-    submitHandler(e) {
-        e.preventDefault();
-        responseHandler(sendData(this.state.action, "property", this.state), this.props.formResponse)
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.submitHandler}>
-
-                <Form.Group controlId="formProperty">
-                    <Form.Label>Property Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the property name."
-                                  onChange={this.formChangeHandler}
-                                  name="property_name"
-                                  value={this.state.property_name}/>
-                </Form.Group>
-                <Form.Group controlId="formProviderApiUrl">
-                    <Form.Label>Property Label</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the property label."
-                                  onChange={this.formChangeHandler}
-                                  name="property_label"
-                                  value={this.state.property_label}/>
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        );
+    const submitHandler = (values) => {
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
+        }
+        responseHandler(sendData(props.data.action, "property", values), props.formResponse)
     }
 
 
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+            <DataForm
+                data={
+                    PropertyFormData(true, property?.property_name, property?.property_label)
+                }
+                submitCallback={submitHandler}
+                submitButtonText={updateButtonLabel}
+            />
+            }
+            {props.data.action !== "update" &&
+            <DataForm
+                data={PropertyFormData()}
+                submitCallback={submitHandler}
+                submitButtonText={addButtonLabel}
+            />
+            }
+        </>
+    );
 }
+export default PropertyForm;

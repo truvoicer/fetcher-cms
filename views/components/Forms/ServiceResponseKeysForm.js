@@ -1,93 +1,67 @@
 import ApiConfig from '../../../config/api-config'
 import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Select from "react-select";
+import {isSet} from "../../../library/utils";
+import DataForm from "./DataForm";
+import {ProviderFormData} from "../../../library/forms/provider-form";
+import {ServiceResponseKeyFormData} from "../../../library/forms/service-response-key-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-class ServiceResponseKeysForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            action: this.props.data.action,
-            id: "",
-            service_id: this.props.config.service_id,
-            key_name: "",
-            key_value: "",
-            show_in_response: false
-        }
-        this.formChangeHandler = this.formChangeHandler.bind(this);
-        this.submitHandler = this.submitHandler.bind(this);
-    }
+const ServiceResponseKeysForm = (props) => {
 
-    componentDidMount() {
-        if (this.state.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceResponseKey, this.props.data.itemId)).then((response) => {
-                this.setState({
-                    id: response.data.data.id,
-                    service_id: response.data.data.service.id,
-                    key_name: response.data.data.key_name,
-                    key_value: response.data.data.key_value
-                })
+    const [serviceResponseKey, setServiceResponseKey] = useState({});
+    const [showForm, setShowForm] = useState(false);
+
+    const addButtonLabel = "Add Response Key";
+    const updateButtonLabel = "Update Response Key";
+
+    useEffect(() => {
+        if (isSet(props.data.action) && props.data.action === "update") {
+            fetchData(sprintf(ApiConfig.endpoints.serviceResponseKey, props.data.itemId)).then((response) => {
+                setServiceResponseKey(response.data.data);
+                setShowForm(true);
             })
         }
-    }
+    }, [props.data.itemId, props.data.action])
 
-
-    formChangeHandler(e) {
-        let autocomplete;
-        if (e.target.name === "key_name") {
-            this.setState({
-                key_name: e.target.value,
-                key_value: e.target.value.toLowerCase()
-            })
-        } else if (e.target.name === "key_value") {
-            this.setState({
-                key_value: e.target.value,
-                key_name: e.target.value.toUpperCase()
-            })
+    const submitHandler = (values) => {
+        if (props.data.action === "update") {
+            values.id = props.data.itemId;
         }
+        values.service_id = props.config.service_id;
+        responseHandler(sendData(props.data.action, "service/response/key", values),  props.formResponse);
     }
 
-    submitHandler(e) {
-        e.preventDefault();
-        // console.log(this.state)
-
-        responseHandler(sendData(this.state.action, "service/response/key", this.state),  this.props.formResponse);
-    }
-
-    render() {
-        return (
-            <Form onSubmit={this.submitHandler}>
-
-                <Form.Group controlId="formResponseKeyName">
-                    <Form.Label>Response Key Name</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the Response Key name."
-                                  onChange={this.formChangeHandler}
-                                  name="key_name"
-                                  value={this.state.key_name}/>
-                </Form.Group>
-                <Form.Group controlId="formResponse KeyValue">
-                    <Form.Label>Response Key Value</Form.Label>
-                    <Form.Control type="text"
-                                  placeholder="Enter the key value."
-                                  onChange={this.formChangeHandler}
-                                  name="key_value"
-                                  value={this.state.key_value}/>
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Submit
-                </Button>
-            </Form>
-        );
-    }
-
-
+    return (
+        <>
+            {props.data.action === "update" && showForm &&
+            <DataForm
+                data={
+                    ServiceResponseKeyFormData(
+                        true,
+                        serviceResponseKey.key_name,
+                        serviceResponseKey.key_value,
+                    )
+                }
+                submitCallback={submitHandler}
+                submitButtonText={updateButtonLabel}
+            />
+            }
+            {props.data.action !== "update" &&
+            <DataForm
+                data={ServiceResponseKeyFormData()}
+                submitCallback={submitHandler}
+                submitButtonText={addButtonLabel}
+            />
+            }
+        </>
+    );
 }
 
 export default ServiceResponseKeysForm;
