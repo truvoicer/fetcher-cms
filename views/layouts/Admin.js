@@ -12,6 +12,8 @@ import {SiteConfig} from "../../config/site-config";
 import {BreadcrumbsContext} from "../components/Context/BreadcrumbsContext";
 import {Routes} from "../../config/routes";
 
+const sprintf = require("sprintf-js").sprintf;
+
 const Admin = (props) => {
     const router = useRouter();
     const [session, setSession] = useState({
@@ -44,7 +46,7 @@ const Admin = (props) => {
     return (
         <App>
             <Head>
-                <title>{props.pageTitle ? props.pageTitle : SiteConfig.siteName}</title>
+                <title>{props.pageName ? sprintf("%s | %s", SiteConfig.siteName, getRouteItem(Routes.items, props.pageName).label) : SiteConfig.siteName}</title>
             </Head>
             <div className={"c-app"}>
                 {session.authenticated &&

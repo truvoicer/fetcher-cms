@@ -6,6 +6,7 @@ import Alert from "react-bootstrap/Alert";
 import {setSession} from "../../library/session/authenticate";
 import React, {useState} from "react";
 import {responseHandler} from "../../library/api/middleware";
+import Head from "next/head";
 
 
 const {getToken} = require("../../library/session/authenticate")
@@ -53,66 +54,71 @@ const Login = (props) => {
         }
     }
     return (
-        <Auth>
-            <>
-                <div className="container">
-                    <div className="row justify-content-center">
-                        <div className="col-md-8">
-                            {response.submitted &&
-                            <Alert variant={response.alertStatus}>
-                                {response.message}
-                            </Alert>
-                            }
-                            <div className="card-group">
-                                <div className="card p-4">
-                                    <div className="card-body">
-                                        <h1>Login</h1>
-                                        <p className="text-muted">Sign In to your account</p>
+        <>
+            <Head>
+                <title>Fetcher CMS | Login</title>
+            </Head>
+            <Auth>
+                <>
+                    <div className="container">
+                        <div className="row justify-content-center">
+                            <div className="col-md-8">
+                                {response.submitted &&
+                                <Alert variant={response.alertStatus}>
+                                    {response.message}
+                                </Alert>
+                                }
+                                <div className="card-group">
+                                    <div className="card p-4">
+                                        <div className="card-body">
+                                            <h1>Login</h1>
+                                            <p className="text-muted">Sign In to your account</p>
 
-                                        <Form onSubmit={submitHandler}>
-                                            <div className="input-group mb-3">
-                                                <div className="input-group-prepend">
+                                            <Form onSubmit={submitHandler}>
+                                                <div className="input-group mb-3">
+                                                    <div className="input-group-prepend">
                                                     <span className="input-group-text">
                                                       <svg className="c-icon">
                                                         <use xlinkHref="/images/icons/sprites/free.svg#cil-puzzle"/>
                                                       </svg>
                                                     </span>
+                                                    </div>
+                                                    <Form.Control type="email" placeholder="Enter email" name="email"
+                                                                  onChange={formChangeHandler}/>
                                                 </div>
-                                                <Form.Control type="email" placeholder="Enter email" name="email"
-                                                              onChange={formChangeHandler}/>
-                                            </div>
-                                            <div className="input-group mb-4">
-                                                <div className="input-group-prepend">
+                                                <div className="input-group mb-4">
+                                                    <div className="input-group-prepend">
                                                     <span className="input-group-text">
                                                         <svg className="c-icon">
                                                           <use
                                                               xlinkHref="/images/icons/sprites/free.svg#cil-lock-locked"/>
                                                         </svg>
                                                     </span>
+                                                    </div>
+                                                    <Form.Control type="password" placeholder="Password" name="password"
+                                                                  onChange={formChangeHandler}/>
+                                                    <Form.Text className="text-muted">
+                                                        We'll never share your email with anyone else.
+                                                    </Form.Text>
                                                 </div>
-                                                <Form.Control type="password" placeholder="Password" name="password"
-                                                              onChange={formChangeHandler}/>
-                                                <Form.Text className="text-muted">
-                                                    We'll never share your email with anyone else.
-                                                </Form.Text>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-6">
-                                                    <Button bsPrefix={"btn btn-primary px-4"} variant="primary"
-                                                            type="submit">
-                                                        Submit
-                                                    </Button>
+                                                <div className="row">
+                                                    <div className="col-6">
+                                                        <Button bsPrefix={"btn btn-primary px-4"} variant="primary"
+                                                                type="submit">
+                                                            Submit
+                                                        </Button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </Form>
+                                            </Form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </>
-        </Auth>
+                </>
+            </Auth>
+        </>
     )
 }
 

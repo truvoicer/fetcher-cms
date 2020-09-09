@@ -1,5 +1,7 @@
 import Admin from '../../../views/layouts/Admin'
 import React from "react";
+import InfoCard from "../../../views/components/Widgets/InfoCard";
+import ApiConfig from "../../../config/api-config";
 
 const Dashboard = (props) => {
     Dashboard.PageName = "dashboard";
@@ -12,7 +14,22 @@ const Dashboard = (props) => {
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Dashboard.PageName}>
             <>
-                <h1>Dashboard</h1>
+                <div className="row">
+                    <div className="col-sm-6 col-lg-3">
+                        <InfoCard
+                            header={"Active Providers"}
+                            classes={"bg-gradient-primary"}
+                            endpoint={ApiConfig.endpoints.providerList}
+                        />
+                    </div>
+                    <div className="col-sm-6 col-lg-3">
+                        <InfoCard
+                            header={"Active Categories"}
+                            classes={"bg-gradient-danger"}
+                            endpoint={ApiConfig.endpoints.categoryList}
+                        />
+                    </div>
+                </div>
             </>
         </Admin>
     )

@@ -71,7 +71,6 @@ const Breadcrumbs = (props) => {
         setActiveDropdown(item.name);
         setDropDownItems(dropDownItems);
     }
-
     return (
         <div className="c-subheader px-3">
             <ol className="breadcrumb border-0 m-0">

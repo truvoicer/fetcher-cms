@@ -9,11 +9,11 @@ const ControlsDropdownItem = (props) => {
     if (props.config.control === "link") {
         let linkData = getLinkData(props.config, props.data)
         return (
-            <Link href={linkData.href} as={linkData.linkAs}>
+            // <Link href={linkData.href} as={linkData.linkAs}>
                 <Dropdown.Item href={linkData.href}>
                     {props.config.text}
                 </Dropdown.Item>
-            </Link>
+            // </Link>
         )
     } else if (props.config.control === "button") {
         return (
