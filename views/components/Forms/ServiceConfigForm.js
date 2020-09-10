@@ -46,9 +46,11 @@ const ServiceConfigForm = (props) => {
                 setSelectData({
                     value_types: getSelectedValueType(data.value_type)
                 })
-                setListData({
-                    item_array_value: data.item_array_value
-                });
+                if (data.item_array_value !== null && data.item_array_value !== "") {
+                    setListData({
+                        item_array_value: data.item_array_value
+                    });
+                }
                 setShowForm(true);
             })
 
@@ -65,7 +67,6 @@ const ServiceConfigForm = (props) => {
     }
 
     const submitHandler = (values) => {
-        console.log(values);
         if (props.data.action === "update") {
             values.id = props.data.itemId;
         }

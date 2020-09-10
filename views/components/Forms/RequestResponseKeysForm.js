@@ -53,10 +53,12 @@ const RequestResponseKeysForm = (props) => {
                         return_data_type: returnDataType
                     })
                 }
-                setListData({
-                    array_keys: response.data.data.array_keys
-                });
-                setShowForm(true);
+                if (response.data.data.array_keys !== null && response.data.data.array_keys !== "") {
+                    setListData({
+                        array_keys: response.data.data.array_keys
+                    });
+                    setShowForm(true);
+                }
             })
 
         }
