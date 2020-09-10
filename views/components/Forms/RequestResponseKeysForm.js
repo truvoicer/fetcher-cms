@@ -93,6 +93,10 @@ const RequestResponseKeysForm = (props) => {
                         requestResponseKey.show_in_response,
                         requestResponseKey.list_item,
                         requestResponseKey.has_array_value,
+                        requestResponseKey.prepend_extra_data,
+                        requestResponseKey.prepend_extra_data_value,
+                        requestResponseKey.append_extra_data,
+                        requestResponseKey.append_extra_data_value
                     )
                 }
                 selectData={selectData}

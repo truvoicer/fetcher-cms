@@ -1,10 +1,14 @@
 export const ServiceRequestResponseKeysFormData = (
     update = false,
-    key_name,
-    key_value,
-    show_in_response,
-    list_item,
-    has_array_value,
+    key_name = null,
+    key_value = null,
+    show_in_response = false,
+    list_item = false,
+    has_array_value = false,
+    prepend_extra_data = false,
+    prepend_extra_data_value = null,
+    append_extra_data = false,
+    append_extra_data_value = null
 ) => {
     return {
         fields: [
@@ -15,18 +19,6 @@ export const ServiceRequestResponseKeysFormData = (
                 type: "text",
                 placeHolder: "Enter a key name",
                 value: key_name ? key_name : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "alphanumeric"
-                        },
-                        {
-                            type: "length",
-                            min: 2,
-                            max: 50
-                        }
-                    ]
-                }
             },
             {
                 name: "key_value",
@@ -35,18 +27,50 @@ export const ServiceRequestResponseKeysFormData = (
                 type: "text",
                 placeHolder: "Enter a key value",
                 value: key_value ? key_value : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "alphanumeric"
+            },
+            {
+                label: "Prepend Extra Data?",
+                name: "prepend_extra_data",
+                fieldType: "checkbox",
+                value: "1",
+                checked: prepend_extra_data,
+                checkboxType: "true_false",
+                subFields: [
+                    {
+                        dependsOn: {
+                            field: "prepend_extra_data",
+                            value: true
                         },
-                        {
-                            type: "length",
-                            min: 2,
-                            max: 50
-                        }
-                    ]
-                }
+                        name: "prepend_extra_data_value",
+                        label: "Prepend Extra Data Value",
+                        type: "text",
+                        fieldType: "text",
+                        placeHolder: "Enter extra data to prepend",
+                        value: prepend_extra_data_value? prepend_extra_data_value : ""
+                    },
+                ]
+            },
+            {
+                label: "Append Extra Data?",
+                name: "append_extra_data",
+                fieldType: "checkbox",
+                value: "1",
+                checked: append_extra_data,
+                checkboxType: "true_false",
+                subFields: [
+                    {
+                        dependsOn: {
+                            field: "append_extra_data",
+                            value: true
+                        },
+                        name: "append_extra_data_value",
+                        label: "Append Extra Data Value",
+                        type: "text",
+                        fieldType: "text",
+                        placeHolder: "Enter extra data to append",
+                        value: append_extra_data_value? append_extra_data_value : ""
+                    },
+                ]
             },
             {
                 label: "Show in response?",
