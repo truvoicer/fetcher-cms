@@ -45,21 +45,21 @@ const RequestResponseKeysForm = (props) => {
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.requestResponseKey, props.config.service_request_id, props.data.itemId))
-            .then((response) => {
-                setRequestResponseKey(response.data.data);
-                const returnDataType = getReturnDataType(response.data.data.return_data_type);
-                if (returnDataType !== null) {
-                    setSelectData({
-                        return_data_type: returnDataType
-                    })
-                }
-                if (response.data.data.array_keys !== null && response.data.data.array_keys !== "") {
-                    setListData({
-                        array_keys: response.data.data.array_keys
-                    });
+                .then((response) => {
+                    setRequestResponseKey(response.data.data);
+                    const returnDataType = getReturnDataType(response.data.data.return_data_type);
+                    if (returnDataType !== null) {
+                        setSelectData({
+                            return_data_type: returnDataType
+                        })
+                    }
+                    if (response.data.data.array_keys !== null && response.data.data.array_keys !== "") {
+                        setListData({
+                            array_keys: response.data.data.array_keys
+                        });
+                    }
                     setShowForm(true);
-                }
-            })
+                })
 
         }
     }, [props.data.itemId, props.data.action])
@@ -122,4 +122,4 @@ const RequestResponseKeysForm = (props) => {
     );
 }
 
-    export default RequestResponseKeysForm;
+export default RequestResponseKeysForm;
