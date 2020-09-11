@@ -42,7 +42,12 @@ export const getSessionObject = () => {
 }
 
 export const getApiUser = async () => {
-    return await axios.post(process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.getApiUser, getSessionObject("access_token") );
+    const requestData = {
+        method: "post",
+        url: process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.getApiUser,
+        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
+    }
+    return await axios.request(requestData);
 }
 
 export const getRouteItem = (items, pageName) => {

@@ -42,7 +42,7 @@ const Login = (props) => {
         let alertStatus = "danger";
         if (status === 200) {
             alertStatus = "success";
-            setSession(data)
+            setSession(data.data)
         }
         setResponse({
             submitted: true,

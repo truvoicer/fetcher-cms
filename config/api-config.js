@@ -4,13 +4,13 @@ export default
 {
     "apiUrl": process.env.NEXT_PUBLIC_API_URL,
     "endpoints": {
-        "login": "/api/login",
+        "login": "/api/account/login",
         "getUserList": "/api/admin/users",
         "getUser": "/api/admin/user/%d",
         "getApiTokenList": "/api/admin/user/%d/api-tokens",
         "getApiToken": "/api/admin/user/api-token/%d",
         "generateApiToken": "/api/admin/user/%d/api-token/generate",
-        "getApiUser": "/api/get-user",
+        "getApiUser": "/api/admin/token/user",
         "search": "/api/admin/search/%s",
         "create": "/api/%s/create",
         "update": "/api/%s/update",
