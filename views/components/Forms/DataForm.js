@@ -146,32 +146,51 @@ const DataForm = (props) => {
         return fieldObject
     }
 
-    const validateForm = (values) => {
-        const errors = {};
-
+    const getIgnoredFields = (values) => {
+        let ignoredFields = [];
         Object.keys(values).map((key) => {
             const field = getFieldByName(key);
-            const isAllowEmpty = field.validation?.rules?.filter(rule => rule.type === "allow_empty");
-            if (!isSet(isAllowEmpty) ||
-                (Array.isArray(isAllowEmpty) && isAllowEmpty.length > 0 && values[field.name] !== "") ||
-                (Array.isArray(isAllowEmpty) && isAllowEmpty.length === 0)
-            ) {
-                field.validation?.rules?.map((rule) => {
-                    const validate = validationRules(rule, values, key);
-                    if (validate !== true) {
-                        errors[key] = validate
-                    }
-                })
+            field.subFields?.map((subField) => {
+                if ((field.fieldType === "checkbox" && !values[field.name]) ||
+                    (field.fieldType === "checkbox" && values[field.name] === "")) {
+                    ignoredFields.push(subField.name);
+                }
+            })
+        });
+        return ignoredFields;
+    }
+    const validateForm = (values) => {
+        const errors = {};
+        const ignoredFields = getIgnoredFields(values);
+        Object.keys(values).map((key) => {
+            const field = getFieldByName(key);
+            if (!ignoredFields.includes(field.name)) {
+                const isAllowEmpty = field.validation?.rules?.filter(rule => rule.type === "allow_empty");
+                if (!isSet(isAllowEmpty) ||
+                    (Array.isArray(isAllowEmpty) && isAllowEmpty.length > 0 && values[field.name] !== "") ||
+                    (Array.isArray(isAllowEmpty) && isAllowEmpty.length === 0)
+                ) {
+                    field.validation?.rules?.map((rule) => {
+                        const validate = validationRules(rule, values, key);
+                        if (validate !== true) {
+                            errors[key] = validate
+                        }
+                    })
+                }
             }
         })
         return errors;
     };
 
     const formSubmitHandler = (values) => {
+        const ignoredFields = getIgnoredFields(values);
         Object.keys(values).map((key) => {
             const field = getFieldByName(key);
             if (field.fieldType === "checkbox" && values[field.name] === "") {
                 values[field.name] = false;
+            }
+            if (ignoredFields.includes(key)) {
+                values[key] = "";
             }
         });
         props.submitCallback(values);
@@ -188,7 +207,7 @@ const DataForm = (props) => {
         setSelected({
             [name]: e
         })
-        values[name] = e? e : [];
+        values[name] = e ? e : [];
         validateForm(values)
     }
 
@@ -242,7 +261,7 @@ const DataForm = (props) => {
                         <>
                             {field.label}
                             <label className="text-black" htmlFor={field.name}>
-                        <span className={"site-form--error--field"}>
+                        <span className={"text-danger site-form--error--field"}>
                             {errors[field.name]}
                         </span>
                             </label>
@@ -278,7 +297,7 @@ const DataForm = (props) => {
                         <>
                             {field.label}
                             <label className="text-black" htmlFor={field.name}>
-                        <span className={"site-form--error--field"}>
+                        <span className={"text-danger site-form--error--field"}>
                             {errors[field.name] && touched[field.name] && errors[field.name]}
                         </span>
                             </label>
@@ -289,7 +308,7 @@ const DataForm = (props) => {
                                   listItemValueLabel={"Value"}
                                   addRowLabel={"Add Parameter"}
                                   data={values[field.name]}
-                          />
+                        />
                     </div>
                 </div>
                 }
@@ -344,7 +363,7 @@ const DataForm = (props) => {
                             <>
                                 {field.label}
                                 <label className="text-black" htmlFor={field.name}>
-                        <span className={"site-form--error--field"}>
+                        <span className={"text-danger site-form--error--field"}>
                             {errors[field.name]}
                         </span>
                                 </label>
@@ -382,7 +401,7 @@ const DataForm = (props) => {
                         <>
                             {field.label}
                             <label className="text-black" htmlFor={field.name}>
-                        <span className={"site-form--error--field"}>
+                        <span className={"text-danger site-form--error--field"}>
                             {errors[field.name] && touched[field.name] && errors[field.name]}
                         </span>
                             </label>
