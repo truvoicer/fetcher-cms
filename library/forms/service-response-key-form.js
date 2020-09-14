@@ -32,6 +32,9 @@ export const ServiceResponseKeyFormData = (
                 fieldType: "text",
                 placeHolder: "Enter a key value",
                 value: keyValue? keyValue : "",
+                matches: {
+                  field: "key_name",
+                },
                 validation: {
                     rules: [
                         {

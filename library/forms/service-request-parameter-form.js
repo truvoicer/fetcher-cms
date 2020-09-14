@@ -32,18 +32,6 @@ export const ServiceRequestParameterFormData = (
                 type: "text",
                 placeHolder: "Enter a parameter value",
                 value: parameterValue? parameterValue : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "alphanumeric"
-                        },
-                        {
-                            type: "length",
-                            min: 2,
-                            max: 50
-                        }
-                    ]
-                }
             },
         ]
     };

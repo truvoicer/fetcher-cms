@@ -94,7 +94,7 @@ const DataForm = (props) => {
                 }
                 break;
             case "alphanumeric":
-                if (!/^[\w_ ]+$/.test(values[key])) {
+                if (!/^[\w_ -]+$/.test(values[key])) {
                     return 'Can only contain letters and numbers';
                 }
                 break;
