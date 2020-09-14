@@ -31,6 +31,8 @@ const DataForm = (props) => {
         let value;
         if (item.fieldType === "text") {
             value = isSet(item.value) ? item.value : "";
+        } else if (item.fieldType === "textarea") {
+            value = isSet(item.value) ? item.value : "";
         } else if (item.fieldType === "select") {
             value = isSet(props.selectData[item.name]) ? props.selectData[item.name] : [];
         } else if (item.fieldType === "checkbox") {
@@ -235,6 +237,9 @@ const DataForm = (props) => {
                 {field.fieldType === "text" &&
                 getInputRow(field, errors, touched, handleBlur, handleChange, values)
                 }
+                {field.fieldType === "textarea" &&
+                getTextAreaRow(field, errors, touched, handleBlur, handleChange, values)
+                }
                 {field.fieldType === "select" &&
                 getSelectRow(field, errors, touched, handleBlur, handleChange, values)
                 }
@@ -410,6 +415,39 @@ const DataForm = (props) => {
                         <input
                             id={field.name}
                             type={field.type}
+                            name={field.name}
+                            className="form-control text-input"
+                            placeholder={field.placeHolder}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values[field.name]}
+                        />
+                    </div>
+                </div>
+                }
+            </>
+        )
+    }
+
+    const getTextAreaRow = (field, errors, touched, handleBlur, handleChange, values) => {
+        return (
+            <>
+                {dependsOnCheck(field, values) &&
+                <div className="row form-group form-group-text">
+                    <div className="col-md-12">
+                        {field.label &&
+                        <>
+                            {field.label}
+                            <label className="text-black" htmlFor={field.name}>
+                        <span className={"text-danger site-form--error--field"}>
+                            {errors[field.name] && touched[field.name] && errors[field.name]}
+                        </span>
+                            </label>
+                        </>
+                        }
+                        <textarea
+                            rows={field.rows? field.rows : 4}
+                            id={field.name}
                             name={field.name}
                             className="form-control text-input"
                             placeholder={field.placeHolder}

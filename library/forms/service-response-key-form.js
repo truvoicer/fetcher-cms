@@ -20,7 +20,7 @@ export const ServiceResponseKeyFormData = (
                         {
                             type: "length",
                             min: 1,
-                            max: 16
+                            max: 30
                         }
                     ]
                 }
@@ -43,7 +43,7 @@ export const ServiceResponseKeyFormData = (
                         {
                             type: "length",
                             min: 1,
-                            max: 16
+                            max: 30
                         }
                     ]
                 }

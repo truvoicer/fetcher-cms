@@ -26,10 +26,32 @@ export const ServiceRequestParameterFormData = (
                 }
             },
             {
+                name: "value_types",
+                label: "Parameter Value Type",
+                fieldType: "select",
+                multi: false,
+            },
+            {
+                dependsOn: {
+                    field: "value_types",
+                    value: "text"
+                },
                 name: "parameter_value",
                 label: "Parameter Value",
                 fieldType: "text",
                 type: "text",
+                placeHolder: "Enter a parameter value",
+                value: parameterValue? parameterValue : "",
+            },
+            {
+                dependsOn: {
+                    field: "value_types",
+                    value: "textarea"
+                },
+                name: "parameter_value",
+                label: "Parameter Value",
+                fieldType: "textarea",
+                rows: 4,
                 placeHolder: "Enter a parameter value",
                 value: parameterValue? parameterValue : "",
             },

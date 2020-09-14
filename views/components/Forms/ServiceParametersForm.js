@@ -14,7 +14,25 @@ const ServiceParametersForm = (props) => {
 
     const [serviceRequestParameter, setServiceRequestParameter] = useState({});
     const [showForm, setShowForm] = useState(false);
+    const [selectData, setSelectData] = useState({
+        value_types: {
+            label: "Text",
+            value: "text"
+        }
+    });
 
+    const [selectOptions, setSelectOptions] = useState({
+        value_types: [
+            {
+                label: "Text",
+                value: "text"
+            },
+            {
+                label: "Textarea",
+                value: "textarea"
+            }
+        ],
+    });
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.serviceRequestParameter, props.data.itemId)).then((response) => {
@@ -44,6 +62,8 @@ const ServiceParametersForm = (props) => {
                         serviceRequestParameter.parameter_value,
                     )
                 }
+                selectData={selectData}
+                selectOptions={selectOptions}
                 submitCallback={submitHandler}
                 submitButtonText={updateButtonLabel}
             />
@@ -51,6 +71,8 @@ const ServiceParametersForm = (props) => {
             {props.data.action !== "update" &&
             <DataForm
                 data={ServiceRequestParameterFormData()}
+                selectData={selectData}
+                selectOptions={selectOptions}
                 submitCallback={submitHandler}
                 submitButtonText={addButtonLabel}
             />
