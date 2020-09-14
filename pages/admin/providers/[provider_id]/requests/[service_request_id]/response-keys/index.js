@@ -8,6 +8,7 @@ import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/middleware";
 import Row from "react-bootstrap/Row";
 import {isSet} from "../../../../../../../library/utils";
+import Card from "react-bootstrap/Card";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -219,6 +220,21 @@ const ServiceRequestResponseKeys = (props) => {
                                 tableDropdownControls={getTableDropdownControls()}
                                 modalConfig={getModalConfig()}
                             />
+                        </Col>
+                        <Col sm={12} md={3} lg={3}>
+                            <Card>
+                                <Card.Header as="h5">Information</Card.Header>
+                                <Card.Body>
+                                <Card.Title>ITEMS ARRAY Key</Card.Title>
+                                <Card.Text>
+                                    A value must be entered for (ITEMS_ARRAY) key.
+                                    If the response data contains no key for the items list data, you can use either:<br/>
+                                    (root_items) = Data item/list is directly in the root of the response<br/>
+                                    or<br/>
+                                    (root_array) = Data item/list is in array in the root of the response.
+                                </Card.Text>
+                            </Card.Body>
+                            </Card>
                         </Col>
                     </Row>
                 </>
