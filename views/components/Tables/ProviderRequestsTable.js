@@ -36,6 +36,30 @@ const ProviderRequestsTable = (props) => {
     const getTableColumns = () => {
         return [
             {
+                name: 'Category/s',
+                sortable: true,
+                right: false,
+                allowOverflow: true,
+                editable: true,
+                grow: 0,
+                editableConfig: {
+                    field: "category",
+                    fieldType: "select",
+                    fieldConfig: {
+                        multiple: true,
+                        endpoint: "service/request",
+                        extraData: {
+                            provider_id: props.provider_id,
+                        },
+                        select: {
+                            endpoint: ApiConfig.endpoints.categoryList,
+                            valueKey: "id",
+                            labelKey: "category_label"
+                        }
+                    }
+                },
+            },
+            {
                 name: 'Request Label',
                 selector: 'service_request_label',
                 sortable: true,

@@ -35,12 +35,6 @@ const ManageServices = (props) => {
     const getTableColumns = () => {
         return [
             {
-                name: 'Category',
-                selector: 'category.category_label',
-                sortable: true,
-                maxWidth: "300px",
-            },
-            {
                 name: 'Service Label',
                 selector: 'service_label',
                 sortable: true,

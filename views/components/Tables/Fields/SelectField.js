@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import Select from "react-select";
 import {fetchData} from "../../../../library/api/middleware";
+import {isObject} from "../../../../library/utils";
 
 const SelectField = (props) => {
     const [editing, setEditing] = useState(false);
@@ -46,12 +47,19 @@ const SelectField = (props) => {
 
     const selectFieldClick = (row, config, e) => {
         fetchData(props.config.fieldConfig.select.endpoint).then((response) => {
-            let selectValue = row[config.field].map((item) => {
-                return {
-                    value: item[config.fieldConfig.select.valueKey],
-                    label: item[config.fieldConfig.select.labelKey],
-                }
-            })
+            let selectValue;
+            if (Array.isArray(row[config.field])) {
+                selectValue = row[config.field].map((item) => {
+                    return {
+                        value: item[config.fieldConfig.select.valueKey],
+                        label: item[config.fieldConfig.select.labelKey],
+                    }
+                })
+            } else if (!Array.isArray(row[config.field]) && isObject(row[config.field])) {
+                selectValue = [row[config.field]]
+            } else {
+                selectValue = [];
+            }
             setEditing(true);
             setShowSelect(true);
             setShowLabel(false);
@@ -63,14 +71,21 @@ const SelectField = (props) => {
 
         let data = props.data;
         let config = props.config;
+        let dataConfigField = data[config.field];
+        if (!Array.isArray(dataConfigField) && dataConfigField === null) {
+            dataConfigField = [];
+        } else if (!Array.isArray(dataConfigField) && isObject(dataConfigField)) {
+            dataConfigField = [dataConfigField]
+        }
+console.log(props)
         return (
             <div className={"datalist-field datalist-select-field" + (editing? " editing" : "")}>
                 {showLabel &&
                 <div className={"datalist-select-field--label datalist-field-border" +
-                (data[config.field].length === 0? " datalist-select-field--empty" : "")}
+                (dataConfigField.length === 0? " datalist-select-field--empty" : "")}
                      onClick={selectFieldClick.bind(this, props.data, props.config)}>
-                    {data[config.field].map((item, index) => (
-                        item.category_label + ((index !== data[config.field].length - 1) ? ", " : "")
+                    {dataConfigField.map((item, index) => (
+                        item.category_label + ((index !== dataConfigField.length - 1) ? ", " : "")
                     ))}
                 </div>
                 }

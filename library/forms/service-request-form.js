@@ -51,6 +51,12 @@ export const ServiceRequestFormData = (
                 fieldType: "select",
                 multi: false
             },
+            {
+                name: "category",
+                label: "Service Categories",
+                fieldType: "select",
+                multi: false
+            },
         ]
     };
 }
