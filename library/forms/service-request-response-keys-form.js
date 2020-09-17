@@ -8,7 +8,8 @@ export const ServiceRequestResponseKeysFormData = (
     prepend_extra_data = false,
     prepend_extra_data_value = null,
     append_extra_data = false,
-    append_extra_data_value = null
+    append_extra_data_value = null,
+    is_service_request = false
 ) => {
     return {
         fields: [
@@ -114,6 +115,26 @@ export const ServiceRequestResponseKeysFormData = (
                         name: "array_keys",
                         label: "List",
                         fieldType: "list"
+                    },
+                ]
+            },
+            {
+                label: "Is a service request?",
+                name: "is_service_request",
+                fieldType: "checkbox",
+                value: "1",
+                checked: is_service_request,
+                checkboxType: "true_false",
+                subFields: [
+                    {
+                        dependsOn: {
+                            field: "is_service_request",
+                            value: true
+                        },
+                        name: "response_key_request_item",
+                        label: "Service Request",
+                        fieldType: "select",
+                        multi: false,
                     },
                 ]
             },

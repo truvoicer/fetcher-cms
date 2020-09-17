@@ -12,14 +12,22 @@ const RequestResponseKeysForm = (props) => {
     const addButtonLabel = "Add Request Config";
     const updateButtonLabel = "Update Request Config";
 
-    const [selectData, setSelectData] = useState({
+    const [serviceRequestSelectData, setServiceRequestSelectData] = useState({
+        response_key_request_item: {}
+    });
+
+    const [serviceRequestSelectOptions, setServiceRequestSelectOptions] = useState({
+        response_key_request_item: []
+    });
+
+    const [returnDataTypeSelectData, setReturnDataTypeSelectData] = useState({
         return_data_type: {
             value: "text",
             label: "Text"
         }
     });
 
-    const [selectOptions, setSelectOptions] = useState({
+    const [returnDataTypeSelectOptions, setReturnDataTypeSelectOptions] = useState({
         return_data_type: [
             {
                 value: "text",
@@ -41,7 +49,13 @@ const RequestResponseKeysForm = (props) => {
         array_keys: []
     });
     const [showForm, setShowForm] = useState(false);
-
+    useEffect(() => {
+        fetchData(sprintf(ApiConfig.endpoints.serviceRequestList), {provider_id: props.config.provider_id}).then((response) => {
+            setServiceRequestSelectOptions({
+                response_key_request_item: getServicesRequestsSelect(response.data.data)
+            })
+        })
+    }, [])
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
             fetchData(sprintf(ApiConfig.endpoints.requestResponseKey, props.config.service_request_id, props.data.itemId))
@@ -49,7 +63,7 @@ const RequestResponseKeysForm = (props) => {
                     setRequestResponseKey(response.data.data);
                     const returnDataType = getReturnDataType(response.data.data.return_data_type);
                     if (returnDataType !== null) {
-                        setSelectData({
+                        setReturnDataTypeSelectData({
                             return_data_type: returnDataType
                         })
                     }
@@ -58,11 +72,28 @@ const RequestResponseKeysForm = (props) => {
                             array_keys: response.data.data.array_keys
                         });
                     }
+                    // if (response.data.data.service_request_response_item !== null) {
+                    //     setServiceRequestSelectData({
+                    //         service_request_response_item: {
+                    //             value: response.data.data.service_request_response_item.id,
+                    //             label: response.data.data.service_request_response_item.service_request_label
+                    //         }
+                    //     });
+                    // }
                     setShowForm(true);
                 })
 
         }
     }, [props.data.itemId, props.data.action])
+
+    const getServicesRequestsSelect = (requests) => {
+        return requests.map((item, index) => {
+            return {
+                value: item.id,
+                label: item.service_request_label
+            }
+        })
+    }
 
     const getReturnDataType = (data) => {
         if (isSet(data) && data !== "" && data !== null && data !== false) {
@@ -98,11 +129,18 @@ const RequestResponseKeysForm = (props) => {
                         requestResponseKey.prepend_extra_data,
                         requestResponseKey.prepend_extra_data_value,
                         requestResponseKey.append_extra_data,
-                        requestResponseKey.append_extra_data_value
+                        requestResponseKey.append_extra_data_value,
+                        requestResponseKey.is_service_request,
                     )
                 }
-                selectData={selectData}
-                selectOptions={selectOptions}
+                selectData={{
+                    ...serviceRequestSelectData,
+                    ...returnDataTypeSelectData
+                }}
+                selectOptions={{
+                    ...serviceRequestSelectOptions,
+                    ...returnDataTypeSelectOptions
+                }}
                 listData={listData}
                 submitCallback={submitHandler}
                 submitButtonText={updateButtonLabel}

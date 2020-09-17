@@ -151,6 +151,23 @@ const ServiceRequestResponseKeys = (props) => {
                     }
                 },
             },
+            {
+                name: 'Is Service Request?',
+                selector: 'is_service_request',
+                sortable: true,
+                editable: true,
+                grow: 0,
+                editableConfig: {
+                    field: "is_service_request",
+                    fieldType: "switch",
+                    fieldConfig: {
+                        endpoint: "service/request/response/key",
+                        extraData: {
+                            service_request_id: serviceRequest.data.id,
+                        }
+                    }
+                },
+            },
         ];
     }
 
@@ -189,13 +206,15 @@ const ServiceRequestResponseKeys = (props) => {
             default: {
                 modalForm: RequestResponseKeysForm,
                 config: {
-                    service_request_id: serviceRequest.data.id
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
                 }
             },
             requestResponseKeys: {
                 modalForm: RequestResponseKeysForm,
                 config: {
-                    service_request_id: serviceRequest.data.id
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
                 }
             },
             delete: {
