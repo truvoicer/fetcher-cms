@@ -1,16 +1,10 @@
+import {isSet} from "../utils";
+
 export const ServiceRequestResponseKeysFormData = (
     update = false,
-    key_name = null,
-    key_value = null,
-    show_in_response = false,
-    list_item = false,
-    has_array_value = false,
-    prepend_extra_data = false,
-    prepend_extra_data_value = null,
-    append_extra_data = false,
-    append_extra_data_value = null,
-    is_service_request = false
+    requestResponseKey = false
 ) => {
+    const serviceResponseKey = requestResponseKey.service_response_key;
     return {
         fields: [
             {
@@ -19,22 +13,22 @@ export const ServiceRequestResponseKeysFormData = (
                 fieldType: "text",
                 type: "text",
                 placeHolder: "Enter a key name",
-                value: key_name ? key_name : "",
+                value: serviceResponseKey.key_name ? serviceResponseKey.key_name : "",
             },
             {
-                name: "key_value",
+                name: "response_key_value",
                 label: "Key Value",
                 fieldType: "text",
                 type: "text",
                 placeHolder: "Enter a key value",
-                value: key_value ? key_value : "",
+                value: requestResponseKey.response_key_value ? requestResponseKey.response_key_value : "",
             },
             {
                 label: "Prepend Extra Data?",
                 name: "prepend_extra_data",
                 fieldType: "checkbox",
                 value: "1",
-                checked: prepend_extra_data,
+                checked: requestResponseKey.prepend_extra_data? requestResponseKey.prepend_extra_data : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -47,7 +41,7 @@ export const ServiceRequestResponseKeysFormData = (
                         type: "text",
                         fieldType: "text",
                         placeHolder: "Enter extra data to prepend",
-                        value: prepend_extra_data_value? prepend_extra_data_value : ""
+                        value: requestResponseKey.prepend_extra_data_value? requestResponseKey.prepend_extra_data_value : ""
                     },
                 ]
             },
@@ -56,7 +50,7 @@ export const ServiceRequestResponseKeysFormData = (
                 name: "append_extra_data",
                 fieldType: "checkbox",
                 value: "1",
-                checked: append_extra_data,
+                checked: requestResponseKey.append_extra_data? requestResponseKey.append_extra_data : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -69,7 +63,7 @@ export const ServiceRequestResponseKeysFormData = (
                         type: "text",
                         fieldType: "text",
                         placeHolder: "Enter extra data to append",
-                        value: append_extra_data_value? append_extra_data_value : ""
+                        value: requestResponseKey.append_extra_data_value? requestResponseKey.append_extra_data_value : ""
                     },
                 ]
             },
@@ -78,7 +72,7 @@ export const ServiceRequestResponseKeysFormData = (
                 name: "show_in_response",
                 fieldType: "checkbox",
                 value: "1",
-                checked: show_in_response,
+                checked: requestResponseKey.show_in_response? requestResponseKey.show_in_response : false,
                 checkboxType: "true_false",
             },
             {
@@ -86,7 +80,7 @@ export const ServiceRequestResponseKeysFormData = (
                 name: "list_item",
                 fieldType: "checkbox",
                 value: "1",
-                checked: list_item,
+                checked: requestResponseKey.list_item? requestResponseKey.list_item : false,
                 checkboxType: "true_false",
             },
             {
@@ -94,7 +88,7 @@ export const ServiceRequestResponseKeysFormData = (
                 name: "has_array_value",
                 fieldType: "checkbox",
                 value: "1",
-                checked: has_array_value,
+                checked: requestResponseKey.has_array_value? requestResponseKey.has_array_value : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -123,7 +117,7 @@ export const ServiceRequestResponseKeysFormData = (
                 name: "is_service_request",
                 fieldType: "checkbox",
                 value: "1",
-                checked: is_service_request,
+                checked: requestResponseKey.is_service_request? requestResponseKey.is_service_request : false,
                 checkboxType: "true_false",
                 subFields: [
                     {

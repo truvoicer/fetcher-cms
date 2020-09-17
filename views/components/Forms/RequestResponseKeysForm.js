@@ -57,34 +57,45 @@ const RequestResponseKeysForm = (props) => {
         })
     }, [])
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.requestResponseKey, props.config.service_request_id, props.data.itemId))
+        if (isSet(props.data.action) && isSet(props.data.data.service_response_key) && props.data.action === "update") {
+            console.log(props.config)
+            fetchData(sprintf(ApiConfig.endpoints.requestResponseKey, props.config.service_request_id, props.data.data.service_response_key.id))
                 .then((response) => {
-                    setRequestResponseKey(response.data.data);
-                    const returnDataType = getReturnDataType(response.data.data.return_data_type);
-                    if (returnDataType !== null) {
-                        setReturnDataTypeSelectData({
-                            return_data_type: returnDataType
-                        })
+                    const data = response.data.data;
+                    setRequestResponseKey(data);
+                    if (isSet(data.return_data_type)) {
+                        const returnDataType = getReturnDataType(data.return_data_type);
+                        if (returnDataType !== null) {
+                            setReturnDataTypeSelectData({
+                                return_data_type: returnDataType
+                            })
+                        }
                     }
-                    if (response.data.data.array_keys !== null && response.data.data.array_keys !== "") {
-                        setListData({
-                            array_keys: response.data.data.array_keys
+                    if (isSet(data.array_keys)) {
+                        if (data.array_keys !== null && data.array_keys !== "") {
+                            setListData({
+                                array_keys: data.array_keys
+                            });
+                        }
+                    }
+
+                    if (isSet(data.response_key_request_item) &&
+                        data.response_key_request_item !== null &&
+                        isSet(data.response_key_request_item.service_request)
+                    ) {
+                        const serviceRequest = data.response_key_request_item.service_request;
+                        setServiceRequestSelectData({
+                            response_key_request_item: {
+                                value: serviceRequest.id,
+                                label: serviceRequest.service_request_label
+                            }
                         });
                     }
-                    // if (response.data.data.service_request_response_item !== null) {
-                    //     setServiceRequestSelectData({
-                    //         service_request_response_item: {
-                    //             value: response.data.data.service_request_response_item.id,
-                    //             label: response.data.data.service_request_response_item.service_request_label
-                    //         }
-                    //     });
-                    // }
                     setShowForm(true);
                 })
 
         }
-    }, [props.data.itemId, props.data.action])
+    }, [props.data.itemId, props.data.action, props.data.data.service_response_key])
 
     const getServicesRequestsSelect = (requests) => {
         return requests.map((item, index) => {
@@ -111,6 +122,7 @@ const RequestResponseKeysForm = (props) => {
         }
         values.service_request_id = props.config.service_request_id;
         values.return_data_type = values.return_data_type.value;
+        values.service_response_key = props.data.data.service_response_key;
         responseHandler(sendData(props.data.action, "service/request/response/key", values), props.formResponse);
     }
 
@@ -121,16 +133,7 @@ const RequestResponseKeysForm = (props) => {
                 data={
                     ServiceRequestResponseKeysFormData(
                         true,
-                        requestResponseKey.key_name,
-                        requestResponseKey.key_value,
-                        requestResponseKey.show_in_response,
-                        requestResponseKey.list_item,
-                        requestResponseKey.has_array_value,
-                        requestResponseKey.prepend_extra_data,
-                        requestResponseKey.prepend_extra_data_value,
-                        requestResponseKey.append_extra_data,
-                        requestResponseKey.append_extra_data_value,
-                        requestResponseKey.is_service_request,
+                        requestResponseKey
                     )
                 }
                 selectData={{

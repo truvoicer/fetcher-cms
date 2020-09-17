@@ -119,6 +119,7 @@ const DataList = (props) => {
             modalTitle: (isSet(config.modal.modalTitle)) ? config.modal.modalTitle : null,
             endpoint: (isSet(config.modal.endpoint)) ? config.modal.endpoint : null,
             action: config.action,
+            data: row,
             itemName: (!row) ? null : row[props.tableData.defaultColumnName],
             itemLabel: (!row) ? null : row[props.tableData.defaultColumnLabel],
             itemId: (!row) ? null : row.id,

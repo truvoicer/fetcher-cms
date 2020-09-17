@@ -79,18 +79,18 @@ const ServiceRequestResponseKeys = (props) => {
         return [
             {
                 name: 'Key Name',
-                selector: 'key_name',
+                selector: 'service_response_key.key_name',
                 sortable: true,
                 grow: 2
             },
             {
                 name: 'Key Value',
-                selector: 'key_value',
+                selector: 'response_key_value',
                 sortable: true,
                 editable: true,
                 grow: 1,
                 editableConfig: {
-                    field: "key_value",
+                    field: "response_key_value",
                     fieldType: "text",
                     fieldConfig: {
                         endpoint: "service/request/response/key",
@@ -140,6 +140,7 @@ const ServiceRequestResponseKeys = (props) => {
                 sortable: true,
                 editable: true,
                 grow: 0,
+                hide: "lg",
                 editableConfig: {
                     field: "has_array_value",
                     fieldType: "switch",
@@ -157,6 +158,7 @@ const ServiceRequestResponseKeys = (props) => {
                 sortable: true,
                 editable: true,
                 grow: 0,
+                hide: "lg",
                 editableConfig: {
                     field: "is_service_request",
                     fieldType: "switch",
