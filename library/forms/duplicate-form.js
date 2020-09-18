@@ -20,7 +20,7 @@ export const DuplicateFormData = (
                         {
                             type: "length",
                             min: 3,
-                            max: 16
+                            max: 50
                         }
                     ]
                 }
@@ -40,7 +40,7 @@ export const DuplicateFormData = (
                         {
                             type: "length",
                             min: 3,
-                            max: 16
+                            max: 50
                         }
                     ]
                 }
