@@ -14,12 +14,9 @@ export const ProviderPropertyFormData = (
                 validation: {
                     rules: [
                         {
-                            type: "alphanumeric"
-                        },
-                        {
                             type: "length",
                             min: 3,
-                            max: 16
+                            max: 50
                         }
                     ]
                 }
