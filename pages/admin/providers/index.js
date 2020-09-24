@@ -5,6 +5,8 @@ import ProviderForm from "../../../views/components/Forms/ProviderForm";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import Col from "react-bootstrap/Col";
 import DataList from "../../../views/components/Tables/DataList";
+import ServiceRequestsExpandableTable
+    from "../../../views/components/Tables/Expandable/Tables/ServiceRequestsExpandableTable";
 
 const ManageProviders = (props) => {
     ManageProviders.PageName = "manage_providers";
@@ -190,6 +192,12 @@ const ManageProviders = (props) => {
                         tableColumns={getTableColumns()}
                         tableDropdownControls={getTableDropdownControls()}
                         modalConfig={getModalConfig()}
+                        expandedRowData={{
+                            component: ServiceRequestsExpandableTable,
+                            props: {
+                                provider_id: "id"
+                            }
+                        }}
                     />
                 </Col>
             </>

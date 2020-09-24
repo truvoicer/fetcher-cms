@@ -10,7 +10,7 @@ import Switcher from "./Fields/Switcher";
 import SelectField from "./Fields/SelectField";
 import {getColumnControls} from "../../../library/datalist/datalist-actions";
 import RowMenu from "./Components/RowMenu";
-import ExpandedRow from "./Components/ExpandedRow";
+import ExpandableRow from "./Expandable/ExpandableRow";
 
 const DataList = (props) => {
     const [modal, setModal] = useState({
@@ -238,9 +238,11 @@ const DataList = (props) => {
                     // onRowClicked={this.rowClickHandler}
                     expandableRows={true}
                     expandableRowsComponent={
-                        <ExpandedRow inlineControls={props.tableInlineControls}
-                                     dropdownControls={props.tableDropdownControls}
-                                     showModalCallback={showModal}/>
+                        <ExpandableRow inlineControls={props.tableInlineControls}
+                                       dropdownControls={props.tableDropdownControls}
+                                       showModalCallback={showModal}
+                                       expandedRowData={props.expandedRowData}
+                        />
                     }
                 />
                 <GetModal/>

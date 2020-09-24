@@ -77,7 +77,7 @@ const SelectField = (props) => {
         } else if (!Array.isArray(dataConfigField) && isObject(dataConfigField)) {
             dataConfigField = [dataConfigField]
         }
-console.log(props)
+// console.log(props)
         return (
             <div className={"datalist-field datalist-select-field" + (editing? " editing" : "")}>
                 {showLabel &&
