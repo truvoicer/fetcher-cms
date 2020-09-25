@@ -3,6 +3,13 @@ import {getColumnControls} from "../../../../library/datalist/datalist-actions";
 import {isSet} from "../../../../library/utils";
 
 const ExpandableRow = (props) => {
+    const getTitle = () => {
+        if (!isSet(props.expandedRowData) || !isSet(props.expandedRowData.title)) {
+            return null
+        }
+        return props.expandedRowData.title;
+    }
+
     const getContent = () => {
         if (!isSet(props.expandedRowData) || !isSet(props.expandedRowData.component)) {
             return false
@@ -22,23 +29,43 @@ const ExpandableRow = (props) => {
     }
     const expandedContent = getContent();
     return (
-        <div>
-            {expandedContent
-                ?
-                expandedContent
-                :
-                <>
-                    {getColumnControls(
-                        props.inlineControls,
-                        props.dropdownControls,
-                        props.data,
-                        props.showModalCallback,
-                        true,
-                        "inline"
-                    )}
-                </>
-            }
-        </div>
+            <div className="card border-success">
+                <div className="card-header">
+                    {props.expandedRowData?.title? props.expandedRowData?.title : ""}
+                    <div className="card-header-actions">
+                        {getColumnControls(
+                            props.inlineControls,
+                            props.dropdownControls,
+                            props.data,
+                            props.showModalCallback,
+                            true,
+                            "inline"
+                        )}
+                        {/*<a className="card-header-action btn-setting" href="#">*/}
+                        {/*    <svg className="c-icon">*/}
+                        {/*        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>*/}
+                        {/*    </svg>*/}
+                        {/*</a>*/}
+                        {/*<a className="card-header-action btn-minimize" href="#">*/}
+                        {/*    <svg className="c-icon">*/}
+                        {/*        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-circle-top"></use>*/}
+                        {/*    </svg>*/}
+                        {/*</a>*/}
+                        {/*<a className="card-header-action btn-close" href="#">*/}
+                        {/*    <svg className="c-icon">*/}
+                        {/*        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-x-circle"></use>*/}
+                        {/*    </svg>*/}
+                        {/*</a>*/}
+                    </div>
+                </div>
+                <div className="card-body">
+                    {expandedContent &&
+                    <div>
+                        {expandedContent}
+                    </div>
+                    }
+                </div>
+            </div>
     );
 }
 
