@@ -25,7 +25,7 @@ const ProviderRequestsTable = (props) => {
             defaultColumnName: "service_request_name",
             defaultColumnLabel: "service_request_label",
             query: {
-                count: 10,
+                count: 100,
                 order: "asc",
                 sort: "service_request_name",
                 provider_id: props.provider_id
