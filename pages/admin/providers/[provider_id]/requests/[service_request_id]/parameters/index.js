@@ -61,7 +61,7 @@ const ServiceRequestParameters = (props) => {
             defaultColumnName: "parameter_name",
             defaultColumnLabel: "parameter_value",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "parameter_name",
                 service_request_id: serviceRequest.data.id

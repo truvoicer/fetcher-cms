@@ -44,7 +44,7 @@ const ApiTokens = (props) => {
             defaultColumnName: "token",
             defaultColumnLabel: "token",
             query: {
-                count: 10,
+                count: 1000,
                 order: "desc",
                 sort: "expires_at"
             },

@@ -20,7 +20,7 @@ const Properties = (props) => {
             title: ApiConfig.endpoints.propertyList,
             endpoint: ApiConfig.endpoints.propertyList,
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "property_name"
             }

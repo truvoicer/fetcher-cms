@@ -25,7 +25,7 @@ const ManageServices = (props) => {
             defaultColumnName: "service_name",
             defaultColumnLabel: "service_label",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "service_name"
             },

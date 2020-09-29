@@ -20,7 +20,7 @@ const ManageProviders = (props) => {
         return {
             endpoint: ApiConfig.endpoints.providerList,
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "provider_name"
             }

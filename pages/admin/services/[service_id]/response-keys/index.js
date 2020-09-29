@@ -45,7 +45,7 @@ const ServiceResponseKeys = (props) => {
             defaultColumnName: "key_name",
             defaultColumnLabel: "key_value",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "key_name",
                 service_id: service.id

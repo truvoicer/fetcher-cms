@@ -63,7 +63,7 @@ const ServiceRequestConfig = (props) => {
             defaultColumnName: "item_name",
             defaultColumnLabel: "item_value",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "item_name",
                 service_request_id: serviceRequest.data.id,

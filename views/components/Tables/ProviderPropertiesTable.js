@@ -15,7 +15,7 @@ const ProviderPropertiesTable = (props) => {
             defaultColumnName: "property_value",
             defaultColumnLabel: "property_value",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "property_name",
                 service_id: props.provider_id

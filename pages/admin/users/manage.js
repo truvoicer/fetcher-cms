@@ -25,7 +25,7 @@ const ManageUsers = (props) => {
             defaultColumnName: "username",
             defaultColumnLabel: "username",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "id"
             }

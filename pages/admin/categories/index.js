@@ -21,7 +21,7 @@ const Categories = (props) => {
             defaultColumnName: "category_name",
             defaultColumnLabel: "category_label",
             query: {
-                count: 10,
+                count: 1000,
                 order: "asc",
                 sort: "category_name"
             },
