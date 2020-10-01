@@ -41,21 +41,6 @@ const ExpandableRow = (props) => {
                             true,
                             "inline"
                         )}
-                        {/*<a className="card-header-action btn-setting" href="#">*/}
-                        {/*    <svg className="c-icon">*/}
-                        {/*        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-settings"></use>*/}
-                        {/*    </svg>*/}
-                        {/*</a>*/}
-                        {/*<a className="card-header-action btn-minimize" href="#">*/}
-                        {/*    <svg className="c-icon">*/}
-                        {/*        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-arrow-circle-top"></use>*/}
-                        {/*    </svg>*/}
-                        {/*</a>*/}
-                        {/*<a className="card-header-action btn-close" href="#">*/}
-                        {/*    <svg className="c-icon">*/}
-                        {/*        <use xlink:href="vendors/@coreui/icons/svg/free.svg#cil-x-circle"></use>*/}
-                        {/*    </svg>*/}
-                        {/*</a>*/}
                     </div>
                 </div>
                 <div className="card-body">

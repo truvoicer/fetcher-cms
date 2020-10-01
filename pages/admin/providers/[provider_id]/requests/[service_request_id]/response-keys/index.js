@@ -9,6 +9,9 @@ import {fetchData} from "../../../../../../../library/api/middleware";
 import Row from "react-bootstrap/Row";
 import {isSet} from "../../../../../../../library/utils";
 import Card from "react-bootstrap/Card";
+import Dropdown from "react-bootstrap/Dropdown";
+import SettingsDropdown from "../../../../../../../views/components/Dropdowns/SettingsDropdown";
+import MergeResponseKeysForm from "../../../../../../../views/components/Forms/MergeResponseKeysForm";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -173,6 +176,23 @@ const ServiceRequestResponseKeys = (props) => {
         ];
     }
 
+    const getTableSettingsDropdown = () => {
+        return [
+            {
+                control: "button",
+                text: "Merge Response Keys",
+                action: "update",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Merge Response Keys",
+                    modalFormName: "mergeResponseKeys"
+                },
+                size: "sm",
+                classes: "outline-primary"
+            },
+        ]
+    }
+
     const getTableDropdownControls = () => {
         return [
             {
@@ -219,6 +239,13 @@ const ServiceRequestResponseKeys = (props) => {
                     provider_id: provider.data.id,
                 }
             },
+            mergeResponseKeys: {
+                modalForm: MergeResponseKeysForm,
+                config: {
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
+                }
+            },
             delete: {
                 modalForm: DeleteForm,
                 config: {
@@ -236,6 +263,7 @@ const ServiceRequestResponseKeys = (props) => {
                     <Row>
                         <Col sm={12} md={9} lg={9}>
                             <DataList
+                                tableSettingsDropdown={getTableSettingsDropdown()}
                                 tableData={getTableData()}
                                 tableColumns={getTableColumns()}
                                 tableDropdownControls={getTableDropdownControls()}
@@ -246,15 +274,16 @@ const ServiceRequestResponseKeys = (props) => {
                             <Card>
                                 <Card.Header as="h5">Information</Card.Header>
                                 <Card.Body>
-                                <Card.Title>ITEMS ARRAY Key</Card.Title>
-                                <Card.Text>
-                                    A value must be entered for (ITEMS_ARRAY) key.
-                                    If the response data contains no key for the items list data, you can use either:<br/>
-                                    (root_items) = Data item/list is directly in the root of the response<br/>
-                                    or<br/>
-                                    (root_array) = Data item/list is in array in the root of the response.
-                                </Card.Text>
-                            </Card.Body>
+                                    <Card.Title>ITEMS ARRAY Key</Card.Title>
+                                    <Card.Text>
+                                        A value must be entered for (ITEMS_ARRAY) key.
+                                        If the response data contains no key for the items list data, you can use
+                                        either:<br/>
+                                        (root_items) = Data item/list is directly in the root of the response<br/>
+                                        or<br/>
+                                        (root_array) = Data item/list is in array in the root of the response.
+                                    </Card.Text>
+                                </Card.Body>
                             </Card>
                         </Col>
                     </Row>

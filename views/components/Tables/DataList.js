@@ -11,6 +11,10 @@ import SelectField from "./Fields/SelectField";
 import {getColumnControls} from "../../../library/datalist/datalist-actions";
 import RowMenu from "./Components/RowMenu";
 import ExpandableRow from "./Expandable/ExpandableRow";
+import Dropdown from "react-bootstrap/Dropdown";
+import SettingsDropdown from "../Dropdowns/SettingsDropdown";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 const DataList = (props) => {
     const [modal, setModal] = useState({
@@ -35,6 +39,26 @@ const DataList = (props) => {
     useEffect(() => {
         setTableData();
     }, [props.tableData.endpoint, props.tableData.query])
+
+    const getTableSettingsDropdown = (config = null) => {
+        if (config === null) {
+            return null;
+        }
+        return (
+            <Dropdown>
+                <Dropdown.Toggle
+                    variant="success"
+                    id="dropdown-basic"
+                    as={SettingsDropdown}
+                />
+                <Dropdown.Menu>
+                    {config.map((item, index) => (
+                        <Dropdown.Item key={index} onClick={showModal.bind(this, item, false)}>Merge Response Keys</Dropdown.Item>
+                    ))}
+                </Dropdown.Menu>
+            </Dropdown>
+        )
+    }
 
     const getTableDataResponseHandler = (status, message, data = null) => {
         if (status === 200) {
@@ -216,47 +240,57 @@ const DataList = (props) => {
         setRowData(data)
     }
 
-        return (
-            <div>
-                {alert.showAlert &&
-                <Alert variant={alert.alertStatus}>
-                    {alert.responseMessage}
-                </Alert>
-                }
-                <DataTable
-                    title={createButton()}
-                    className={"datalist"}
-                    striped={true}
-                    highlightOnHover={false}
-                    responsive={true}
-                    overflowY={true}
-                    pagination={true}
-                    paginationPerPage={100}
-                    columns={getTableColumns(props.tableColumns, props.tableDropdownControls,
-                             props.tableInlineControls)}
-                    data={data}
-                    // onRowClicked={this.rowClickHandler}
-                    expandableRows={true}
-                    expandableRowsComponent={
-                        <ExpandableRow inlineControls={props.tableInlineControls}
-                                       dropdownControls={props.tableDropdownControls}
-                                       showModalCallback={showModal}
-                                       expandedRowData={props.expandedRowData}
-                        />
-                    }
-                />
-                <GetModal/>
-                {rowClicked &&
-                <RowMenu inlineControls={props.tableInlineControls}
-                         dropdownControls={props.tableDropdownControls}
-                         style={rowClickedStyle}
-                         data={rowData}
-                         closeMenuCallback={closeMenu}
-                         showModalCallback={showModal}/>
+    return (
+        <div>
+            {alert.showAlert &&
+            <Alert variant={alert.alertStatus}>
+                {alert.responseMessage}
+            </Alert>
+            }
+            <div className="card border-success">
+                <div className="card-header">
+                    <div className="card-header-actions">
+                        {getTableSettingsDropdown(props.tableSettingsDropdown)}
+                    </div>
+                </div>
+                <div className="card-body">
+                    <DataTable
+                        title={createButton()}
+                        className={"datalist"}
+                        striped={true}
+                        highlightOnHover={false}
+                        responsive={true}
+                        overflowY={true}
+                        pagination={true}
+                        paginationPerPage={100}
+                        columns={getTableColumns(props.tableColumns, props.tableDropdownControls,
+                            props.tableInlineControls)}
+                        data={data}
+                        // onRowClicked={this.rowClickHandler}
+                        expandableRows={true}
+                        expandableRowsComponent={
+                            <ExpandableRow inlineControls={props.tableInlineControls}
+                                           dropdownControls={props.tableDropdownControls}
+                                           showModalCallback={showModal}
+                                           expandedRowData={props.expandedRowData}
+                            />
+                        }
+                    />
 
-                }
-
+                </div>
             </div>
-        )
+            <GetModal/>
+            {rowClicked &&
+            <RowMenu inlineControls={props.tableInlineControls}
+                     dropdownControls={props.tableDropdownControls}
+                     style={rowClickedStyle}
+                     data={rowData}
+                     closeMenuCallback={closeMenu}
+                     showModalCallback={showModal}/>
+
+            }
+
+        </div>
+    )
 }
 export default DataList;
