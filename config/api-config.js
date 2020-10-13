@@ -40,5 +40,8 @@ export default
         "requestResponseKeyList": "/api/service/request/%d/response/key/list",
         "requestResponseKeyRelation": "/api/service/request/response/key/relation/%d",
         "serviceApiRequest": "/api/service/api/request/run",
+        "tools": "/api/tools/%s",
+        "fileList": "/api/tools/filesystem/files",
+        "file": "/api/tools/filesystem/file/%d"
     }
 }

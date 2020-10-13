@@ -169,6 +169,15 @@ export const Routes =
             subs: [
                 {
                     access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "FileSystem",
+                    name: "filesystem",
+                    route: "/admin/tools/filesystem",
+                    parent: "tools",
+                    icon: "cil-wc",
+                    sidebar: true
+                },
+                {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Importer",
                     name: "importer",
                     route: "/admin/tools/importer",

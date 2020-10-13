@@ -79,7 +79,7 @@ const DataList = (props) => {
                 hasColumnsConfig = true;
                 column.cell = row => getColumnControls(dropdownControls, inlineControls, row, showModal)
             }
-            if (isSet(column.editable)) {
+            if (isSet(column.editable) && column.editable) {
                 column.cell = row => getColumnEditable(row,
                     column.editableConfig)
             }
@@ -99,7 +99,7 @@ const DataList = (props) => {
     }
 
     const getColumnEditable = (row, config) => {
-        switch (config.fieldType) {
+        switch (config?.fieldType) {
             case "switch":
                 return <Switcher config={config} data={row}
                                  updateCallback={editableFieldRequest}
