@@ -160,6 +160,35 @@ export const Routes =
         },
         {
             access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            label: "Tools",
+            name: "tools",
+            route: "/admin/tools",
+            parent: "dashboard",
+            icon: "cil-gem",
+            sidebar: true,
+            subs: [
+                {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "Importer",
+                    name: "importer",
+                    route: "/admin/tools/importer",
+                    parent: "tools",
+                    icon: "cil-wc",
+                    sidebar: true
+                },
+                {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "Exporter",
+                    name: "exporter",
+                    route: "/admin/tools/exporter",
+                    parent: "tools",
+                    icon: "cil-wc",
+                    sidebar: true
+                }
+            ]
+        },
+        {
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "User Admin",
             label: "Users",
             name: "users",

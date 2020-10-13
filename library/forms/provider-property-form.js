@@ -10,16 +10,7 @@ export const ProviderPropertyFormData = (
                 fieldType: "text",
                 type: "text",
                 placeHolder: "Enter a property value",
-                value: propertyValue? propertyValue : "",
-                validation: {
-                    rules: [
-                        {
-                            type: "length",
-                            min: 3,
-                            max: 50
-                        }
-                    ]
-                }
+                value: propertyValue? propertyValue : ""
             },
         ]
     }
