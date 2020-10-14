@@ -15,6 +15,19 @@ export const sendData = async (operation, endpoint, data) => {
     return await axios.request(requestData);
 }
 
+export const sendFileData = async (operation, endpoint, data) => {
+    const requestData = {
+        method: "post",
+        url: process.env.NEXT_PUBLIC_API_URL + sprintf(apiConfig.endpoints[operation], endpoint),
+        data: data,
+        headers: {
+            'Authorization': sprintf("Bearer %s", getSessionObject().access_token),
+            "Content-Type": "multipart/form-data"
+        }
+    }
+    return await axios.request(requestData);
+}
+
 export const fetchData = async (endpoint, queryObj) => {
     const requestData = {
         method: "get",

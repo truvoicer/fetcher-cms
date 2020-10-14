@@ -42,15 +42,15 @@ const ServiceRequestForm = (props) => {
                 setServiceRequest(response.data.data);
                 setServicesData({
                     services: {
-                        value: response.data.data.service.id,
-                        label: response.data.data.service.service_label
+                        value: response?.data?.data?.service?.id,
+                        label: response?.data?.data?.service?.service_label
                     }
                 })
                 if (isSet(response.data.data.category) && response.data.data.category !== null) {
                     setCategoryData({
                         category: {
-                            value: response.data.data.category.id,
-                            label: response.data.data.category.category_label
+                            value: response?.data?.data?.category?.id,
+                            label: response?.data?.data?.category?.category_label
                         }
                     })
                 }

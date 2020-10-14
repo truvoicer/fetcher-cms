@@ -47,6 +47,7 @@ const Admin = (props) => {
         <App>
             <Head>
                 <title>{props.pageName ? sprintf("%s | %s", SiteConfig.siteName, getRouteItem(Routes.items, props.pageName).label) : SiteConfig.siteName}</title>
+                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
             </Head>
             <div className={"c-app"}>
                 {session.authenticated &&
