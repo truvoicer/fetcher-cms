@@ -11,7 +11,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {Button, FormGroup, FormLabel} from "react-bootstrap";
 import Select from "react-select";
 import FormFileInput from "react-bootstrap/FormFileInput";
-import {fetchData, sendFileData} from "../../../library/api/middleware";
+import {fetchData, sendData, sendFileData} from "../../../library/api/middleware";
 import {isSet} from "../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf
@@ -37,12 +37,13 @@ const ImporterPage = (props) => {
     const [activeStep, setActiveStep] = useState(0);
     const [selectedImportType, setSelectedImportType] = useState({});
     const [selectedImportFile, setSelectedImportFile] = useState({});
-    const [availableTypesList, setAvailableTypesList] = useState({});
+    const [mappingsData, setMappingsData] = useState({});
     const [response, setResponse] = useState({
         success: false,
         message: "",
         data: []
     });
+    const availableTypesSelectList = {};
 
     const getBreadcrumbsConfig = () => {
         return {
@@ -123,67 +124,117 @@ const ImporterPage = (props) => {
             </>
         )
     }
-    const uploadStepSubmitHandler = (e) => {
-        const data = new FormData();
-        data.append("import_type", selectedImportType.value);
-        data.append("upload_file", selectedImportFile);
-        sendFileData("tools", "import", data)
-            .then(response => {
-                if (response.data.status === "success") {
-                    console.log(response.data)
-                    setResponse({
-                        success: true,
-                        message: response.data.message,
-                        data: response.data.data
-                    })
-                    console.log(response.data.data)
-                    const successItems = response.data.data.filter(item => item.status === "success");
-                    console.log(successItems)
-                    if (successItems.length === 0) {
-                        setActiveStep(2);
-                    } else {
-                        setActiveStep(1);
-                    }
+
+    const filterEntityList = (list) => {
+        return list.map(item => {
+            let name;
+            Object.keys(item).map(key => {
+                if (key.includes("name")) {
+                    name = item[key];
                 }
-                console.log(response.data)
             })
-            .catch(error => {
-                setResponse({
-                    success: false,
-                    message: error?.response?.data?.message,
-                    data: error?.response?.data?.data
-                })
-            })
+            return {
+                value: item?.id,
+                name: name,
+                label: name
+            }
+        })
     }
 
-    const getMappingsSection = (section) => {
-        setAvailableTypesList(availableTypesList => {
-            let cloneList = [...availableTypesList];
-            if (isSet(section.name)) {
-                cloneList[section.name] = section.available;
+    const mappingsSelectChangeHandler = (destEntityKey, sourceEntityKey, importEntityName, sourceItemName, e) => {
+        console.log(destEntityKey, sourceEntityKey, importEntityName, e)
+        setMappingsData(mappingsData => {
+            let cloneData = {...mappingsData};
+            if (!isSet(cloneData[importEntityName])) {
+                cloneData[importEntityName] = {};
             }
-            return cloneList;
+            if (!isSet(cloneData[importEntityName][sourceEntityKey])) {
+                cloneData[importEntityName][sourceEntityKey] = {};
+            }
+            if (!isSet(cloneData[importEntityName][sourceEntityKey][destEntityKey])) {
+                cloneData[importEntityName][sourceEntityKey][destEntityKey] = {};
+            }
+            cloneData[importEntityName][sourceEntityKey][destEntityKey][sourceItemName] = e.value
+            return cloneData;
         })
+    }
+
+    const getAvailableDestEntityOptions = (mappings) => {
+        mappings.map((section, index) => {
+            Object.keys(section.data).map(key => {
+                availableTypesSelectList[key] = filterEntityList(section.data[key].available);
+            })
+        })
+        return availableTypesSelectList;
+    }
+
+    const getMappingOptionsForSourceEntities = (sourceEntities, destEntityKey, importEntityName) => {
         return (
             <>
+                <div className={"card"}>
+                    <div className={"card-header"}>
+                        <strong>{"Destination: " + destEntityKey}</strong>
+                    </div>
+                    <div className={"card-body"}>
+                        {Object.keys(sourceEntities).map((sourceEntityKey, sourceEntityIndex) => (
+                            <React.Fragment key={sourceEntityIndex}>
+                                <h5>{"Source: " + sourceEntityKey}</h5>
+                                {filterEntityList(sourceEntities[sourceEntityKey]).map((item, listIndex) => (
+                                    <FormGroup as={Row} key={listIndex}>
+                                        <FormLabel column sm="3">{item.name}</FormLabel>
+                                        <Col sm="6">
+                                            <Select
+                                                options={availableTypesSelectList[destEntityKey]}
+                                                onChange={
+                                                    mappingsSelectChangeHandler.bind(
+                                                        this,
+                                                        destEntityKey,
+                                                        sourceEntityKey,
+                                                        importEntityName,
+                                                        item.name
+                                                    )
+                                                }
+                                            />
+                                        </Col>
+                                    </FormGroup>
+                                ))}
+                            </React.Fragment>
+                        ))}
+                    </div>
+                </div>
+            </>
+        )
+    }
 
+    const getMappingsForDestEntities = (destEntities, importEntityName) => {
+        return (
+            <>
+                {Object.keys(destEntities).map((destEntityKey, index) => (
+                    <React.Fragment key={index}>
+                        {getMappingOptionsForSourceEntities(destEntities[destEntityKey].sources, destEntityKey, importEntityName)}
+                    </React.Fragment>
+                ))}
             </>
         );
     }
 
     const mappingStep = () => {
+        getAvailableDestEntityOptions(response.data.mappings)
         return (
-            <>
-                {Array.isArray(response.data) && response.data.map((item, index) => (
+            <Form onSubmit={submitHandler}>
+                {Array.isArray(response.data.mappings) && response.data.mappings.map((mappingEntityItem, index) => (
                     <React.Fragment key={index}>
-                        {getMappingsSection(item)}
+                        <h3>{"Import: " + mappingEntityItem.import_entity.label}</h3>
+                        {getMappingsForDestEntities(mappingEntityItem.data, mappingEntityItem.import_entity.name)}
                     </React.Fragment>
                 ))}
-            </>
+                <FormGroup>
+                    <Button type={"submit"}>
+                        Run Import
+                    </Button>
+                </FormGroup>
+            </Form>
         )
-    }
-    const mappingStepSubmitHandler = () => {
-
     }
     const finishStep = () => {
         return (
@@ -208,9 +259,6 @@ const ImporterPage = (props) => {
             </>
         )
     }
-    const finishStepSubmitHandler = (e) => {
-        setActiveStep(0)
-    }
 
     const fileChangeHandler = (e) => {
         setSelectedImportFile(selectedImportFile => {
@@ -224,6 +272,54 @@ const ImporterPage = (props) => {
                 label: e.label
             }
         })
+    }
+
+    const mappingStepSubmitHandler = (e) => {
+        const extraData = {
+            mappings: mappingsData,
+            file_id: response.data.file.id,
+            import_type: selectedImportType.value
+        }
+        sendData("tools", "import/mappings", extraData)
+            .then(response => {
+                console.log(response.data)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+    const finishStepSubmitHandler = (e) => {
+        setActiveStep(0)
+    }
+
+    const uploadStepSubmitHandler = (e) => {
+        const data = new FormData();
+        data.append("import_type", selectedImportType.value);
+        data.append("upload_file", selectedImportFile);
+        sendFileData("tools", "import", data)
+            .then(response => {
+                if (response.data.status === "success") {
+                    setResponse({
+                        success: true,
+                        message: response.data.message,
+                        data: response.data.data
+                    })
+
+                    if (!isSet(response.data.data.mappings)) {
+                        setActiveStep(2);
+                    } else {
+                        setActiveStep(1);
+                    }
+                }
+                // console.log(response.data)
+            })
+            .catch(error => {
+                setResponse({
+                    success: false,
+                    message: error?.response?.data?.message,
+                    data: error?.response?.data?.data
+                })
+            })
     }
 
     const submitHandler = (e) => {
@@ -243,11 +339,7 @@ const ImporterPage = (props) => {
         }
         return false;
     }
-
-    useEffect(() => {
-
-    }, []);
-
+    console.log(mappingsData)
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ImporterPageName}>
             <Row>
