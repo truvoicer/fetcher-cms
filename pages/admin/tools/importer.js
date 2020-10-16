@@ -142,7 +142,7 @@ const ImporterPage = (props) => {
     }
 
     const mappingsSelectChangeHandler = (destEntityKey, sourceEntityKey, importEntityName, sourceItemName, e) => {
-        console.log(destEntityKey, sourceEntityKey, importEntityName, e)
+        // console.log(destEntityKey, sourceEntityKey, importEntityName, e)
         setMappingsData(mappingsData => {
             let cloneData = {...mappingsData};
             if (!isSet(cloneData[importEntityName])) {
@@ -282,9 +282,21 @@ const ImporterPage = (props) => {
         }
         sendData("tools", "import/mappings", extraData)
             .then(response => {
-                console.log(response.data)
+                if (response.data.status === "success") {
+                    setActiveStep(2);
+                    setResponse({
+                        success: true,
+                        message: response.data.message,
+                        data: response.data.data
+                    })
+                }
             })
             .catch(error => {
+                setResponse({
+                    success: false,
+                    message: error?.response?.data?.message,
+                    data: error?.response?.data?.data
+                })
                 console.error(error)
             })
     }
@@ -339,7 +351,7 @@ const ImporterPage = (props) => {
         }
         return false;
     }
-    console.log(mappingsData)
+
     return (
         <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ImporterPageName}>
             <Row>
