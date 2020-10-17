@@ -31,8 +31,7 @@ const ExpandableRow = (props) => {
     return (
             <div className="card border-success">
                 <div className="card-header">
-                    {props.expandedRowData?.title? props.expandedRowData?.title : ""}
-                    <div className="card-header-actions">
+                    <div className="d-flex">
                         {getColumnControls(
                             props.inlineControls,
                             props.dropdownControls,
@@ -44,6 +43,7 @@ const ExpandableRow = (props) => {
                     </div>
                 </div>
                 <div className="card-body">
+                    <h4>{props.expandedRowData?.title? props.expandedRowData?.title : ""}</h4>
                     {expandedContent &&
                     <div>
                         {expandedContent}

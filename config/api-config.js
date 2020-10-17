@@ -42,6 +42,7 @@ export default
         "serviceApiRequest": "/api/service/api/request/run",
         "tools": "/api/tools/%s",
         "fileList": "/api/tools/filesystem/files",
-        "file": "/api/tools/filesystem/file/%d"
+        "file": "/api/tools/filesystem/file/%d",
+        "fileDownload": "/api/tools/filesystem/file/%d/download"
     }
 }

@@ -193,7 +193,7 @@ const ManageProviders = (props) => {
                         tableDropdownControls={getTableDropdownControls()}
                         modalConfig={getModalConfig()}
                         expandedRowData={{
-                            title: "Provider Settings",
+                            title: "Service Requests",
                             component: ServiceRequestsExpandableTable,
                             props: {
                                 provider_id: "id"

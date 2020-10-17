@@ -145,8 +145,6 @@ const ExporterPage = (props) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        console.log(exportData)
-        console.log(validateExportData(exportData))
         if (!validateExportData(exportData)) {
             return false;
         }

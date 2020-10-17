@@ -14,11 +14,15 @@ const ControlsInlineButton = (props) => {
             </Link>
         )
     } else if (props.config.control === "button") {
+        let clickHandler = props.callback.bind(this, props.config, props.data);
+        if (typeof props.config.action === "function") {
+            clickHandler = props.config.action;
+        }
         return (
             <Button
                 variant={props.config.classes}
                 size={props.config.size}
-                onClick={props.callback.bind(this, props.config, props.data)}
+                onClick={clickHandler.bind(this, props.data)}
             >
                 {props.config.text}
             </Button>

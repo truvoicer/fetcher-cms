@@ -4,6 +4,7 @@ import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
 import Admin from "../../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
+import {fetchData} from "../../../../library/api/middleware";
 
 export const FileSystemPageName = "filesystem";
 
@@ -74,8 +75,29 @@ const FileSystemPage = (props) => {
         ];
     }
 
+    const downloadCallback = (data, e) => {
+        fetchData(sprintf(ApiConfig.endpoints.fileDownload, data.id))
+            .then(response => {
+                if (response.data.status === "success") {
+                    window.open(response.data.data.url, "_blank")
+                    return true;
+                }
+                console.error(response.data)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+
     const getTableDropdownControls = () => {
         return [
+            {
+                control: "button",
+                text: "Download",
+                action: downloadCallback,
+                size: "sm",
+                classes: "outline-success"
+            },
             {
                 control: "button",
                 text: "Delete",
