@@ -14,6 +14,8 @@ import ServiceRequestResponseKeys
     , {ServiceRequestResponseKeysPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/response-keys";
 import ServiceRequestConfig, {ServiceRequestConfigPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/config";
 import ProviderRequests from "../../../pages/admin/providers/[provider_id]/requests";
+import ServiceRequestsExpandableTable from "./Expandable/Tables/ServiceRequestsExpandableTable";
+import ApiClient from "../ApiTools/ApiClient";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -272,6 +274,14 @@ const ProviderRequestsTable = (props) => {
             tableColumns={getTableColumns()}
             tableDropdownControls={getTableDropdownControls()}
             modalConfig={getModalConfig()}
+            expandedRowData={{
+                title: "Api Requests Client",
+                component: ApiClient,
+                props: {
+                    provider_id: props.provider_id,
+                    service_request_id: "id"
+                }
+            }}
         />
     )
 }

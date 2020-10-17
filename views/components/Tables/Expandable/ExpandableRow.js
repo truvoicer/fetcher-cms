@@ -23,6 +23,8 @@ const ExpandableRow = (props) => {
         Object.keys(props.expandedRowData.props).map(key => {
             if (isSet(props.data[props.expandedRowData.props[key]])) {
                 propsObject[key] = props.data[props.expandedRowData.props[key]];
+            } else {
+                propsObject[key] = props.expandedRowData.props[key];
             }
         })
         return propsObject;
