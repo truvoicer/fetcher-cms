@@ -78,6 +78,10 @@ const ImporterPage = (props) => {
             value: "providers",
             label: "Providers"
         },
+        {
+            value: "properties",
+            label: "Properties"
+        },
     ]
 
     const getStepContent = (key) => {
@@ -219,6 +223,9 @@ const ImporterPage = (props) => {
     }
 
     const mappingStep = () => {
+        if (!isSet(response.data) || !isSet(response.data.mappings) || !Array.isArray(response.data.mappings)) {
+            return null;
+        }
         getAvailableDestEntityOptions(response.data.mappings)
         return (
             <Form onSubmit={submitHandler}>
@@ -289,14 +296,14 @@ const ImporterPage = (props) => {
                         message: response.data.message,
                         data: response.data.data
                     })
+                    return true;
                 }
+                setActiveStep(1);
+                console.error(response.data)
+                return false;
             })
             .catch(error => {
-                setResponse({
-                    success: false,
-                    message: error?.response?.data?.message,
-                    data: error?.response?.data?.data
-                })
+                setActiveStep(1);
                 console.error(error)
             })
     }

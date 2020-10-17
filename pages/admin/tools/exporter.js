@@ -68,6 +68,21 @@ const ExporterPage = (props) => {
                 return cloneList;
             })
         })
+        fetchData(sprintf(ApiConfig.endpoints.propertyList)).then((response) => {
+            setExportFormList(exportFormList => {
+                let cloneList = [...exportFormList];
+                cloneList.push({
+                    show: false,
+                    id: "id",
+                    name: "properties",
+                    label: "Properties",
+                    nameField: "property_name",
+                    labelField: "property_label",
+                    data: response.data.data
+                })
+                return cloneList;
+            })
+        })
     }, []);
 
     const getBreadcrumbsConfig = () => {
