@@ -123,7 +123,11 @@ const DataList = (props) => {
         let action = "update";
         if (isSet(config.fieldConfig.extraData)) {
             Object.keys(config.fieldConfig.extraData).map((item) => {
-                row[item] = config.fieldConfig.extraData[item];
+                if (isSet(config.fieldConfig.extraData[item].key) && isSet(row[config.fieldConfig.extraData[item].key])) {
+                    row[item] = row[config.fieldConfig.extraData[item].key];
+                } else {
+                    row[item] = config.fieldConfig.extraData[item];
+                }
             })
         }
         responseHandler(

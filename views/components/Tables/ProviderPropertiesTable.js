@@ -43,7 +43,10 @@ const ProviderPropertiesTable = (props) => {
                     fieldConfig: {
                         endpoint: "provider/property",
                         extraData: {
-                            provider_id: props.provider_id
+                            provider_id: props.provider_id,
+                            property_id: {
+                                key: "id"
+                            }
                         }
                     }
                 },
