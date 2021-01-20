@@ -467,6 +467,7 @@ const DataForm = (props) => {
             initialValues={initialValues}
             validate={values => validateForm(values)}
             onSubmit={values => formSubmitHandler(values)}
+            enableReinitialize={true}
         >
             {({
                   values,

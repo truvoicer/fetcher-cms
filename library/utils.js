@@ -106,3 +106,7 @@ export const isObjectEmpty = (object) => {
 export const isObject = (object) => {
     return typeof object === "object";
 }
+
+export const isNotEmpty = (item) => {
+    return typeof item !== "undefined" && item !== null && item !== "" && item !== false;
+}

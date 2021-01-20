@@ -14,7 +14,6 @@ const InfoCard = (props) => {
 
     const getDataResponseHandler = (status, message, data = null) => {
         if (status === 200) {
-            console.log(data.data)
             setListData(data.data)
         } else {
            console.error(data)

@@ -17,6 +17,7 @@ export default
         "delete": "/api/%s/delete",
         "duplicate": "/api/%s/duplicate",
         "merge": "/api/%s/merge",
+        "scraper": "/api/scraper",
         "provider": "/api/provider/%d",
         "providerList": "/api/providers",
         "providerProperty": "/api/provider/%d/property/%d",
