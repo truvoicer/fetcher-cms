@@ -5,25 +5,51 @@ import Select from "react-select";
 import {fetchRequest, postRequest} from "../../../library/api/middleware";
 import ApiConfig from "../../../config/api-config";
 import {error} from "next/dist/build/output/log";
+import {isNotEmpty} from "../../../library/utils";
+import ScrapersSelect from "../Forms/Selects/ScrapersSelect";
 
-const ScraperSettings = ({scraper = null}) => {
+const ScraperSettings = ({scraper = null, provider = null}) => {
     const [responseKeys, setResponseKeys] = useState([])
-    useEffect(() => {
+    const [selectedScraper, setSelectedScraper] = useState(null)
+    const [selectedResponseKey, setSelectedResponseKey] = useState(null)
+    const [scraperResponseKey, setScraperResponseKey] = useState(null)
+
+    const fetchServiceResponseKeys = (serviceId) => {
         fetchRequest({
             endpoint: ApiConfig.endpoints.serviceResponseKeyList,
             data: {
-                service_id: scraper.service.id
+                service_id: serviceId
             },
             onSuccess: (responseData) => {
-                console.log(responseData)
                 setResponseKeys(responseData.data)
             },
             onError: (error) => {
                 console.error(error)
             }
         })
+    }
+
+    useEffect(() => {
+        if (isNotEmpty(scraper)) {
+            setSelectedScraper(scraper)
+            fetchServiceResponseKeys(scraper.service.id)
+        }
     }, [scraper])
 
+    useEffect(() => {
+        if (isNotEmpty(selectedResponseKey)) {
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.scraper,
+                operation: `${scraper.id}/response-key/${selectedResponseKey.value}`,
+                onSuccess: (responseData) => {
+                    setScraperResponseKey(responseData.data)
+                },
+                onError: (error) => {
+                    console.error(error)
+                }
+            })
+        }
+    }, [selectedResponseKey])
     return (
         <div className={"scrapers--settings"}>
             <div className="row">
@@ -72,9 +98,22 @@ const ScraperSettings = ({scraper = null}) => {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-sm-12 col-md-5">
-
                                     <div className="card">
-                                        <div className="card-header">Scrapers</div>
+                                        <div className="card-header">Select a Scraper</div>
+                                        <div className="card-body">
+                                            <ScrapersSelect
+                                                scraper={scraper}
+                                                provider={provider}
+                                                callback={(data) => {
+                                                    fetchServiceResponseKeys(data.service.id)
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-12 col-md-5">
+                                    <div className="card">
+                                        <div className="card-header">Select a Response Key</div>
                                         <div className="card-body">
                                             <Select
                                                 options={responseKeys.map(responseKey => {
@@ -84,9 +123,39 @@ const ScraperSettings = ({scraper = null}) => {
                                                     }
                                                 })}
                                                 onChange={(e) => {
-                                                    console.log(e)
+                                                    setSelectedResponseKey(e)
                                                 }}
                                             />
+                                        </div>
+                                    </div>
+                                </div>
+                                {isNotEmpty(selectedResponseKey) &&
+                                <div className="col-sm-12 col-md-2">
+                                    <div className="card">
+                                        <div className="card-header">Key Name</div>
+                                        <div className="card-body">
+                                            <div className={"d-flex"}>
+                                                {selectedResponseKey?.label &&
+                                                <div>
+                                                    <p>{selectedResponseKey.label}</p>
+                                                </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-12 col-md-12">
+                                    <div className="card">
+                                        <div className="card-header">Configuration</div>
+                                        <div className="card-body">
+                                            {Array.isArray(scraperResponseKey) &&
+                                            <p className={"text-danger"}>
+                                                This response has no configuration
+                                            </p>
+                                            }
                                         </div>
                                     </div>
                                 </div>

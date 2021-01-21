@@ -58,7 +58,7 @@ const ManageScrapers = (props) => {
                                     setModalSize("xl")
                                     setModalTitle("Scraper Settings")
                                     setModalComponent(
-                                        <ScraperSettings scraper={row} />
+                                        <ScraperSettings scraper={row} provider={selectedProvider} />
                                     )
                                     setShowModal(true)
                                 }}
