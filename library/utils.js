@@ -110,3 +110,17 @@ export const isObject = (object) => {
 export const isNotEmpty = (item) => {
     return typeof item !== "undefined" && item !== null && item !== "" && item !== false;
 }
+
+export const getAcceptedMimeTypesString = (allowedExtArray = null) => {
+    if (allowedExtArray === null) {
+        return '';
+    }
+    return allowedExtArray.map(type => type.mime_type).join(", ");
+}
+export const getAcceptedFileExtString = (allowedExtArray = null, allowedMessage) => {
+    if (allowedExtArray === null) {
+        return '';
+    }
+    const joinAcceptedFiles = allowedExtArray.map(type => type.extension).join(", ");
+    return allowedMessage.replace("[accepted]", joinAcceptedFiles)
+}

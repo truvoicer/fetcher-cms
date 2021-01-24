@@ -15,8 +15,8 @@ const ScraperForm = ({provider = null, operation = null, onSuccess}) => {
     const [providerOptions, setProviderOptions] = useState({provider: []});
     const [providerData, setProviderData] = useState({provider: {}});
 
-    const addButtonLabel = "Add Service Request";
-    const updateButtonLabel = "Update Service Request";
+    const addButtonLabel = "Save";
+    const updateButtonLabel = "Update";
 
     useEffect(() => {
         fetchData(sprintf(ApiConfig.endpoints.serviceList)).then((response) => {
@@ -43,29 +43,8 @@ const ScraperForm = ({provider = null, operation = null, onSuccess}) => {
                 }
                 return dataClone;
             })
-            setShowForm(true)
         }
-        // if (isSet(props.data.action) && props.data.action === "update") {
-        //     fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.data.itemId)).then((response) => {
-        //         setServiceRequest(response.data.data);
-        //         setServicesData({
-        //             services: {
-        //                 value: response?.data?.data?.service?.id,
-        //                 label: response?.data?.data?.service?.service_label
-        //             }
-        //         })
-        //         if (isSet(response.data.data.provider) && response.data.data.provider !== null) {
-        //             setProviderData({
-        //                 provider: {
-        //                     value: response?.data?.data?.provider?.id,
-        //                     label: response?.data?.data?.provider?.provider_label
-        //                 }
-        //             })
-        //         }
-        //         setShowForm(true);
-        //     })
-        //
-        // }
+        setShowForm(true)
     }, [provider])
 
     const getServicesSelect = (requests) => {
@@ -103,27 +82,6 @@ const ScraperForm = ({provider = null, operation = null, onSuccess}) => {
 
     return (
         <>
-            {/*{props.data.action === "update" && showForm &&*/}
-            {/*<DataForm*/}
-            {/*    data={*/}
-            {/*        ScraperFormData(*/}
-            {/*            true,*/}
-            {/*            serviceRequest.service_request_name,*/}
-            {/*            serviceRequest.service_request_label,*/}
-            {/*        )*/}
-            {/*    }*/}
-            {/*    selectData={{*/}
-            {/*        ...servicesData,*/}
-            {/*        ...providerData*/}
-            {/*    }}*/}
-            {/*    selectOptions={{*/}
-            {/*        ...servicesOptions,*/}
-            {/*        ...providerOptions*/}
-            {/*    }}*/}
-            {/*    submitCallback={submitHandler}*/}
-            {/*    submitButtonText={updateButtonLabel}*/}
-            {/*/>*/}
-            {/*}*/}
             {operation === "insert" && showForm  &&
             <DataForm
                 data={ScraperFormData()}

@@ -19,6 +19,8 @@ const ManageProviders = (props) => {
     const getTableData = () => {
         return {
             endpoint: ApiConfig.endpoints.providerList,
+            defaultColumnName: "provider_name",
+            defaultColumnLabel: "provider_label",
             query: {
                 count: 1000,
                 order: "asc",

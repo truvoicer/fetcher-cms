@@ -7,12 +7,19 @@ import ApiConfig from "../../../config/api-config";
 import {error} from "next/dist/build/output/log";
 import {isNotEmpty} from "../../../library/utils";
 import ScrapersSelect from "../Forms/Selects/ScrapersSelect";
+import Modal from "react-bootstrap/Modal";
+import Admin from "../../layouts/Admin";
+import ScheduleForm from "../Forms/Scraper/ScheduleForm";
 
 const ScraperSettings = ({scraper = null, provider = null}) => {
     const [responseKeys, setResponseKeys] = useState([])
     const [selectedScraper, setSelectedScraper] = useState(null)
     const [selectedResponseKey, setSelectedResponseKey] = useState(null)
     const [scraperResponseKey, setScraperResponseKey] = useState(null)
+    const [showModal, setShowModal] = useState(false)
+    const [modalTitle, setModalTitle] = useState("")
+    const [modalSize, setModalSize] = useState("md")
+    const [modalComponent, setModalComponent] = useState(null)
 
     const fetchServiceResponseKeys = (serviceId) => {
         fetchRequest({
@@ -74,9 +81,18 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                             <Dropdown.Menu>
                                                 <Dropdown.Item
                                                     onClick={() => {
+                                                        setModalSize("md")
+                                                        setModalTitle("Scraper Schedule Options")
+                                                        setModalComponent(
+                                                            <ScheduleForm
+                                                              scraper={scraper}
+                                                              provider={provider}
+                                                            />
+                                                        )
+                                                        setShowModal(true)
                                                     }}
                                                 >
-                                                    New Scraper
+                                                    Schedule
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>
@@ -164,6 +180,20 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                     </div>
                 </div>
             </div>
+            <Modal
+                show={showModal}
+                size={modalSize}
+                onHide={() => {
+                    setShowModal(false)
+                }}
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title>{modalTitle}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {modalComponent}
+                </Modal.Body>
+            </Modal>
         </div>
     );
 };

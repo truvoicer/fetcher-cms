@@ -3,23 +3,17 @@ import {isNotEmpty} from "../../../../library/utils";
 import {fetchRequest} from "../../../../library/api/middleware";
 import ApiConfig from "../../../../config/api-config";
 import Select from "react-select";
+import {getScraperList} from "../../../../library/api/helpers/scraper-helpers";
 
 const ScrapersSelect = ({provider = null, scraper = null, callback}) => {
     const [scraperList, setScraperList] = useState([])
 
     const setScrapers = () => {
         if (isNotEmpty(provider)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.scraper,
-                operation: "list",
-                data: {
-                    provider_id: provider.id,
-                    count: 1000,
-                    order: "asc",
-                    sort: "scraper_name"
-                },
+            getScraperList({
+                providerId: provider.id,
                 onSuccess: (responseData) => {
-                    setScraperList(responseData.data)
+                    setScraperList(responseData)
                 },
                 onError: (error) => {
                     console.error(error)
@@ -34,7 +28,7 @@ const ScrapersSelect = ({provider = null, scraper = null, callback}) => {
     }, [provider])
 
     const getExtraProps = () => {
-        console.log(scraper)
+        // console.log(scraper)
         if (isNotEmpty(scraper)) {
             return {
                 value: {
