@@ -1,6 +1,6 @@
 import Form from "react-bootstrap/Form";
 import React, {useEffect, useState} from "react";
-import {sendData, fetchData, responseHandler} from '../../../library/api/middleware'
+import {sendData, fetchData, responseHandler} from '../../../library/api/fetcher-api/fetcher-middleware'
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Select from 'react-select';

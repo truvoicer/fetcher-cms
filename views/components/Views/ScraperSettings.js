@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
 import SettingsDropdown from "../Dropdowns/SettingsDropdown";
 import Select from "react-select";
-import {fetchRequest, postRequest} from "../../../library/api/middleware";
+import {fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import {error} from "next/dist/build/output/log";
 import {isNotEmpty} from "../../../library/utils";

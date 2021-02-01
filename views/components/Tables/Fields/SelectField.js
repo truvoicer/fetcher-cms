@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import Select from "react-select";
-import {fetchData} from "../../../../library/api/middleware";
+import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObject} from "../../../../library/utils";
 
 const SelectField = (props) => {

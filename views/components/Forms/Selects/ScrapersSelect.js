@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {isNotEmpty} from "../../../../library/utils";
-import {fetchRequest} from "../../../../library/api/middleware";
+import {fetchRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../config/api-config";
 import Select from "react-select";
 import {getScraperList} from "../../../../library/api/helpers/scraper-helpers";

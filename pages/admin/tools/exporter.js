@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
-import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
+import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import {Alert} from "react-bootstrap";
 

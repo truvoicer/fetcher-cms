@@ -1,7 +1,7 @@
 import AdminHeader from '../components/Headers/AdminHeader'
 import AdminSidebar from '../components/Sidebars/AdminSidebar'
 import AdminFooter from '../components/Footers/AdminFooter'
-import {checkAccessControl, getApiUser, getRouteItem} from "../../library/session/authenticate";
+import {checkAccessControl, getRouteItem} from "../../library/session/authenticate";
 import Router, {useRouter} from "next/router";
 import React, {useEffect, useState} from "react";
 import App from "../App";
@@ -11,6 +11,7 @@ import Head from 'next/head'
 import {SiteConfig} from "../../config/site-config";
 import {BreadcrumbsContext} from "../components/Context/BreadcrumbsContext";
 import {Routes} from "../../config/routes";
+import {getApiUser} from "../../library/api/fetcher-api/fetcher-middleware";
 
 const sprintf = require("sprintf-js").sprintf;
 

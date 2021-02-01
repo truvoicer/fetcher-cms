@@ -1,7 +1,7 @@
 import DataTable from 'react-data-table-component';
 import Button from "react-bootstrap/Button";
 import React, {useEffect, useState} from "react";
-import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
+import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import {isSet} from "../../../library/utils";

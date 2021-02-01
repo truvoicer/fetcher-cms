@@ -5,7 +5,7 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import Admin from "../../../../../../../views/layouts/Admin";
 import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../../../library/api/middleware";
+import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import Row from "react-bootstrap/Row";
 import {isSet} from "../../../../../../../library/utils";
 import Card from "react-bootstrap/Card";

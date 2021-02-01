@@ -1,7 +1,7 @@
 import ApiConfig from "../../../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
 import Admin from "../../../../../../../views/layouts/Admin";
-import {fetchData} from "../../../../../../../library/api/middleware";
+import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import ApiClient from "../../../../../../../views/components/ApiTools/ApiClient";
 

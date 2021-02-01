@@ -2,7 +2,7 @@ import Admin from '../../../views/layouts/Admin'
 import ApiConfig from '../../../config/api-config'
 import React, {useEffect, useState} from "react";
 import Select from "react-select";
-import {fetchData, fetchRequest} from "../../../library/api/middleware";
+import {fetchData, fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isNotEmpty} from "../../../library/utils";
 import Modal from "react-bootstrap/Modal";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -10,6 +10,9 @@ import SettingsDropdown from "../../../views/components/Dropdowns/SettingsDropdo
 import ScraperForm from "../../../views/components/Forms/ScraperForm";
 import DataTable from "react-data-table-component";
 import ScraperSettings from "../../../views/components/Views/ScraperSettings";
+import Accordion from "react-bootstrap/Accordion"
+import Card from "react-bootstrap/Card";
+import ScraperApiJobs from "../../../views/components/Views/ScraperApiJobs";
 
 
 const ManageScrapers = (props) => {
@@ -20,6 +23,9 @@ const ManageScrapers = (props) => {
         }
     }
 
+    const MANAGE_SCRAPER_JOBS_KEY = "manage_scraper_jobs";
+    const MANAGE_SCRAPERS_KEY = "manage_scrapers";
+
     const [providerList, setProviderList] = useState([])
     const [scraperList, setScraperList] = useState([])
     const [selectedProvider, setSelectedProvider] = useState(null)
@@ -27,6 +33,7 @@ const ManageScrapers = (props) => {
     const [modalTitle, setModalTitle] = useState("")
     const [modalSize, setModalSize] = useState("md")
     const [modalComponent, setModalComponent] = useState(null)
+    const [accordionItem, setAccordionItem] = useState(null)
 
     const scraperColumns = [
         {
@@ -131,8 +138,61 @@ const ManageScrapers = (props) => {
             <div className={"scrapers"}>
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12">
+                        <Accordion>
+                            <div className="card">
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="0"
+                                >
+                                    <div className={"scrapers--header d-flex float-left align-items-center"}>
+                                        <div className={"scrapers--header--title"}>
+                                            Scraper Api Jobs
+                                        </div>
+                                    </div>
+                                    <div className="card-header-actions">
+                                        <div className={"scrapers--header d-flex float-left align-items-center"}>
+                                            <Dropdown>
+                                                <Dropdown.Toggle
+                                                    variant="success"
+                                                    id="dropdown-basic"
+                                                    as={SettingsDropdown}
+                                                />
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item
+                                                        onClick={() => {
+                                                        }}
+                                                    >
+                                                        New Scraper
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                            <a
+                                                className="card-header-action btn-minimize"
+                                                href=""
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                }}
+                                            >
+                                                <svg className="c-icon">
+                                                    <use xlinkHref="/images/icons/sprites/free.svg#cil-reload"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="0">
+                                    <div className="card-body">
+                                        <ScraperApiJobs
+
+                                        />
+                                    </div>
+                                </Accordion.Collapse>
+                            </div>
                         <div className="card">
-                            <div className="card-header">
+                            <Accordion.Toggle
+                                as={Card.Header}
+                                eventKey="1"
+                            >
                                 <div className={"scrapers--header d-flex float-left align-items-center"}>
                                     <div className={"scrapers--header--title"}>
                                         Manage Scrapers
@@ -145,6 +205,9 @@ const ManageScrapers = (props) => {
                                                     label: provider.provider_label
                                                 }
                                             })}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                            }}
                                             onChange={(e) => {
                                                 fetchRequest({
                                                     endpoint: ApiConfig.endpoints.provider,
@@ -205,11 +268,12 @@ const ManageScrapers = (props) => {
                                         </a>
                                     </div>
                                 </div>
-                            </div>
-                            {isNotEmpty(selectedProvider) &&
+                            </Accordion.Toggle>
+                            <Accordion.Collapse eventKey="1">
                             <div className="card-body">
                                 <div className="row">
                                     <div className="col-sm-12 col-md-12">
+                                        {isNotEmpty(selectedProvider) &&
                                         <div className="card">
                                             <div className="card-header">Scrapers</div>
                                             <div className="card-body">
@@ -227,12 +291,15 @@ const ManageScrapers = (props) => {
                                                 />
                                             </div>
                                         </div>
+                                        }
                                     </div>
 
                                 </div>
                             </div>
-                            }
+
+                            </Accordion.Collapse>
                         </div>
+                        </Accordion>
                     </div>
 
                 </div>

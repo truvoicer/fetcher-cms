@@ -8,7 +8,7 @@ import Button from "react-bootstrap/Button";
 import FormList from "../Forms/Components/FormList";
 import React, {useEffect, useState} from "react";
 import {isObjectEmpty, isSet} from "../../../library/utils";
-import {fetchData, responseHandler} from "../../../library/api/middleware";
+import {fetchData, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 
 const ApiClient = (props) => {

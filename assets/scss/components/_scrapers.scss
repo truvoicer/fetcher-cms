@@ -11,5 +11,9 @@
   .rdt_TableHeader {
     display: none;
   }
-
+  .accordion {
+    > .card {
+      overflow: visible;
+    }
+  }
 }

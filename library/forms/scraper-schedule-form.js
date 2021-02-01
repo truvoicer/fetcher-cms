@@ -39,6 +39,33 @@ export const ScraperScheduleFormData = (
             {
                 rowIndex: 1,
                 columnIndex: 0,
+                name: "use_cron_expression",
+                description: "",
+                showLabel: false,
+                label: "Use Cron Expression?",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "checkbox",
+                checkboxType: "true_false",
+                value: isSet(scraperSchedule?.use_cron_expression)? scraperSchedule?.use_cron_expression : true,
+                options: [],
+            },
+            {
+                rowIndex: 1,
+                columnIndex: 1,
+                name: "cron_expression",
+                description: "",
+                label: "Cron Expression",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "text",
+                value: !isNotEmpty(scraperSchedule?.cron_expression)? null : scraperSchedule.cron_expression,
+                options: [],
+            },
+            {
+                rowIndex: 2,
+                columnIndex: 0,
                 name: "start_date",
                 description: "",
                 label: "Start Date?",
@@ -49,7 +76,7 @@ export const ScraperScheduleFormData = (
                 value: !isNotEmpty(scraperSchedule?.start_date)? null : scraperSchedule.start_date,
             },
             {
-                rowIndex: 1,
+                rowIndex: 2,
                 columnIndex: 1,
                 name: "end_date",
                 description: "",
@@ -61,7 +88,7 @@ export const ScraperScheduleFormData = (
                 value: !isNotEmpty(scraperSchedule?.end_date)? null : scraperSchedule.end_date,
             },
             {
-                rowIndex: 2,
+                rowIndex: 3,
                 columnIndex: 0,
                 name: "every_minute",
                 description: "",
@@ -75,7 +102,7 @@ export const ScraperScheduleFormData = (
                 options: [],
             },
             {
-                rowIndex: 2,
+                rowIndex: 3,
                 columnIndex: 1,
                 name: "minute",
                 description: "",
@@ -89,7 +116,7 @@ export const ScraperScheduleFormData = (
                 value: !isNotEmpty(scraperSchedule?.minute)? "" : scraperSchedule.minute,
             },
             {
-                rowIndex: 3,
+                rowIndex: 4,
                 columnIndex: 0,
                 name: "every_hour",
                 description: "",
@@ -103,7 +130,7 @@ export const ScraperScheduleFormData = (
                 options: [],
             },
             {
-                rowIndex: 3,
+                rowIndex: 4,
                 columnIndex: 1,
                 name: "hour",
                 description: "",
@@ -117,7 +144,7 @@ export const ScraperScheduleFormData = (
                 value: !isNotEmpty(scraperSchedule?.hour)? "" : scraperSchedule.hour,
             },
             {
-                rowIndex: 4,
+                rowIndex: 5,
                 columnIndex: 0,
                 name: "every_day",
                 description: "",
@@ -132,7 +159,7 @@ export const ScraperScheduleFormData = (
                 data: [],
             },
             {
-                rowIndex: 4,
+                rowIndex: 5,
                 columnIndex: 1,
                 name: "day",
                 description: "",
@@ -146,7 +173,7 @@ export const ScraperScheduleFormData = (
                 value: !isNotEmpty(scraperSchedule?.day)? "" : scraperSchedule.day,
             },
             {
-                rowIndex: 5,
+                rowIndex: 6,
                 columnIndex: 0,
                 name: "every_month",
                 description: "",
@@ -161,7 +188,7 @@ export const ScraperScheduleFormData = (
                 data: [],
             },
             {
-                rowIndex: 5,
+                rowIndex: 6,
                 columnIndex: 1,
                 name: "month",
                 description: "",
@@ -188,7 +215,7 @@ export const ScraperScheduleFormData = (
                 value: !isNotEmpty(scraperSchedule?.month)? {} : {value: scraperSchedule.month, label: uCaseFirst(scraperSchedule.month)},
             },
             {
-                rowIndex: 6,
+                rowIndex: 7,
                 columnIndex: 0,
                 name: "every_weekday",
                 description: "",
@@ -203,7 +230,7 @@ export const ScraperScheduleFormData = (
                 data: [],
             },
             {
-                rowIndex: 6,
+                rowIndex: 7,
                 columnIndex: 1,
                 name: "weekday",
                 description: "",

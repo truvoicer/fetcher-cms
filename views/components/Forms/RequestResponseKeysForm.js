@@ -1,5 +1,5 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/middleware";
+import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet, uCaseFirst} from "../../../library/utils";
 import DataForm from "./DataForm";

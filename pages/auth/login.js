@@ -5,11 +5,8 @@ import Button from 'react-bootstrap/Button'
 import Alert from "react-bootstrap/Alert";
 import {setSession} from "../../library/session/authenticate";
 import React, {useState} from "react";
-import {responseHandler} from "../../library/api/middleware";
+import {getToken, responseHandler} from "../../library/api/fetcher-api/fetcher-middleware";
 import Head from "next/head";
-
-
-const {getToken} = require("../../library/session/authenticate")
 
 const Login = (props) => {
     Login.PageName = "login";
@@ -50,6 +47,7 @@ const Login = (props) => {
             message: message
         })
         if (status === 200) {
+            console.log(status)
             router.push('/admin/dashboard')
         }
     }

@@ -1,11 +1,11 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {sendData, responseHandler, postRequest} from "../../../../library/api/middleware";
+import {sendData, responseHandler, postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import Alert from "react-bootstrap/Alert";
 import {isNotEmpty, isSet} from "../../../../library/utils";
-import {fetchData} from "../../../../library/api/middleware";
+import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../config/api-config";
 import DataForm from "../DataForm/DataForm";
 import {UserFormData} from "../../../../library/forms/user-form";

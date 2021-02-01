@@ -1,4 +1,4 @@
-import {fetchRequest} from "../middleware";
+import {fetchRequest} from "../fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 
 export const getScraperList = ({providerId, onSuccess, onError}) => {

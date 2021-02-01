@@ -11,7 +11,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import {Button, FormGroup, FormLabel} from "react-bootstrap";
 import Select from "react-select";
 import FormFileInput from "react-bootstrap/FormFileInput";
-import {fetchData, sendData, sendFileData} from "../../../library/api/middleware";
+import {fetchData, sendData, sendFileData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf

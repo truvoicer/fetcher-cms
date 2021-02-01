@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {fetchData, postRequest, responseHandler, sendData} from "../../../library/api/middleware";
+import {fetchData, postRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import {isNotEmpty, isSet} from "../../../library/utils";
 import DataForm from "./DataForm";

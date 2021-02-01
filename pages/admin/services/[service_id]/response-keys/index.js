@@ -5,7 +5,7 @@ import DataList from "../../../../../views/components/Tables/DataList";
 import Admin from "../../../../../views/layouts/Admin";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/middleware";
+import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../../../library/utils";
 
 const sprintf = require("sprintf-js").sprintf

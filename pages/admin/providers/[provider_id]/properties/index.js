@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import Admin from "../../../../../views/layouts/Admin";
 import ProviderPropertiesTable from "../../../../../views/components/Tables/ProviderPropertiesTable";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/middleware";
+import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../../../library/utils";
 import {error} from "next/dist/build/output/log";
 

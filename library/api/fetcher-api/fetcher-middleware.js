@@ -1,16 +1,26 @@
-import axios from 'axios';
-import apiConfig from "../../config/api-config";
-import {getSessionObject} from "../session/authenticate";
-import {isObjectEmpty} from "../utils";
+import apiConfig from "../../../config/api-config";
+import {getSessionObject} from "../../session/authenticate";
+import {isObjectEmpty} from "../../utils";
+import {buildRequestUrl} from "../helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf;
-const vsprintf = require("sprintf-js").vsprintf;
+const axios = require("axios");
 
-const buildRequestUrl = ({endpoint = "", operation = "", args = []}) => {
-    if (args.length > 0) {
-        endpoint = vsprintf(endpoint, args)
+const fetcherApiRequest = axios.create({
+    baseURL: apiConfig.apiUrl,
+});
+
+export const getApiUser = async () => {
+    const requestData = {
+        method: "post",
+        url: apiConfig.endpoints.getApiUser,
+        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
-    return `${process.env.NEXT_PUBLIC_API_URL}${endpoint}/${operation}`;
+    return await fetcherApiRequest.request(requestData);
+}
+
+export const getToken = async (data) => {
+    return axios.post(process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.login, data);
 }
 
 export const fetchRequest = ({endpoint, operation = "", args = [], data={}, onSuccess, onError}) => {
@@ -20,7 +30,7 @@ export const fetchRequest = ({endpoint, operation = "", args = [], data={}, onSu
         params: data,
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
-    axios.request(request).then(response => {
+    fetcherApiRequest.request(request).then(response => {
         onSuccess(response.data)
     }).catch(error => {
         onError(error)
@@ -34,7 +44,7 @@ export const postRequest = ({endpoint, operation, requestData, args = [], method
         data: requestData,
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
-    axios.request(request).then(response => {
+    fetcherApiRequest.request(request).then(response => {
         onSuccess(response.data)
     }).catch(error => {
         onError(error)
@@ -48,7 +58,7 @@ export const sendData = async (operation, endpoint, data) => {
         data: data,
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
-    return await axios.request(requestData);
+    return await fetcherApiRequest.request(requestData);
 }
 
 export const sendFileData = async (operation, endpoint, data) => {
@@ -61,7 +71,7 @@ export const sendFileData = async (operation, endpoint, data) => {
             "Content-Type": "multipart/form-data"
         }
     }
-    return await axios.request(requestData);
+    return await fetcherApiRequest.request(requestData);
 }
 
 export const fetchData = async (endpoint, queryObj) => {
@@ -71,7 +81,7 @@ export const fetchData = async (endpoint, queryObj) => {
         params: queryObj,
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
-    return await axios.request(requestData);
+    return await fetcherApiRequest.request(requestData);
 }
 
 export const responseHandler = (promise, callback) => {

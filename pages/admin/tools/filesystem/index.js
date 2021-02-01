@@ -4,7 +4,7 @@ import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
 import Admin from "../../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../library/api/middleware";
+import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
 
 export const FileSystemPageName = "filesystem";
 

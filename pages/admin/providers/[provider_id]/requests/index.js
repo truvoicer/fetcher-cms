@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Admin from "../../../../../views/layouts/Admin";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/middleware";
+import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../../config/api-config";
 import {getRouteItem} from "../../../../../library/session/authenticate";
 import {Routes} from "../../../../../config/routes";

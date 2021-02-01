@@ -1,7 +1,7 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {sendData, responseHandler} from "../../../library/api/middleware";
+import {sendData, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 

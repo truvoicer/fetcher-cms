@@ -1,4 +1,4 @@
-import {responseHandler, sendData} from "../../../library/api/middleware";
+import {responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React from "react";
 import DataForm from "./DataForm";
 import {DuplicateFormData} from "../../../library/forms/duplicate-form";

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchData, responseHandler} from "../../../library/api/middleware";
+import {fetchData, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
 
 const InfoCard = (props) => {
 
