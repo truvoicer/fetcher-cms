@@ -1,6 +1,6 @@
 import Admin from '../../../views/layouts/Admin'
 import ApiConfig from '../../../config/api-config'
-import React, {useEffect, useState} from "react";
+import React, {createRef, useEffect, useRef, useState} from "react";
 import Select from "react-select";
 import {fetchData, fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isNotEmpty} from "../../../library/utils";
@@ -13,9 +13,18 @@ import ScraperSettings from "../../../views/components/Views/ScraperSettings";
 import Accordion from "react-bootstrap/Accordion"
 import Card from "react-bootstrap/Card";
 import ScraperApiJobs from "../../../views/components/Views/ScraperApiJobs";
+import {connect} from "react-redux";
+import {
+    SCRAPER_API_STATE_KEY,
+    SCRAPER_API_STATUS, SCRAPER_API_STATUS_OFFLINE,
+    SCRAPER_API_STATUS_ONLINE
+} from "../../../library/redux/constants/scraper-constants";
+import {event} from "next/dist/build/output/log";
+import ScraperSendJob from "../../../views/components/Views/ScraperSendJob";
+import Button from "react-bootstrap/Button";
 
 
-const ManageScrapers = (props) => {
+const ManageScrapers = ({scraperApi}) => {
     ManageScrapers.PageName = "manage_scrapers";
     const getBreadcrumbsConfig = () => {
         return {
@@ -33,7 +42,10 @@ const ManageScrapers = (props) => {
     const [modalTitle, setModalTitle] = useState("")
     const [modalSize, setModalSize] = useState("md")
     const [modalComponent, setModalComponent] = useState(null)
+    const [modalFooter, setModalFooter] = useState(false)
+    const [modalFooterComponent, setModalFooterComponent] = useState(null)
     const [accordionItem, setAccordionItem] = useState(null)
+    const toggleRef = createRef();
 
     const scraperColumns = [
         {
@@ -71,6 +83,25 @@ const ManageScrapers = (props) => {
                                 }}
                             >
                                 Settings
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                                onClick={() => {
+                                    setModalSize("md")
+                                    setModalTitle("Send To Scraper Api")
+                                    setModalFooterComponent(
+                                        <>
+                                            <Button variant="secondary">Cancel</Button>
+                                            <Button variant="primary">Execute Scraper Job</Button>
+                                        </>
+                                    )
+                                    setModalFooter(true)
+                                    setModalComponent(
+                                        <ScraperSendJob scraper={row} provider={selectedProvider} />
+                                    )
+                                    setShowModal(true)
+                                }}
+                            >
+                                Execute Job
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
@@ -150,6 +181,12 @@ const ManageScrapers = (props) => {
                                         </div>
                                     </div>
                                     <div className="card-header-actions">
+                                        {scraperApi[SCRAPER_API_STATUS] === SCRAPER_API_STATUS_ONLINE &&
+                                        <span className="badge badge-pill badge-success">Online</span>
+                                        }
+                                        {scraperApi[SCRAPER_API_STATUS] === SCRAPER_API_STATUS_OFFLINE &&
+                                        <span className="badge badge-pill badge-danger">Offline</span>
+                                        }
                                         <div className={"scrapers--header d-flex float-left align-items-center"}>
                                             <Dropdown>
                                                 <Dropdown.Toggle
@@ -192,6 +229,17 @@ const ManageScrapers = (props) => {
                             <Accordion.Toggle
                                 as={Card.Header}
                                 eventKey="1"
+                                ref={toggleRef}
+                                onClick={(e) => {
+                                    // if (!e.target.classList.contains("card-header")) {
+                                    //     console.log("no card jead")
+                                    //     e.preventDefault();
+                                    //     e.stopPropagation()
+                                    //     console.log(toggleRef)
+                                    // } else {
+                                    //     console.log("yes card jead")
+                                    // }
+                                }}
                             >
                                 <div className={"scrapers--header d-flex float-left align-items-center"}>
                                     <div className={"scrapers--header--title"}>
@@ -199,15 +247,13 @@ const ManageScrapers = (props) => {
                                     </div>
                                     <div className={"scrapers--header__select"}>
                                         <Select
+                                            className={"scrapers-select"}
                                             options={providerList.map(provider => {
                                                 return {
                                                     value: provider.id,
                                                     label: provider.provider_label
                                                 }
                                             })}
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                            }}
                                             onChange={(e) => {
                                                 fetchRequest({
                                                     endpoint: ApiConfig.endpoints.provider,
@@ -317,8 +363,22 @@ const ManageScrapers = (props) => {
                 <Modal.Body>
                     {modalComponent}
                 </Modal.Body>
+                {modalFooter &&
+                <Modal.Footer>
+                    {modalFooterComponent}
+                </Modal.Footer>
+                }
             </Modal>
         </Admin>
     )
 }
-export default ManageScrapers;
+function mapStateToProps(state) {
+    return {
+        scraperApi: state[SCRAPER_API_STATE_KEY]
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(ManageScrapers);

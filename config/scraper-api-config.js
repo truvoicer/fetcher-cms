@@ -2,7 +2,8 @@ export const ScraperApiConfig = {
     "apiUrl": process.env.NEXT_PUBLIC_SCRAPER_API_URL,
     "endpoints": {
         "login": "/web/auth/login",
-        "tokenCheck": "/web/auth/token/check",
+        "webTokenCheck": "/web/auth/token/check",
+        "tokenCheck": "/auth/token/check",
         "getUserList": "/admin/users",
         "getUser": "/admin/user/%d",
         "getApiTokenList": "/admin/user/%d/api-tokens",

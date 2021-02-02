@@ -1,7 +1,7 @@
 import {ScraperApiConfig} from "../../../config/scraper-api-config";
 import {getSessionObject, setScraperApiSession} from "../../session/authenticate";
 import apiConfig from "../../../config/api-config";
-import {isSet} from "../../utils";
+import {isNotEmpty, isSet} from "../../utils";
 import {buildRequestUrl} from "../helpers/api-helpers";
 
 const axios = require("axios");
@@ -21,22 +21,9 @@ export const getScraperApiUser = async () => {
     return await scraperApiRequest.request(requestData);
 }
 
-export const authenticateUser = (user) => {
-    const requestData = {
-        method: "post",
-        url: ScraperApiConfig.endpoints.getApiUser,
-        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().scraper_token)}
-    }
-    return scraperApiRequest.request(requestData);
-}
 
-export const scraperTokenRequest = ({onSuccess = false, onError = false, endpoint}) => {
-    const requestData = {
-        method: "post",
-        url: endpoint,
-        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
-    }
-    axios.request(requestData).then(response => {
+const authResponseHandler = ({onSuccess, onError, request}) => {
+    request.then(response => {
         if (onSuccess) {
             onSuccess(response.data)
         }
@@ -55,12 +42,47 @@ export const scraperTokenRequest = ({onSuccess = false, onError = false, endpoin
     });
 }
 
-export const scraperTokenCheck = ({onSuccess, onError}) => {
-    scraperTokenRequest({
-        endpoint: ScraperApiConfig.apiUrl + ScraperApiConfig.endpoints.tokenCheck,
+export const sessionTokenCheck = ({onSuccess = false, onError = false, endpoint}) => {
+    const requestData = {
+        method: "post",
+        url: ScraperApiConfig.endpoints.tokenCheck,
+        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().scraper_token)}
+    }
+    authResponseHandler({
+        request: scraperApiRequest.request(requestData),
         onSuccess: onSuccess,
         onError: onError
     })
+}
+
+export const scraperTokenRequest = ({onSuccess = false, onError = false, endpoint}) => {
+    const requestData = {
+        method: "post",
+        url: endpoint,
+        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
+    }
+    authResponseHandler({
+        request: axios.request(requestData),
+        onSuccess: onSuccess,
+        onError: onError
+    })
+}
+
+export const scraperTokenCheck = ({onSuccess, onError}) => {
+    const scraperToken = getSessionObject().scraper_token;
+    if (isNotEmpty(scraperToken)) {
+        sessionTokenCheck({
+            onSuccess: onSuccess,
+            onError: onError
+        })
+
+    } else {
+        scraperTokenRequest({
+            endpoint: ScraperApiConfig.apiUrl + ScraperApiConfig.endpoints.webTokenCheck,
+            onSuccess: onSuccess,
+            onError: onError
+        })
+    }
 }
 export const getScraperToken = ({onSuccess, onError}) => {
     scraperTokenRequest({

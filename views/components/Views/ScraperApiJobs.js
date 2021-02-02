@@ -18,6 +18,11 @@ import {
 } from "../../../library/api/scraper-api/scraper-middleware";
 import {setScraperApiSession} from "../../../library/session/authenticate";
 import {ScraperApiConfig} from "../../../config/scraper-api-config";
+import {setScraperApiStatusAction} from "../../../library/redux/actions/scraper-actions";
+import {
+    SCRAPER_API_STATUS_OFFLINE,
+    SCRAPER_API_STATUS_ONLINE
+} from "../../../library/redux/constants/scraper-constants";
 
 const ScraperApiJobs = () => {
     const AUTH_SUCCESS = "auth_success";
@@ -59,12 +64,13 @@ const ScraperApiJobs = () => {
         getScraperToken({
             onSuccess: (responseData) => {
                 if (responseData?.status === "success") {
+                    setScraperApiStatusAction(SCRAPER_API_STATUS_ONLINE)
                     setScraperApiSession(responseData.data)
                     fetchCronJobs()
                 }
             },
             onError: (error) => {
-
+                setScraperApiStatusAction(SCRAPER_API_STATUS_OFFLINE)
             }
         })
     }
@@ -78,11 +84,14 @@ const ScraperApiJobs = () => {
                             status: AUTH_SUCCESS,
                             message: responseData.message
                         })
+                        setScraperApiStatusAction(SCRAPER_API_STATUS_ONLINE)
+                        setScraperApiSession(responseData.data)
                         fetchCronJobs()
                         break;
                 }
             },
             onError: (error) => {
+                setScraperApiStatusAction(SCRAPER_API_STATUS_OFFLINE)
                 switch (error?.status) {
                     case "cron_user_not_exist":
                         setAuthStatus({
@@ -100,7 +109,7 @@ const ScraperApiJobs = () => {
             }
         })
     }, [])
-    console.log(scraperList)
+    // console.log(scraperList)
     return (
         <div className={"scrapers--settings"}>
             <div className="row">
@@ -112,28 +121,7 @@ const ScraperApiJobs = () => {
                         <div className="card-body">
                             <div className="row">
                                 <div className="col-sm-12 col-md-12">
-                                    {authStatus.status === AUTH_FAIL &&
-                                    <>
-                                    <p>error</p>
-                                    </>
-
-                                    }
-                                    {authStatus.status === AUTH_USER_NOT_EXIST &&
-                                    <>
-                                        <p className={"text-danger"}>{authStatus.message}</p>
-                                        <button
-                                            className="btn btn-outline-primary btn-lg btn-block"
-                                            type="button"
-                                            onClick={(e) => {
-                                                e.preventDefault()
-                                                requestToken()
-                                            }}
-                                        >
-                                            Connect to Cron Api
-                                        </button>
-                                    </>
-                                    }
-                                    {authStatus.status === AUTH_SUCCESS &&
+                                    {authStatus.status === AUTH_SUCCESS ?
                                         <>
                                             <p>success</p>
                                         {/*<DataTable*/}
@@ -148,6 +136,20 @@ const ScraperApiJobs = () => {
                                         {/*    data={scraperList}*/}
                                         {/*    expandableRows={true}*/}
                                         {/*/>*/}
+                                        </>
+                                        :
+                                        <>
+                                            <p className={"text-danger"}>{authStatus.message}</p>
+                                            <button
+                                                className="btn btn-outline-primary btn-lg btn-block"
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault()
+                                                    requestToken()
+                                                }}
+                                            >
+                                                Connect to Cron Api
+                                            </button>
                                         </>
                                     }
                                 </div>

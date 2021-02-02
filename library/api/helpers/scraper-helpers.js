@@ -45,3 +45,29 @@ export const getScraperScheduleByScraperId = ({scraperId, onSuccess, onError}) =
         },
     })
 }
+
+export const getScraperConfig = ({scraperConfigId, onSuccess, onError}) => {
+    fetchRequest({
+        endpoint: ApiConfig.endpoints.scraper,
+        operation: `config/${scraperConfigId}/single`,
+        onSuccess: (responseData) => {
+            onSuccess(responseData.data)
+        },
+        onError: (error) => {
+            onError(error)
+        },
+    })
+}
+
+export const getScraperConfigByScraperId = ({scraperId, onSuccess, onError}) => {
+    fetchRequest({
+        endpoint: ApiConfig.endpoints.scraper,
+        operation: `${scraperId}/config`,
+        onSuccess: (responseData) => {
+            onSuccess(responseData)
+        },
+        onError: (error) => {
+            onError(error)
+        },
+    })
+}

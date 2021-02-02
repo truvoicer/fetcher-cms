@@ -1,0 +1,102 @@
+import {isNotEmpty, isSet, uCaseFirst} from "../utils";
+
+export const ScraperConfigFormData = (
+    update = false,
+    scraperConfig = null,
+) => {
+    // console.log(scraperConfig?.every_minute)
+    return {
+        fields: [
+            {
+                rowIndex: 0,
+                columnIndex: 0,
+                name: "base_url",
+                description: "",
+                label: "Base Url",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "text",
+                value: !isNotEmpty(scraperConfig?.base_url)? "" : scraperConfig.base_url,
+            },
+            {
+                rowIndex: 0,
+                columnIndex: 1,
+                name: "client_type",
+                description: "",
+                label: "Client Type",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "select",
+                multi: false,
+                options: [
+                    {value: "firefox", label: "Firefox"},
+                    {value: "chrome", label: "Chrome"},
+                ],
+                data: [],
+                value: !isNotEmpty(scraperConfig?.client_type)? {} : {value: scraperConfig.client_type, label: uCaseFirst(scraperConfig.client_type)},
+            },
+            {
+                rowIndex: 0,
+                columnIndex: 2,
+                name: "max_pages",
+                description: "",
+                label: "Max Pages",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "number",
+                min: 1,
+                value: !isNotEmpty(scraperConfig?.max_pages)? "" : scraperConfig.max_pages,
+            },
+            {
+                rowIndex: 1,
+                columnIndex: 0,
+                name: "list_container_selector",
+                description: "",
+                label: "List Container Selector",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "text",
+                value: !isNotEmpty(scraperConfig?.list_container_selector)? "" : scraperConfig.list_container_selector,
+            },
+            {
+                rowIndex: 1,
+                columnIndex: 1,
+                name: "list_child_selector",
+                description: "",
+                label: "List Child Selector",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "text",
+                value: !isNotEmpty(scraperConfig?.list_child_selector)? "" : scraperConfig.list_child_selector,
+            },
+            {
+                rowIndex: 1,
+                columnIndex: 2,
+                name: "list_item_trigger_selector",
+                description: "",
+                label: "List Item Trigger Selector",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "text",
+                value: !isNotEmpty(scraperConfig?.list_item_trigger_selector)? "" : scraperConfig.list_item_trigger_selector,
+            },
+            {
+                rowIndex: 2,
+                columnIndex: 0,
+                name: "single_item_container_selector",
+                description: "",
+                label: "Single Item Container Selector",
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "text",
+                type: "text",
+                value: !isNotEmpty(scraperConfig?.single_item_container_selector)? "" : scraperConfig.single_item_container_selector,
+            }
+        ]
+    }
+}

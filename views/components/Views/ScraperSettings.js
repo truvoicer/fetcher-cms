@@ -4,12 +4,11 @@ import SettingsDropdown from "../Dropdowns/SettingsDropdown";
 import Select from "react-select";
 import {fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
-import {error} from "next/dist/build/output/log";
 import {isNotEmpty} from "../../../library/utils";
 import ScrapersSelect from "../Forms/Selects/ScrapersSelect";
 import Modal from "react-bootstrap/Modal";
-import Admin from "../../layouts/Admin";
 import ScheduleForm from "../Forms/Scraper/ScheduleForm";
+import ConfigForm from "../Forms/Scraper/ConfigForm";
 
 const ScraperSettings = ({scraper = null, provider = null}) => {
     const [responseKeys, setResponseKeys] = useState([])
@@ -20,6 +19,41 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
     const [modalTitle, setModalTitle] = useState("")
     const [modalSize, setModalSize] = useState("md")
     const [modalComponent, setModalComponent] = useState(null)
+    const [responseKeySelectorValue, setResponseKeySelectorValue] = useState("")
+    const [responseKeySelectorRequest, setResponseKeySelectorRequest] = useState({
+        status: "",
+        message: ""
+    })
+
+    const responseKeySelectorFormHandler = (e) => {
+        e.preventDefault();
+        let endpoint;
+        if (!isNotEmpty(scraperResponseKey) || (Array.isArray(scraperResponseKey) && scraperResponseKey.length === 0)) {
+            endpoint = `${scraper.id}/response-key/${selectedResponseKey.value}/create`;
+        } else {
+            endpoint = `/response-key/${scraperResponseKey.id}/update`;
+        }
+        postRequest({
+            endpoint: ApiConfig.endpoints.scraper,
+            operation: endpoint,
+            requestData: {
+                response_key_selector: responseKeySelectorValue
+            },
+            onSuccess: (responseData) => {
+                setResponseKeySelectorRequest({
+                    status: "success",
+                    message: "Saved"
+                })
+            },
+            onError: (error) => {
+                setResponseKeySelectorRequest({
+                    status: "error",
+                    message: "Error"
+                })
+                console.error(error)
+            }
+        })
+    }
 
     const fetchServiceResponseKeys = (serviceId) => {
         fetchRequest({
@@ -50,6 +84,14 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                 operation: `${scraper.id}/response-key/${selectedResponseKey.value}`,
                 onSuccess: (responseData) => {
                     setScraperResponseKey(responseData.data)
+
+                    if (!isNotEmpty(responseData?.data) ||
+                        (Array.isArray(responseData.data) && responseData.data.length === 0)
+                    ) {
+                        setResponseKeySelectorValue("")
+                    } else {
+                        setResponseKeySelectorValue(responseData.data.response_key_selector)
+                    }
                 },
                 onError: (error) => {
                     console.error(error)
@@ -85,8 +127,8 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                                         setModalTitle("Scraper Schedule Options")
                                                         setModalComponent(
                                                             <ScheduleForm
-                                                              scraper={scraper}
-                                                              provider={provider}
+                                                                scraper={scraper}
+                                                                provider={provider}
                                                             />
                                                         )
                                                         setShowModal(true)
@@ -127,7 +169,7 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-12 col-md-5">
+                                <div className="col-sm-12 col-md-4">
                                     <div className="card">
                                         <div className="card-header">Select a Response Key</div>
                                         <div className="card-body">
@@ -146,19 +188,53 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                     </div>
                                 </div>
                                 {isNotEmpty(selectedResponseKey) &&
-                                <div className="col-sm-12 col-md-2">
-                                    <div className="card">
-                                        <div className="card-header">Key Name</div>
-                                        <div className="card-body">
-                                            <div className={"d-flex"}>
-                                                {selectedResponseKey?.label &&
-                                                <div>
-                                                    <p>{selectedResponseKey.label}</p>
+                                <div className="col-sm-12 col-md-3">
+                                    <form onSubmit={responseKeySelectorFormHandler}>
+                                        <div className="card">
+                                            <div className="card-header">
+                                                <div
+                                                    className={"scrapers--header d-flex float-left align-items-center"}>
+                                                    <div className={"scrapers--header--title"}>
+                                                        Key Name
+                                                    </div>
                                                 </div>
-                                                }
+                                                <div className="card-header-actions">
+                                                    {responseKeySelectorRequest.status === "success" &&
+                                                    <span
+                                                        className={"text-success mr-4"}>{responseKeySelectorRequest.message}</span>
+                                                    }
+                                                    {responseKeySelectorRequest.status === "error" &&
+                                                    <span
+                                                        className={"text-danger mr-4"}>{responseKeySelectorRequest.message}</span>
+                                                    }
+                                                    <button
+                                                        className="btn btn-sm btn-primary"
+                                                        type="submit"
+                                                    >
+                                                        Save
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div className="card-body">
+                                                <div className={"d-flex"}>
+                                                    {selectedResponseKey?.label &&
+                                                    <div>
+                                                        <p>{selectedResponseKey.label}</p>
+                                                    </div>
+                                                    }
+                                                </div>
+                                                <input
+                                                    className="form-control"
+                                                    type="text"
+                                                    placeholder="Enter response key selector"
+                                                    onChange={(event) => {
+                                                        setResponseKeySelectorValue(event.target.value)
+                                                    }}
+                                                    value={responseKeySelectorValue}
+                                                />
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
                                 }
                             </div>
@@ -167,11 +243,10 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                     <div className="card">
                                         <div className="card-header">Configuration</div>
                                         <div className="card-body">
-                                            {Array.isArray(scraperResponseKey) &&
-                                            <p className={"text-danger"}>
-                                                This response has no configuration
-                                            </p>
-                                            }
+                                            <ConfigForm
+                                                scraper={scraper}
+                                                provider={provider}
+                                            />
                                         </div>
                                     </div>
                                 </div>

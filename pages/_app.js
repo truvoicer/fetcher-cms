@@ -1,6 +1,12 @@
 import '../assets/scss/style.scss'
 import '@fortawesome/fontawesome-free/css/all.css'
-// This default export is required in a new `pages/_app.js` file.
+import {Provider} from "react-redux";
+import store from "../library/redux/store";
+
 export default function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
+  )
 }
