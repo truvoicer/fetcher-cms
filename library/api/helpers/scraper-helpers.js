@@ -1,4 +1,4 @@
-import {fetchRequest} from "../fetcher-api/fetcher-middleware";
+import {fetchRequest, postRequest} from "../fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 
 export const getScraperList = ({providerId, onSuccess, onError}) => {
@@ -63,6 +63,19 @@ export const getScraperConfigByScraperId = ({scraperId, onSuccess, onError}) => 
     fetchRequest({
         endpoint: ApiConfig.endpoints.scraper,
         operation: `${scraperId}/config`,
+        onSuccess: (responseData) => {
+            onSuccess(responseData)
+        },
+        onError: (error) => {
+            onError(error)
+        },
+    })
+}
+
+export const sendScraperJobRequest = ({scraperId, onSuccess, onError}) => {
+    postRequest({
+        endpoint: ApiConfig.endpoints.scraper,
+        operation: `${scraperId}/job/send`,
         onSuccess: (responseData) => {
             onSuccess(responseData)
         },

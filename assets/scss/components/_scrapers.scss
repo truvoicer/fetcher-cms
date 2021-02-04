@@ -16,4 +16,9 @@
       overflow: visible;
     }
   }
+  &--send-job {
+    .label {
+      font-weight: bold;
+    }
+  }
 }

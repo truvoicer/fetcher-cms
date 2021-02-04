@@ -77,7 +77,7 @@ const ManageScrapers = ({scraperApi}) => {
                                     setModalSize("xl")
                                     setModalTitle("Scraper Settings")
                                     setModalComponent(
-                                        <ScraperSettings scraper={row} provider={selectedProvider} />
+                                        <ScraperSettings scraper={row} provider={selectedProvider}/>
                                     )
                                     setShowModal(true)
                                 }}
@@ -86,17 +86,29 @@ const ManageScrapers = ({scraperApi}) => {
                             </Dropdown.Item>
                             <Dropdown.Item
                                 onClick={() => {
-                                    setModalSize("md")
+                                    setModalSize("lg")
                                     setModalTitle("Send To Scraper Api")
                                     setModalFooterComponent(
                                         <>
-                                            <Button variant="secondary">Cancel</Button>
-                                            <Button variant="primary">Execute Scraper Job</Button>
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => {
+                                                    setShowModal(false)
+                                                }}
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                variant="primary"
+                                                onClick={() => {
+
+                                                }}
+                                            >Execute Scraper Job</Button>
                                         </>
                                     )
                                     setModalFooter(true)
                                     setModalComponent(
-                                        <ScraperSendJob scraper={row} provider={selectedProvider} />
+                                        <ScraperSendJob scraper={row} provider={selectedProvider}/>
                                     )
                                     setShowModal(true)
                                 }}
@@ -225,126 +237,126 @@ const ManageScrapers = ({scraperApi}) => {
                                     </div>
                                 </Accordion.Collapse>
                             </div>
-                        <div className="card">
-                            <Accordion.Toggle
-                                as={Card.Header}
-                                eventKey="1"
-                                ref={toggleRef}
-                                onClick={(e) => {
-                                    // if (!e.target.classList.contains("card-header")) {
-                                    //     console.log("no card jead")
-                                    //     e.preventDefault();
-                                    //     e.stopPropagation()
-                                    //     console.log(toggleRef)
-                                    // } else {
-                                    //     console.log("yes card jead")
-                                    // }
-                                }}
-                            >
-                                <div className={"scrapers--header d-flex float-left align-items-center"}>
-                                    <div className={"scrapers--header--title"}>
-                                        Manage Scrapers
-                                    </div>
-                                    <div className={"scrapers--header__select"}>
-                                        <Select
-                                            className={"scrapers-select"}
-                                            options={providerList.map(provider => {
-                                                return {
-                                                    value: provider.id,
-                                                    label: provider.provider_label
-                                                }
-                                            })}
-                                            onChange={(e) => {
-                                                fetchRequest({
-                                                    endpoint: ApiConfig.endpoints.provider,
-                                                    args: [e.value],
-                                                    onSuccess: (responseData) => {
-                                                        setSelectedProvider(responseData.data)
-                                                    },
-                                                    onError: (error) => {
-                                                        console.error(error)
-                                                    },
-                                                })
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="card-header-actions">
+                            <div className="card">
+                                <Accordion.Toggle
+                                    as={Card.Header}
+                                    eventKey="1"
+                                    ref={toggleRef}
+                                    onClick={(e) => {
+                                        // if (!e.target.classList.contains("card-header")) {
+                                        //     console.log("no card jead")
+                                        //     e.preventDefault();
+                                        //     e.stopPropagation()
+                                        //     console.log(toggleRef)
+                                        // } else {
+                                        //     console.log("yes card jead")
+                                        // }
+                                    }}
+                                >
                                     <div className={"scrapers--header d-flex float-left align-items-center"}>
-                                        <Dropdown>
-                                            <Dropdown.Toggle
-                                                variant="success"
-                                                id="dropdown-basic"
-                                                as={SettingsDropdown}
-                                            />
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item
-                                                    onClick={() => {
-                                                        setModalComponent(
-                                                            <ScraperForm
-                                                                provider={selectedProvider}
-                                                                operation={"insert"}
-                                                                onSuccess={(data) => {
-                                                                    setScraperList(data)
-                                                                    setShowModal(false)
-                                                                    setModalTitle("")
-                                                                    setModalComponent(null)
-                                                                }}
-                                                            />
-                                                        );
-                                                        setModalTitle("New Scraper")
-                                                        setShowModal(true)
-                                                    }}
-                                                >
-                                                    New Scraper
-                                                </Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                        <a
-                                            className="card-header-action btn-minimize"
-                                            href=""
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setScrapers()
-                                            }}
-                                        >
-                                            <svg className="c-icon">
-                                                <use xlinkHref="/images/icons/sprites/free.svg#cil-reload"/>
-                                            </svg>
-                                        </a>
-                                    </div>
-                                </div>
-                            </Accordion.Toggle>
-                            <Accordion.Collapse eventKey="1">
-                            <div className="card-body">
-                                <div className="row">
-                                    <div className="col-sm-12 col-md-12">
-                                        {isNotEmpty(selectedProvider) &&
-                                        <div className="card">
-                                            <div className="card-header">Scrapers</div>
-                                            <div className="card-body">
-                                                <DataTable
-                                                    className={"datalist"}
-                                                    striped={true}
-                                                    highlightOnHover={false}
-                                                    responsive={true}
-                                                    overflowY={true}
-                                                    pagination={true}
-                                                    paginationPerPage={100}
-                                                    columns={scraperColumns}
-                                                    data={scraperList}
-                                                    expandableRows={true}
-                                                />
-                                            </div>
+                                        <div className={"scrapers--header--title"}>
+                                            Manage Scrapers
                                         </div>
-                                        }
+                                        <div className={"scrapers--header__select"}>
+                                            <Select
+                                                className={"scrapers-select"}
+                                                options={providerList.map(provider => {
+                                                    return {
+                                                        value: provider.id,
+                                                        label: provider.provider_label
+                                                    }
+                                                })}
+                                                onChange={(e) => {
+                                                    fetchRequest({
+                                                        endpoint: ApiConfig.endpoints.provider,
+                                                        args: [e.value],
+                                                        onSuccess: (responseData) => {
+                                                            setSelectedProvider(responseData.data)
+                                                        },
+                                                        onError: (error) => {
+                                                            console.error(error)
+                                                        },
+                                                    })
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="card-header-actions">
+                                        <div className={"scrapers--header d-flex float-left align-items-center"}>
+                                            <Dropdown>
+                                                <Dropdown.Toggle
+                                                    variant="success"
+                                                    id="dropdown-basic"
+                                                    as={SettingsDropdown}
+                                                />
+                                                <Dropdown.Menu>
+                                                    <Dropdown.Item
+                                                        onClick={() => {
+                                                            setModalComponent(
+                                                                <ScraperForm
+                                                                    provider={selectedProvider}
+                                                                    operation={"insert"}
+                                                                    onSuccess={(data) => {
+                                                                        setScraperList(data)
+                                                                        setShowModal(false)
+                                                                        setModalTitle("")
+                                                                        setModalComponent(null)
+                                                                    }}
+                                                                />
+                                                            );
+                                                            setModalTitle("New Scraper")
+                                                            setShowModal(true)
+                                                        }}
+                                                    >
+                                                        New Scraper
+                                                    </Dropdown.Item>
+                                                </Dropdown.Menu>
+                                            </Dropdown>
+                                            <a
+                                                className="card-header-action btn-minimize"
+                                                href=""
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setScrapers()
+                                                }}
+                                            >
+                                                <svg className="c-icon">
+                                                    <use xlinkHref="/images/icons/sprites/free.svg#cil-reload"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </Accordion.Toggle>
+                                <Accordion.Collapse eventKey="1">
+                                    <div className="card-body">
+                                        <div className="row">
+                                            <div className="col-sm-12 col-md-12">
+                                                {isNotEmpty(selectedProvider) &&
+                                                <div className="card">
+                                                    <div className="card-header">Scrapers</div>
+                                                    <div className="card-body">
+                                                        <DataTable
+                                                            className={"datalist"}
+                                                            striped={true}
+                                                            highlightOnHover={false}
+                                                            responsive={true}
+                                                            overflowY={true}
+                                                            pagination={true}
+                                                            paginationPerPage={100}
+                                                            columns={scraperColumns}
+                                                            data={scraperList}
+                                                            expandableRows={true}
+                                                        />
+                                                    </div>
+                                                </div>
+                                                }
+                                            </div>
+
+                                        </div>
                                     </div>
 
-                                </div>
+                                </Accordion.Collapse>
                             </div>
-
-                            </Accordion.Collapse>
-                        </div>
                         </Accordion>
                     </div>
 
@@ -356,6 +368,7 @@ const ManageScrapers = ({scraperApi}) => {
                 onHide={() => {
                     setShowModal(false)
                 }}
+
             >
                 <Modal.Header closeButton>
                     <Modal.Title>{modalTitle}</Modal.Title>
@@ -372,6 +385,7 @@ const ManageScrapers = ({scraperApi}) => {
         </Admin>
     )
 }
+
 function mapStateToProps(state) {
     return {
         scraperApi: state[SCRAPER_API_STATE_KEY]
