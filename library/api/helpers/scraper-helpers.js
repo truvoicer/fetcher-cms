@@ -9,7 +9,7 @@ export const getScraperList = ({providerId, onSuccess, onError}) => {
             provider_id: providerId,
             count: 1000,
             order: "asc",
-            sort: "scraper_name"
+            sort: "scraperName"
         },
         onSuccess: (responseData) => {
             onSuccess(responseData.data)

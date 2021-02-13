@@ -1,4 +1,4 @@
-import ScraperForm from "../../views/components/Forms/ScraperForm";
+import ScraperForm from "../../views/components/Forms/Scraper/ScraperForm";
 
 export const ScraperSettingsMenu = [
     {

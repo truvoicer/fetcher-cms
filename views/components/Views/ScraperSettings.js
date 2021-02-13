@@ -9,6 +9,7 @@ import ScrapersSelect from "../Forms/Selects/ScrapersSelect";
 import Modal from "react-bootstrap/Modal";
 import ScheduleForm from "../Forms/Scraper/ScheduleForm";
 import ConfigForm from "../Forms/Scraper/ConfigForm";
+import ScraperForm from "../Forms/Scraper/ScraperForm";
 
 const ScraperSettings = ({scraper = null, provider = null}) => {
     const [responseKeys, setResponseKeys] = useState([])
@@ -124,6 +125,22 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                                 <Dropdown.Item
                                                     onClick={() => {
                                                         setModalSize("md")
+                                                        setModalTitle("Edit Scraper")
+                                                        setModalComponent(
+                                                            <ScraperForm
+                                                                provider={provider}
+                                                                scraperData={scraper}
+                                                                operationData={"update"}
+                                                            />
+                                                        )
+                                                        setShowModal(true)
+                                                    }}
+                                                >
+                                                    Edit Scraper
+                                                </Dropdown.Item>
+                                                <Dropdown.Item
+                                                    onClick={() => {
+                                                        setModalSize("md")
                                                         setModalTitle("Scraper Schedule Options")
                                                         setModalComponent(
                                                             <ScheduleForm
@@ -134,7 +151,7 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                                         setShowModal(true)
                                                     }}
                                                 >
-                                                    Schedule
+                                                    Edit Schedule
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>
                                         </Dropdown>

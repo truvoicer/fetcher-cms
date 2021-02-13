@@ -2,12 +2,12 @@ import Admin from '../../../views/layouts/Admin'
 import ApiConfig from '../../../config/api-config'
 import React, {createRef, useEffect, useRef, useState} from "react";
 import Select from "react-select";
-import {fetchData, fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isNotEmpty} from "../../../library/utils";
 import Modal from "react-bootstrap/Modal";
 import Dropdown from "react-bootstrap/Dropdown";
 import SettingsDropdown from "../../../views/components/Dropdowns/SettingsDropdown";
-import ScraperForm from "../../../views/components/Forms/ScraperForm";
+import ScraperForm from "../../../views/components/Forms/Scraper/ScraperForm";
 import DataTable from "react-data-table-component";
 import ScraperSettings from "../../../views/components/Views/ScraperSettings";
 import Accordion from "react-bootstrap/Accordion"
@@ -101,7 +101,17 @@ const ManageScrapers = ({scraperApi}) => {
                                             <Button
                                                 variant="primary"
                                                 onClick={() => {
-
+                                                    postRequest({
+                                                        endpoint: ApiConfig.endpoints.scraper,
+                                                        operation: `${row.id}/job/request`,
+                                                        onSuccess: (responseData) => {
+                                                            console.log(JSON.stringify(responseData.data))
+                                                            setShowModal(false)
+                                                        },
+                                                        onError: (error) => {
+                                                            console.error(error)
+                                                        }
+                                                    })
                                                 }}
                                             >Execute Scraper Job</Button>
                                         </>
@@ -156,7 +166,7 @@ const ManageScrapers = ({scraperApi}) => {
                     provider_id: selectedProvider.id,
                     count: 1000,
                     order: "asc",
-                    sort: "scraper_name"
+                    sort: "scraperName"
                 },
                 onSuccess: (responseData) => {
                     setScraperList(responseData.data)
@@ -295,13 +305,7 @@ const ManageScrapers = ({scraperApi}) => {
                                                             setModalComponent(
                                                                 <ScraperForm
                                                                     provider={selectedProvider}
-                                                                    operation={"insert"}
-                                                                    onSuccess={(data) => {
-                                                                        setScraperList(data)
-                                                                        setShowModal(false)
-                                                                        setModalTitle("")
-                                                                        setModalComponent(null)
-                                                                    }}
+                                                                    operationData={"insert"}
                                                                 />
                                                             );
                                                             setModalTitle("New Scraper")
