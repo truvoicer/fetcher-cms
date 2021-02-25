@@ -119,7 +119,7 @@ const ServiceRequestParameters = (props) => {
                     modalTitle: "Edit Parameter",
                     modalFormName: "requestParams"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -132,7 +132,7 @@ const ServiceRequestParameters = (props) => {
                     endpoint: "service/request/parameter",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

@@ -94,7 +94,7 @@ const ApiTokens = (props) => {
                     endpoint: "admin/user/api-token",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

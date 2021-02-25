@@ -25,29 +25,6 @@ export const ServiceResponseKeyFormData = (
                     ]
                 }
             },
-            {
-                name: "key_value",
-                label: "Key Value",
-                type: "text",
-                fieldType: "text",
-                placeHolder: "Enter a key value",
-                value: keyValue? keyValue : "",
-                matches: {
-                  field: "key_name",
-                },
-                validation: {
-                    rules: [
-                        {
-                            type: "alphanumeric"
-                        },
-                        {
-                            type: "length",
-                            min: 1,
-                            max: 30
-                        }
-                    ]
-                }
-            },
         ]
     }
 }

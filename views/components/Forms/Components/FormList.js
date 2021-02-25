@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {isSet} from "../../../../library/utils";
@@ -13,11 +13,13 @@ const FormList = (props) => {
     const listItemKeyLabel = "Key";
     const listItemValueLabel = "Value";
 
-    let getFormList = [];
-    if ((isSet(props.data) && Array.isArray(props.data) && props.data.length > 0)) {
-        getFormList = props.data;
-    }
-    const [formList, setFormList] = useState(getFormList);
+    const [formList, setFormList] = useState(props.data);
+
+    useEffect(() => {
+        if ((isSet(props.data) && Array.isArray(props.data))) {
+            setFormList(props.data)
+        }
+    }, [props.data])
 
     const addFormListRow = (e) => {
         let formListState = [...formList];

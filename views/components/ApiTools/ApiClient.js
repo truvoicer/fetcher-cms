@@ -8,8 +8,10 @@ import Button from "react-bootstrap/Button";
 import FormList from "../Forms/Components/FormList";
 import React, {useEffect, useState} from "react";
 import {isObjectEmpty, isSet} from "../../../library/utils";
-import {fetchData, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
+
+const sprintf = require("sprintf-js").sprintf;
 
 const ApiClient = (props) => {
     const [provider, setProvider] = useState(isSet(props.provider)? props.provider : {});
@@ -17,6 +19,9 @@ const ApiClient = (props) => {
 
     const [requestTypeOptions, setRequestTypeOptions] = useState([]);
     const [queryParameterData, setQueryParameterData] = useState([]);
+    const [requestParameterData, setRequestParameterData] = useState([]);
+    const [formListData, setFormListData] = useState([]);
+
     const [request, setRequest] = useState({
         show: false,
         resultString: ""
@@ -25,6 +30,15 @@ const ApiClient = (props) => {
         value: "",
         label: "Select a Request Type"
     });
+
+    useEffect(() => {
+        setFormListData(requestParameterData.map(parameter => {
+            return {
+                name: parameter.parameter_name,
+                value: parameter.parameter_value,
+            }
+        }))
+    }, [requestParameterData])
 
     useEffect(() => {
         if (!isObjectEmpty(provider) && !isObjectEmpty(serviceRequest)) {
@@ -54,8 +68,25 @@ const ApiClient = (props) => {
         }
         return serviceRequestList.map((item) => {
             return {
+                id: item.id,
                 value: item.service_request_name,
                 label: item.service_request_label
+            }
+        })
+    }
+
+
+    const parametersFetchRequest = (serviceRequestId) => {
+        fetchRequest({
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, serviceRequestId),
+            operation: `parameters`,
+            onSuccess: (responseData) => {
+                if (responseData.status === "success" && Array.isArray(responseData?.data?.service_request_parameters)) {
+                    setRequestParameterData(responseData.data.service_request_parameters)
+                }
+            },
+            onError: (error) => {
+
             }
         })
     }
@@ -66,6 +97,9 @@ const ApiClient = (props) => {
             value: e.value,
             label: e.label
         })
+
+        const findServiceRequest = requestTypeOptions.find(request => e.value === request.value);
+        parametersFetchRequest(findServiceRequest.id)
     }
 
     const submitHandler = (e) => {
@@ -135,6 +169,7 @@ const ApiClient = (props) => {
                                                           listItemKeyLabel={"Parameter name"}
                                                           listItemValueLabel={"Parameter value"}
                                                           addRowLabel={"Add Parameter"}
+                                                          data={formListData}
                                                 />
                                             </Form.Group>
                                         </Col>

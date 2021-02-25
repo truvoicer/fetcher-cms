@@ -162,8 +162,8 @@ const ProviderRequestsTable = (props) => {
                         }
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "link",
@@ -185,8 +185,8 @@ const ProviderRequestsTable = (props) => {
                         }
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "link",
@@ -208,8 +208,8 @@ const ProviderRequestsTable = (props) => {
                         }
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "button",
@@ -222,7 +222,7 @@ const ProviderRequestsTable = (props) => {
                     modalFormName: "duplicateRequest",
                     endpoint: "service/request"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -236,7 +236,7 @@ const ProviderRequestsTable = (props) => {
                     endpoint: "service/request",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

@@ -92,7 +92,7 @@ const ManageUsers = (props) => {
                     modalTitle: "Edit User",
                     modalFormName: "user"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -105,7 +105,7 @@ const ManageUsers = (props) => {
                     endpoint: "admin/user",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

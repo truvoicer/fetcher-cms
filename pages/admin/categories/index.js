@@ -84,7 +84,7 @@ const Categories = (props) => {
                     endpoint: "category",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

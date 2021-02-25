@@ -123,7 +123,7 @@ const ServiceRequestConfig = (props) => {
                     modalTitle: "Edit Config Item",
                     modalFormName: "requestConfig"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -137,7 +137,7 @@ const ServiceRequestConfig = (props) => {
                     endpoint: "service/request/config",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

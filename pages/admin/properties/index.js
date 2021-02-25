@@ -70,7 +70,7 @@ const Properties = (props) => {
                     modalTitle: "Edit Property",
                     modalFormName: "property"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -83,7 +83,7 @@ const Properties = (props) => {
                     endpoint: "property",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

@@ -103,7 +103,7 @@ const ServiceResponseKeys = (props) => {
                     modalTitle: "Edit Response Key",
                     modalFormName: "responseKeys"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -116,7 +116,7 @@ const ServiceResponseKeys = (props) => {
                     endpoint: "service/response/key",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

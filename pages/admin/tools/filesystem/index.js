@@ -95,7 +95,7 @@ const FileSystemPage = (props) => {
                 control: "button",
                 text: "Download",
                 action: downloadCallback,
-                size: "sm",
+                size: "md",
                 classes: "outline-success"
             },
             {
@@ -108,7 +108,7 @@ const FileSystemPage = (props) => {
                     endpoint: "tools/filesystem/file",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

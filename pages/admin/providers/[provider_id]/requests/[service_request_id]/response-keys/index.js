@@ -187,7 +187,7 @@ const ServiceRequestResponseKeys = (props) => {
                     modalTitle: "Merge Response Keys",
                     modalFormName: "mergeResponseKeys"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
         ]
@@ -204,7 +204,7 @@ const ServiceRequestResponseKeys = (props) => {
                     modalTitle: "Edit Response Keys",
                     modalFormName: "requestResponseKeys"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-primary"
             },
             {
@@ -217,7 +217,7 @@ const ServiceRequestResponseKeys = (props) => {
                     endpoint: "service/request/response/key",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

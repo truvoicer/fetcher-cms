@@ -16,7 +16,6 @@ const Login = (props) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [response, setResponse] = useState({
-        submitted: false,
         alertStatus: "",
         message: ""
     });
@@ -38,18 +37,14 @@ const Login = (props) => {
     const loginResponseHandler = (status, message, data = null) => {
         let alertStatus = "danger";
         if (status === 200) {
-            alertStatus = "success";
             setSession(data.data)
+            router.push('/admin/dashboard')
+            return;
         }
         setResponse({
-            submitted: true,
             alertStatus: alertStatus,
             message: message
         })
-        if (status === 200) {
-            console.log(status)
-            router.push('/admin/dashboard')
-        }
     }
     return (
         <>
@@ -61,7 +56,7 @@ const Login = (props) => {
                     <div className="container">
                         <div className="row justify-content-center">
                             <div className="col-md-8">
-                                {response.submitted &&
+                                {response.alertStatus === "danger" &&
                                 <Alert variant={response.alertStatus}>
                                     {response.message}
                                 </Alert>

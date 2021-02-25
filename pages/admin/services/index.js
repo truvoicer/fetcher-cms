@@ -94,8 +94,8 @@ const ManageServices = (props) => {
                         }
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "button",
@@ -107,7 +107,7 @@ const ManageServices = (props) => {
                     endpoint: "service",
                     modalFormName: "delete"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

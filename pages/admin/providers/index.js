@@ -140,8 +140,8 @@ const ManageProviders = (props) => {
                         brackets: false
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "link",
@@ -153,8 +153,8 @@ const ManageProviders = (props) => {
                         brackets: false,
                     }
                 },
-                size: "sm",
-                classes: "btn btn-outline-primary btn-sm"
+                size: "md",
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "button",
@@ -166,7 +166,7 @@ const ManageProviders = (props) => {
                     modalFormName: "delete",
                     endpoint: "provider"
                 },
-                size: "sm",
+                size: "md",
                 classes: "outline-danger"
             }
         ];

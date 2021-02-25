@@ -33,26 +33,26 @@ export const Routes =
                 }
             ]
         },
-        {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
-            label: "Scrapers",
-            name: "scrapers",
-            route: "/admin/scrapers",
-            parent: "dashboard",
-            icon: "cil-voice-over-record",
-            sidebar: true,
-            subs: [
-                {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
-                    label: "Manage Scrapers",
-                    name: "manage_scrapers",
-                    route: "/admin/scrapers",
-                    parent: "dashboard",
-                    icon: "cil-wc",
-                    sidebar: true
-                },
-            ]
-        },
+        // {
+        //     access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+        //     label: "Scrapers",
+        //     name: "scrapers",
+        //     route: "/admin/scrapers",
+        //     parent: "dashboard",
+        //     icon: "cil-voice-over-record",
+        //     sidebar: true,
+        //     subs: [
+        //         {
+        //             access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+        //             label: "Manage Scrapers",
+        //             name: "manage_scrapers",
+        //             route: "/admin/scrapers",
+        //             parent: "dashboard",
+        //             icon: "cil-wc",
+        //             sidebar: true
+        //         },
+        //     ]
+        // },
         {
             access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Providers",
