@@ -37,7 +37,7 @@ export const Routes =
             access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Scrapers",
             name: "scrapers",
-            route: "/admin/scrapers",
+            route: "/admin/scrapers2",
             parent: "dashboard",
             icon: "cil-voice-over-record",
             sidebar: true,
