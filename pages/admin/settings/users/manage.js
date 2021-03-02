@@ -1,13 +1,14 @@
-import Admin from '../../../views/layouts/Admin'
-import ApiConfig from "../../../config/api-config";
-import DeleteForm from "../../../views/components/Forms/DeleteForm";
-import DataList from "../../../views/components/Tables/DataList";
+import Admin from '../../../../views/layouts/Admin'
+import ApiConfig from "../../../../config/api-config";
+import DeleteForm from "../../../../views/components/Forms/DeleteForm";
+import DataList from "../../../../views/components/Tables/DataList";
 import React from "react";
-import UserForm from "../../../views/components/Forms/UserForm";
+import UserForm from "../../../../views/components/Forms/UserForm";
 import Col from "react-bootstrap/Col";
-import {getRouteItem} from "../../../library/session/authenticate";
-import {Routes} from "../../../config/routes";
-import ApiTokens, {ApiTokensPageName} from "./[user_id]/api-tokens";
+import {getRouteItem} from "../../../../library/session/authenticate";
+import {Routes} from "../../../../config/routes";
+import {SettingsApiTokensPageName} from "./[user_id]/api-tokens";
+import UserMappings from "../../../../views/components/Forms/User/UserMappings";
 
 export const ManageUsersPageName = "manage_users";
 const ManageUsers = (props) => {
@@ -69,7 +70,7 @@ const ManageUsers = (props) => {
                 location: "inline",
                 text: "Access Tokens",
                 action: "access_tokens",
-                href: getRouteItem(Routes.items, ApiTokensPageName).route,
+                href: getRouteItem(Routes.items, SettingsApiTokensPageName).route,
                 hrefConfig: {
                     replace: true,
                     data: {
@@ -91,6 +92,18 @@ const ManageUsers = (props) => {
                     showModal: true,
                     modalTitle: "Edit User",
                     modalFormName: "user"
+                },
+                size: "md",
+                classes: "outline-primary"
+            },
+            {
+                control: "button",
+                text: "Mappings",
+                action: "mappings",
+                modal: {
+                    showModal: true,
+                    modalTitle: "Update User Mappings",
+                    modalFormName: "mappings"
                 },
                 size: "md",
                 classes: "outline-primary"
@@ -121,6 +134,9 @@ const ManageUsers = (props) => {
             },
             delete: {
                 modalForm: DeleteForm
+            },
+            mappings: {
+                modalForm: UserMappings
             }
         };
     }

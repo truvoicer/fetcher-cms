@@ -217,20 +217,20 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "User Admin",
-            label: "Users",
-            name: "users",
-            route: "/admin/users/manage",
+            label: "User Admin",
+            name: "user_admin",
+            route: "/admin/profile/manage",
             parent: "dashboard",
             icon: "cil-wc",
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_SUPER_ADMIN"],
-                    label: "Manage Users",
-                    name: "manage_users",
-                    route: "/admin/users/manage",
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "Profile",
+                    name: "user_profile",
+                    route: "/admin/profile/manage",
                     parent: "dashboard",
                     icon: "cil-wc",
                     sidebar: true
@@ -239,8 +239,38 @@ export const Routes =
                     access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Api Tokens",
                     name: "api_tokens",
-                    route: "/admin/users/%(user.id)d/api-tokens",
-                    parent: "users",
+                    route: "/admin/profile/api-tokens",
+                    parent: "user_admin",
+                    icon: "cil-wc",
+                    sidebar: true
+                },
+            ]
+        },
+        {
+            access_control: ["ROLE_SUPER_ADMIN"],
+            heading: "Site Settings",
+            label: "Admin",
+            name: "settings",
+            route: "/admin/settings/manage",
+            parent: "dashboard",
+            icon: "cil-wc",
+            sidebar: true,
+            subs: [
+                {
+                    access_control: ["ROLE_SUPER_ADMIN"],
+                    label: "Manage Users",
+                    name: "manage_users",
+                    route: "/admin/settings/users/manage",
+                    parent: "dashboard",
+                    icon: "cil-wc",
+                    sidebar: true
+                },
+                {
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "Api Tokens",
+                    name: "settings_api_tokens",
+                    route: "/admin/settings/users/%(user.id)d/api-tokens",
+                    parent: "settings",
                     icon: "cil-wc",
                     sidebar: false
                 },

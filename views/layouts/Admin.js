@@ -12,6 +12,8 @@ import {SiteConfig} from "../../config/site-config";
 import {BreadcrumbsContext} from "../components/Context/BreadcrumbsContext";
 import {Routes} from "../../config/routes";
 import {getApiUser} from "../../library/api/fetcher-api/fetcher-middleware";
+import {setSessionUserAction} from "../../library/redux/actions/session-actions";
+import {setSessionAuthenticated, setSessionAuthenticating} from "../../library/redux/reducers/session-reducer";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -36,7 +38,10 @@ const Admin = (props) => {
                         accessDenied: false,
                         user: response.data.data
                     })
+                    setSessionUserAction(response.data.data);
+                    setSessionAuthenticated(true);
                 }
+                setSessionAuthenticating(false);
             })
             .catch((error) => {
                 console.error(error)

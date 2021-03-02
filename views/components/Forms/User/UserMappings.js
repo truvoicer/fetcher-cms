@@ -1,0 +1,129 @@
+import React, {useEffect, useState} from "react";
+import {isNotEmpty} from "../../../../library/utils";
+import {fetchData, fetchRequest, postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import ApiConfig from "../../../../config/api-config";
+import DataForm from "../DataForm/DataForm";
+import {UserProfileFormData} from "../../../../library/forms/user-profile-form";
+import {MappingsFormData} from "../../../../library/forms/mappings-form";
+
+const UserMappings = (props) => {
+    const [userData, setUserData] = useState(null);
+    const [showForm, setShowForm] = useState(false);
+    const [mappings, setMappings] = useState(null);
+    const [serviceRequestOptions, setServiceRequestOptions] = useState([]);
+    const [providerOptions, setProviderOptions] = useState([]);
+    const [categoryOptions, setCategoryOptions] = useState([]);
+    const [response, setResponse] = useState({
+        show: false,
+        variant: "",
+        message: ""
+    });
+    const updateButtonLabel = "Save";
+
+    const getUserMappings = (userId) => {
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.admin,
+            operation: `user/${userId}`,
+            onSuccess: (responseData) => {
+                console.log(responseData)
+                if (responseData.status === "success") {
+                    setUserData(responseData.data)
+                    setShowForm(true);
+                }
+            },
+            onError: (error) => {
+                console.error(error)
+            }
+        })
+    }
+
+    useEffect(() => {
+        fetchData(sprintf(ApiConfig.endpoints.serviceRequestList)).then((response) => {
+            setServiceRequestOptions(getServicesRequestSelect(response.data.data))
+        })
+        fetchData(sprintf(ApiConfig.endpoints.providerList)).then((response) => {
+            setProviderOptions(getProvidersSelect(response.data.data))
+        })
+        fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
+            setCategoryOptions(getCategoriesSelect(response.data.data))
+        })
+    }, [])
+
+    useEffect(() => {
+        if (isNotEmpty(props?.itemId)) {
+            getUserDataById(props.itemId)
+        }
+    }, [props.itemId])
+
+    const getServicesRequestSelect = (requests) => {
+        return requests.map((item, index) => {
+            return {
+                value: item.id,
+                label: item.service_request_label
+            }
+        })
+    }
+
+    const getCategoriesSelect = (data) => {
+        return data.map((item, index) => {
+            return {
+                value: item.id,
+                label: item.category_label
+            }
+        })
+    }
+
+    const getProvidersSelect = (data) => {
+        return data.map((item, index) => {
+            return {
+                value: item.id,
+                label: item.provider_label
+            }
+        })
+    }
+
+    const submitHandler = (values) => {
+
+        postRequest({
+            endpoint: ApiConfig.endpoints.admin,
+            operation: `user/update`,
+            requestData: values,
+            onSuccess: (responseData) => {
+                setUserData(responseData.data)
+                setResponse({
+                    show: true,
+                    variant: "success",
+                    message: responseData.message
+                })
+            },
+            onError: (error) => {
+                setResponse({
+                    show: true,
+                    variant: "success",
+                    message: "Error"
+                })
+            }
+        })
+    }
+    return (
+        <>
+            {response.show &&
+            <div className={`alert alert-${response.variant}`} role="alert">
+                {response.message}
+            </div>
+            }
+            <DataForm
+                formType={"single"}
+                data={MappingsFormData({
+                    mappings: null,
+                    serviceRequestOptions: serviceRequestOptions,
+                    categoryOptions: categoryOptions,
+                    providerOptions: providerOptions
+                })}
+                submitCallback={submitHandler}
+                submitButtonText={updateButtonLabel}
+            />
+        </>
+    );
+}
+export default UserMappings;

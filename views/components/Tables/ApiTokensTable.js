@@ -1,41 +1,26 @@
-import React, {useEffect, useState} from "react";
-import Admin from "../../../../../views/layouts/Admin";
-import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
-import ApiConfig from "../../../../../config/api-config";
-import DataList from "../../../../../views/components/Tables/DataList";
-import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
-import {formatDate, isSet} from "../../../../../library/utils";
-import ApiTokenForm from "../../../../../views/components/Forms/ApiTokenForm";
+import React, {useEffect, useState} from 'react';
+import {formatDate, isSet} from "../../../library/utils";
+import {fetchData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import ApiConfig from "../../../config/api-config";
+import ApiTokenForm from "../Forms/ApiTokenForm";
+import DeleteForm from "../Forms/DeleteForm";
+import DataList from "./DataList";
 
 const sprintf = require("sprintf-js").sprintf
-
-export const ApiTokensPageName = "api_tokens";
-const ApiTokens = (props) => {
+const ApiTokensTable = ({userId}) => {
 
     const [user, setUser] = useState({});
     const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
-        if (isSet(props.user_id)) {
-            fetchData(sprintf(ApiConfig.endpoints.getUser, props.user_id)).then((response) => {
+        if (isSet(userId)) {
+            fetchData(sprintf(ApiConfig.endpoints.getUser, userId)).then((response) => {
                 setUser(response.data.data);
                 setShowTable(true);
             });
         }
-    }, [props.user_id]);
+    }, [userId]);
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ApiTokensPageName,
-            data: {
-                user: {
-                    id: user.id,
-                    name: user.username
-                }
-            }
-        }
-    }
 
     const getTableData = () => {
         return {
@@ -123,37 +108,15 @@ const ApiTokens = (props) => {
     return (
         <>
             {showTable &&
-            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ApiTokensPageName}>
-                <>
-                    <Col sm={12} md={12} lg={12}>
-                        <DataList
-                            tableData={getTableData()}
-                            tableColumns={getTableColumns()}
-                            tableDropdownControls={getTableDropdownControls()}
-                            modalConfig={getModalConfig()}
-                        />
-
-                    </Col>
-                </>
-            </Admin>
+                <DataList
+                    tableData={getTableData()}
+                    tableColumns={getTableColumns()}
+                    tableDropdownControls={getTableDropdownControls()}
+                    modalConfig={getModalConfig()}
+                />
             }
         </>
     )
-}
+};
 
-export async function getStaticProps({params}) {
-    return {
-        props: {
-            user_id: params.user_id,
-        },
-    }
-}
-
-export async function getStaticPaths() {
-    return {
-        paths: [],
-        fallback: true,
-    }
-}
-
-export default ApiTokens;
+export default ApiTokensTable;

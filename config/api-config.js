@@ -15,6 +15,7 @@ export default
         "delete": "/%s/delete",
         "duplicate": "/%s/duplicate",
         "merge": "/%s/merge",
+        "admin": "/admin",
         "scraper": "/scraper",
         "provider": "/provider/%d",
         "providerList": "/providers",
