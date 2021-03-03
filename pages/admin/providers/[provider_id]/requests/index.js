@@ -6,7 +6,12 @@ import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middlewa
 import ApiConfig from "../../../../../config/api-config";
 import {getRouteItem} from "../../../../../library/session/authenticate";
 import {Routes} from "../../../../../config/routes";
-import {isSet} from "../../../../../library/utils";
+import {isObjectEmpty, isSet} from "../../../../../library/utils";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../../../library/redux/actions/breadcrumbs-actions";
+import {ServiceRequestResponseKeysPageName} from "./[service_request_id]/response-keys";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -18,6 +23,17 @@ const ProviderRequests = (props) => {
     const [provider, setProvider] = useState({});
 
     useEffect(() => {
+        if (!isObjectEmpty(provider)) {
+            setBreadcrumbsPageNameAction(ProviderRequestsPageName)
+            setBreadcrumbsDataAction({
+                provider: {
+                    id: provider.id,
+                    name: provider.provider_name
+                }
+            })
+        }
+    }, [provider]);
+    useEffect(() => {
         if (isSet(props.provider_id)) {
             fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
                 setProvider(response.data.data)
@@ -26,24 +42,12 @@ const ProviderRequests = (props) => {
         }
     }, [props.provider_id])
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ProviderRequestsPageName,
-            data: {
-                provider: {
-                    id: provider.id,
-                    name: provider.provider_name
-                }
-            }
-        }
-    }
-
     const getBaseUrl = () => {
         return getRouteItem(Routes.items, ProviderRequestsPageName).route;
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ProviderRequestsPageName}>
+        <Admin pageName={ProviderRequestsPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                 {showTable &&

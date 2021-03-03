@@ -4,6 +4,11 @@ import Admin from "../../../../../../../views/layouts/Admin";
 import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import ApiClient from "../../../../../../../views/components/ApiTools/ApiClient";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../../../../../library/redux/actions/breadcrumbs-actions";
+import {ServiceRequestParametersPageName} from "../parameters";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -13,6 +18,22 @@ const ServiceRequestTest = (props) => {
 
     const [provider, setProvider] = useState({});
     const [serviceRequest, setServiceRequest] = useState({});
+
+    useEffect(() => {
+        if (!isObjectEmpty(provider.data) && !isObjectEmpty(serviceRequest.data)) {
+            setBreadcrumbsPageNameAction(ServiceRequestTestPageName)
+            setBreadcrumbsDataAction({
+                provider: {
+                    id: provider.id,
+                    name: provider.provider_name
+                },
+                service_requests: {
+                    id: serviceRequest.id,
+                    name: serviceRequest.service_request_name
+                },
+            })
+        }
+    }, [provider, serviceRequest]);
 
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
@@ -29,26 +50,10 @@ const ServiceRequestTest = (props) => {
         }
     }, [props.provider_id, props.service_request_id]);
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ServiceRequestTestPageName,
-            data: {
-                provider: {
-                    id: provider.id,
-                    name: provider.provider_name
-                },
-                service_requests: {
-                    id: serviceRequest.id,
-                    name: serviceRequest.service_request_name
-                },
-            }
-        }
-    }
-
     return (
         <>
             {!isObjectEmpty(provider) && !isObjectEmpty(serviceRequest) &&
-            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestTestPageName}>
+            <Admin pageName={ServiceRequestTestPageName}>
                 <ApiClient
                     provider={provider}
                     serviceRequest={serviceRequest}

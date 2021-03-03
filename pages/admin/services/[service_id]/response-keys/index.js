@@ -6,7 +6,12 @@ import Admin from "../../../../../views/layouts/Admin";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
-import {isSet} from "../../../../../library/utils";
+import {isObjectEmpty, isSet} from "../../../../../library/utils";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../../../library/redux/actions/breadcrumbs-actions";
+import {ProviderRequestsPageName} from "../../../providers/[provider_id]/requests";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -17,6 +22,17 @@ const ServiceResponseKeys = (props) => {
     const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
+        if (!isObjectEmpty(service)) {
+            setBreadcrumbsPageNameAction(ServiceResponseKeysPageName)
+            setBreadcrumbsDataAction({
+                services: {
+                    id: service.id,
+                    name: service.service_name
+                }
+            })
+        }
+    }, [service]);
+    useEffect(() => {
         if (isSet(props.service_id)) {
             fetchData(sprintf(ApiConfig.endpoints.service, props.service_id)).then((response) => {
                 setService(response.data.data);
@@ -24,19 +40,6 @@ const ServiceResponseKeys = (props) => {
             })
         }
     }, [props.service_id]);
-
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ServiceResponseKeysPageName,
-            data: {
-                services: {
-                    id: service.id,
-                    name: service.service_name
-                }
-            }
-        }
-    }
 
     const getTableData = () => {
         return {
@@ -145,7 +148,7 @@ const ServiceResponseKeys = (props) => {
     return (
         <>
             {showTable &&
-            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceResponseKeysPageName}>
+            <Admin pageName={ServiceResponseKeysPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                         <DataList

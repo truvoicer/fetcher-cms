@@ -22,15 +22,16 @@ import {
 import {event} from "next/dist/build/output/log";
 import ScraperSendJob from "../../../views/components/Views/ScraperSendJob";
 import Button from "react-bootstrap/Button";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../library/redux/actions/breadcrumbs-actions";
+import {ServiceRequestResponseKeysPageName} from "../providers/[provider_id]/requests/[service_request_id]/response-keys";
 
 
 const ManageScrapers = ({scraperApi}) => {
     ManageScrapers.PageName = "manage_scrapers";
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ManageScrapers.PageName,
-        }
-    }
+    setBreadcrumbsPageNameAction(ManageScrapers.PageName)
 
     const MANAGE_SCRAPER_JOBS_KEY = "manage_scraper_jobs";
     const MANAGE_SCRAPERS_KEY = "manage_scrapers";
@@ -187,7 +188,7 @@ const ManageScrapers = ({scraperApi}) => {
     }, [selectedProvider])
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageScrapers.PageName}>
+        <Admin pageName={ManageScrapers.PageName}>
             <div className={"scrapers"}>
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12">

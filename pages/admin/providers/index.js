@@ -7,15 +7,12 @@ import Col from "react-bootstrap/Col";
 import DataList from "../../../views/components/Tables/DataList";
 import ServiceRequestsExpandableTable
     from "../../../views/components/Tables/Expandable/Tables/ServiceRequestsExpandableTable";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const ManageProviders = (props) => {
     ManageProviders.PageName = "manage_providers";
+    setBreadcrumbsPageNameAction(ManageProviders.PageName)
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ManageProviders.PageName,
-        }
-    }
     const getTableData = () => {
         return {
             endpoint: ApiConfig.endpoints.providerList,
@@ -186,7 +183,7 @@ const ManageProviders = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageProviders.PageName}>
+        <Admin pageName={ManageProviders.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList

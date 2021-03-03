@@ -8,15 +8,11 @@ import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
 import ServiceResponseKeys, {ServiceResponseKeysPageName} from "./[service_id]/response-keys";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const ManageServices = (props) => {
     ManageServices.PageName = "manage_services";
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ManageServices.PageName
-        }
-    }
+    setBreadcrumbsPageNameAction(ManageServices.PageName)
 
     const getTableData = () => {
         return {
@@ -128,7 +124,7 @@ const ManageServices = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageServices.PageName}>
+        <Admin pageName={ManageServices.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList

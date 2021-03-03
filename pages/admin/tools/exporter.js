@@ -7,12 +7,15 @@ import Card from "react-bootstrap/Card";
 import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import {Alert} from "react-bootstrap";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const sprintf = require("sprintf-js").sprintf
 
 export const ExporterPageName = "exporter";
 
 const ExporterPage = (props) => {
+    setBreadcrumbsPageNameAction(ExporterPageName)
+
     const [exportFormList, setExportFormList] = useState([]);
     const [exportData, setExportData] = useState([]);
     const [response, setResponse] = useState({
@@ -84,12 +87,6 @@ const ExporterPage = (props) => {
             })
         })
     }, []);
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ExporterPageName,
-        }
-    }
 
     const getListIndex = (exportItemName, compareKey, list) => {
         let listIndex = false;
@@ -179,7 +176,7 @@ const ExporterPage = (props) => {
             })
     }
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ExporterPageName}>
+        <Admin pageName={ExporterPageName}>
             <Card>
                 <Card.Header>Exporter</Card.Header>
                 <Card.Body>

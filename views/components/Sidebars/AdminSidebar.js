@@ -1,13 +1,19 @@
 import {Routes} from '../../../config/routes'
 import {SiteConfig} from '../../../config/site-config'
-import {checkAccessControl, getRouteItem, getSessionObject} from '../../../library/session/authenticate'
+import {checkAccessControl, getRouteItem} from '../../../library/session/authenticate'
 import Link from "next/link";
-import React, {useContext} from "react";
-import {UserContext} from "../Context/UserContext";
+import React, {useEffect, useState} from "react";
 import SearchComponent from "../Search/SearchComponent";
+import {
+    SESSION_AUTHENTICATED,
+    SESSION_AUTHENTICATING,
+    SESSION_STATE_KEY, SESSION_USER
+} from "../../../library/redux/constants/session-constants";
+import {connect} from "react-redux";
+import {isObjectEmpty} from "../../../library/utils";
 
-const Sidebar = (props) => {
-    const userContext = useContext(UserContext);
+const Sidebar = ({session}) => {
+    const [showSidebar, setShowSidebar] = useState(false);
 
     const menuClick = (e) => {
         if (e.target.classList.contains("c-linkable")) {
@@ -30,9 +36,15 @@ const Sidebar = (props) => {
         )
     }
 
+    useEffect(() => {
+        if (!session[SESSION_AUTHENTICATING] && session[SESSION_AUTHENTICATED] && !isObjectEmpty(session[SESSION_USER])) {
+            setShowSidebar(true);
+        }
+    }, [session, session[SESSION_AUTHENTICATING], session[SESSION_AUTHENTICATED]])
+
     const ListItems = () => {
         return Routes.items.map(function (item, index) {
-            if(checkAccessControl(getRouteItem(Routes.items, item.name), userContext.user)) {
+            if (checkAccessControl(getRouteItem(Routes.items, item.name), session[SESSION_USER])) {
                 let i = 0;
                 return (
                     <div key={index.toString()}>
@@ -80,17 +92,29 @@ const Sidebar = (props) => {
             }
         })
     }
-
     return (
         <div className="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show" id="sidebar">
             <div className="c-sidebar-brand d-lg-down-none">
                 {SiteConfig.siteName}
             </div>
-
-            <SearchComponent />
-            <GetSidebarNav/>
+            {showSidebar &&
+            <>
+                <SearchComponent/>
+                <GetSidebarNav/>
+            </>
+            }
         </div>
     )
 
 }
-export default Sidebar
+
+function mapStateToProps(state) {
+    return {
+        session: state[SESSION_STATE_KEY]
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(Sidebar);

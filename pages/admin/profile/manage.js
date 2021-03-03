@@ -12,9 +12,12 @@ import UserProfileForm from "../../../views/components/Forms/User/UserProfileFor
 import Modal from "react-bootstrap/Modal";
 import ScraperSettings from "../../../views/components/Views/ScraperSettings";
 import ApiTokensTable from "../../../views/components/Tables/ApiTokensTable";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 export const UserProfilePageName = "user_profile";
 const ManageUsers = ({session}) => {
+    setBreadcrumbsPageNameAction(UserProfilePageName)
+
     const [showModal, setShowModal] = useState(false)
     const [modalTitle, setModalTitle] = useState("")
     const [modalSize, setModalSize] = useState("md")
@@ -22,14 +25,8 @@ const ManageUsers = ({session}) => {
     const [modalFooter, setModalFooter] = useState(false)
     const [modalFooterComponent, setModalFooterComponent] = useState(null)
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: UserProfilePageName
-        }
-    }
-
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={UserProfilePageName}>
+        <Admin pageName={UserProfilePageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <Accordion defaultValue={"0"} activeKey={"0"}>

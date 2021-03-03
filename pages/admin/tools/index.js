@@ -1,15 +1,13 @@
 import Admin from '../../../views/layouts/Admin'
 import React from "react";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 export const ToolsPagePageName = "tools";
 const Tools = (props) => {
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ToolsPagePageName
-        }
-    }
+    setBreadcrumbsPageNameAction(ToolsPagePageName)
+
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ToolsPagePageName}>
+        <Admin pageName={ToolsPagePageName}>
             <>
                 <div className="row">
                     <div className="col-sm-12">

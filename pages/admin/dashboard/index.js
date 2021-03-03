@@ -2,17 +2,14 @@ import Admin from '../../../views/layouts/Admin'
 import React from "react";
 import InfoCard from "../../../views/components/Widgets/InfoCard";
 import ApiConfig from "../../../config/api-config";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const Dashboard = (props) => {
     Dashboard.PageName = "dashboard";
+    setBreadcrumbsPageNameAction(Dashboard.PageName)
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: Dashboard.PageName
-        }
-    }
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Dashboard.PageName}>
+        <Admin pageName={Dashboard.PageName}>
             <>
                 <div className="row">
                     <div className="col-sm-6 col-lg-3">

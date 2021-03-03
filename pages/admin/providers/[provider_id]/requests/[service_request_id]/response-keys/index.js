@@ -7,11 +7,14 @@ import RequestResponseKeysForm from "../../../../../../../views/components/Forms
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import Row from "react-bootstrap/Row";
-import {isSet} from "../../../../../../../library/utils";
+import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import Card from "react-bootstrap/Card";
-import Dropdown from "react-bootstrap/Dropdown";
-import SettingsDropdown from "../../../../../../../views/components/Dropdowns/SettingsDropdown";
 import MergeResponseKeysForm from "../../../../../../../views/components/Forms/MergeResponseKeysForm";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../../../../../library/redux/actions/breadcrumbs-actions";
+import {ServiceRequestTestPageName} from "../request-test";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -26,7 +29,22 @@ const ServiceRequestResponseKeys = (props) => {
         data: {},
         received: false
     });
-    const [showTable, setShowTable] = useState(false);
+
+    useEffect(() => {
+        if (!isObjectEmpty(provider.data) && !isObjectEmpty(serviceRequest.data)) {
+            setBreadcrumbsPageNameAction(ServiceRequestResponseKeysPageName)
+            setBreadcrumbsDataAction({
+                provider: {
+                    id: provider.data.id,
+                    name: provider.data.provider_name
+                },
+                service_requests: {
+                    id: serviceRequest.data.id,
+                    name: serviceRequest.data.service_request_name
+                },
+            })
+        }
+    }, [provider, serviceRequest]);
 
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
@@ -44,23 +62,6 @@ const ServiceRequestResponseKeys = (props) => {
             })
         }
     }, [props.provider_id, props.service_request_id]);
-
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ServiceRequestResponseKeysPageName,
-            data: {
-                provider: {
-                    id: provider.data.id,
-                    name: provider.data.provider_name
-                },
-                service_requests: {
-                    id: serviceRequest.data.id,
-                    name: serviceRequest.data.service_request_name
-                },
-            }
-        }
-    }
 
     const getTableData = () => {
         return {
@@ -258,7 +259,7 @@ const ServiceRequestResponseKeys = (props) => {
     return (
         <>
             {serviceRequest.received && provider.received &&
-            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestResponseKeysPageName}>
+            <Admin pageName={ServiceRequestResponseKeysPageName}>
                 <>
                     <Row>
                         <Col sm={12} md={9} lg={9}>

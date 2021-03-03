@@ -5,15 +5,12 @@ import DataList from "../../../views/components/Tables/DataList";
 import CategoryForm from "../../../views/components/Forms/CategoryForm";
 import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const Categories = (props) => {
     Categories.PageName = "manage_categories";
+    setBreadcrumbsPageNameAction(Categories.PageName)
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: Categories.pageName,
-        }
-    }
     const getTableData = () => {
         return {
             title: "",
@@ -104,7 +101,7 @@ const Categories = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Categories.PageName}>
+        <Admin pageName={Categories.PageName}>
             <>
                 <Col sm={12} md={6} lg={6}>
                     <DataList

@@ -9,15 +9,11 @@ import {getRouteItem} from "../../../../library/session/authenticate";
 import {Routes} from "../../../../config/routes";
 import {SettingsApiTokensPageName} from "./[user_id]/api-tokens";
 import UserMappings from "../../../../views/components/Forms/User/UserMappings";
+import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
 
 export const ManageUsersPageName = "manage_users";
 const ManageUsers = (props) => {
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ManageUsersPageName
-        }
-    }
+    setBreadcrumbsPageNameAction(ManageUsersPageName)
 
     const getTableData = () => {
         return {
@@ -142,7 +138,7 @@ const ManageUsers = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ManageUsersPageName}>
+        <Admin pageName={ManageUsersPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList

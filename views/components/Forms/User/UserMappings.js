@@ -6,7 +6,7 @@ import DataForm from "../DataForm/DataForm";
 import {UserProfileFormData} from "../../../../library/forms/user-profile-form";
 import {MappingsFormData} from "../../../../library/forms/mappings-form";
 
-const UserMappings = (props) => {
+const UserMappings = ({data, config}) => {
     const [userData, setUserData] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [mappings, setMappings] = useState(null);
@@ -23,11 +23,11 @@ const UserMappings = (props) => {
     const getUserMappings = (userId) => {
         fetchRequest({
             endpoint: ApiConfig.endpoints.admin,
-            operation: `user/${userId}`,
+            operation: `user/${userId}/mappings`,
             onSuccess: (responseData) => {
                 console.log(responseData)
                 if (responseData.status === "success") {
-                    setUserData(responseData.data)
+                    setMappings(responseData.data)
                     setShowForm(true);
                 }
             },
@@ -38,9 +38,6 @@ const UserMappings = (props) => {
     }
 
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.serviceRequestList)).then((response) => {
-            setServiceRequestOptions(getServicesRequestSelect(response.data.data))
-        })
         fetchData(sprintf(ApiConfig.endpoints.providerList)).then((response) => {
             setProviderOptions(getProvidersSelect(response.data.data))
         })
@@ -50,19 +47,10 @@ const UserMappings = (props) => {
     }, [])
 
     useEffect(() => {
-        if (isNotEmpty(props?.itemId)) {
-            getUserDataById(props.itemId)
+        if (isNotEmpty(data?.itemId)) {
+            getUserMappings(data.itemId)
         }
-    }, [props.itemId])
-
-    const getServicesRequestSelect = (requests) => {
-        return requests.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.service_request_label
-            }
-        })
-    }
+    }, [data.itemId])
 
     const getCategoriesSelect = (data) => {
         return data.map((item, index) => {
@@ -83,13 +71,15 @@ const UserMappings = (props) => {
     }
 
     const submitHandler = (values) => {
-
         postRequest({
             endpoint: ApiConfig.endpoints.admin,
-            operation: `user/update`,
-            requestData: values,
+            operation: `user/${data.itemId}/mappings/save`,
+            requestData: {
+                providers: values.providers.map(provider => provider.value),
+                categories: values.categories.map(category => category.value),
+            },
             onSuccess: (responseData) => {
-                setUserData(responseData.data)
+                setMappings(responseData.data)
                 setResponse({
                     show: true,
                     variant: "success",
@@ -115,8 +105,7 @@ const UserMappings = (props) => {
             <DataForm
                 formType={"single"}
                 data={MappingsFormData({
-                    mappings: null,
-                    serviceRequestOptions: serviceRequestOptions,
+                    mappings: mappings,
                     categoryOptions: categoryOptions,
                     providerOptions: providerOptions
                 })}

@@ -6,7 +6,12 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import Admin from "../../../../../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
-import {isSet} from "../../../../../../../library/utils";
+import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../../../../../library/redux/actions/breadcrumbs-actions";
+import {ServiceRequestConfigPageName} from "../config";
 
 const sprintf = require("sprintf-js").sprintf
 export const ServiceRequestParametersPageName = "requests_parameters";
@@ -20,6 +25,21 @@ const ServiceRequestParameters = (props) => {
         received: false
     });
 
+    useEffect(() => {
+        if (!isObjectEmpty(provider.data) && !isObjectEmpty(serviceRequest.data)) {
+            setBreadcrumbsPageNameAction(ServiceRequestParametersPageName)
+            setBreadcrumbsDataAction({
+                provider: {
+                    id: provider.data.id,
+                    name: provider.data.provider_name
+                },
+                service_requests: {
+                    id: serviceRequest.data.id,
+                    name: serviceRequest.data.service_request_name
+                },
+            })
+        }
+    }, [provider, serviceRequest]);
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
             fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
@@ -36,23 +56,6 @@ const ServiceRequestParameters = (props) => {
             })
         }
     }, [props.provider_id, props.service_request_id]);
-
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ServiceRequestParametersPageName,
-            data: {
-                provider: {
-                    id: provider.data.id,
-                    name: provider.data.provider_name
-                },
-                service_requests: {
-                    id: serviceRequest.data.id,
-                    name: serviceRequest.data.service_request_name
-                },
-            }
-        }
-    }
 
     const getTableData = () => {
         return {
@@ -161,7 +164,7 @@ const ServiceRequestParameters = (props) => {
     return (
         <>
             {serviceRequest.received && provider.received &&
-            <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ServiceRequestParametersPageName}>
+            <Admin pageName={ServiceRequestParametersPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                         <DataList

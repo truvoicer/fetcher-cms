@@ -5,14 +5,19 @@ import ProviderPropertiesTable from "../../../../../views/components/Tables/Prov
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../../../library/utils";
-import {error} from "next/dist/build/output/log";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../../../library/redux/actions/breadcrumbs-actions";
 
 const sprintf = require("sprintf-js").sprintf;
 
 const ProviderProperties = (props) => {
     ProviderProperties.PageName = "provider_properties";
+
     const [provider, setProvider] = useState({});
     const [showTable, setShowTable] = useState(false);
+
 
     useEffect(() => {
         if (isSet(props.provider_id)) {
@@ -20,6 +25,13 @@ const ProviderProperties = (props) => {
             .then((response) => {
                 setProvider(response.data.data)
                 setShowTable(true)
+                setBreadcrumbsPageNameAction(ProviderProperties.PageName)
+                setBreadcrumbsDataAction({
+                    provider_properties: {
+                        id: response.data.data.id,
+                        name: response.data.data.provider_name
+                    }
+                })
             })
                 .catch((error) => {
                     console.error(error)
@@ -27,20 +39,8 @@ const ProviderProperties = (props) => {
         }
     }, [props.provider_id]);
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ProviderProperties.PageName,
-            data: {
-                provider_properties: {
-                    id: provider.id,
-                    name: provider.provider_name
-                }
-            }
-        }
-    }
-
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ProviderProperties.PageName}>
+        <Admin pageName={ProviderProperties.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                 {showTable &&

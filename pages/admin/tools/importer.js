@@ -13,6 +13,8 @@ import Select from "react-select";
 import FormFileInput from "react-bootstrap/FormFileInput";
 import {fetchData, sendData, sendFileData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../library/utils";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
+import {ExporterPageName} from "./exporter";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ImporterPage = (props) => {
+    setBreadcrumbsPageNameAction(ImporterPageName)
 
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
@@ -44,12 +47,6 @@ const ImporterPage = (props) => {
         data: []
     });
     const availableTypesSelectList = {};
-
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: ImporterPageName,
-        }
-    }
 
     const steps = [
         {
@@ -360,7 +357,7 @@ const ImporterPage = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={ImporterPageName}>
+        <Admin pageName={ImporterPageName}>
             <Row>
                 <Col sm={12} md={12} lg={12}>
                     <Card>

@@ -1,13 +1,12 @@
 import {Routes} from '../../../config/routes'
 import Link from "next/link";
-import {UserContext} from "../Context/UserContext";
 import Breadcrumbs from "./Breadcrumbs";
 import {logout} from "../../../library/session/authenticate";
-import React, {useContext} from "react";
+import React from "react";
+import {SESSION_STATE_KEY, SESSION_USER} from "../../../library/redux/constants/session-constants";
+import {connect} from "react-redux";
 
-const AdminHeader = (props) => {
-    const userContext = useContext(UserContext);
-
+const AdminHeader = ({session}) => {
     const logoutHandler = () => {
         logout()
     }
@@ -52,7 +51,7 @@ const AdminHeader = (props) => {
                            aria-haspopup="true"
                            aria-expanded="false"
                             onClick={showUserDropdown}>
-                            {userContext.user.username}
+                            {session[SESSION_USER]?.email || ""}
                         </a>
                         <div id={"userDropdownMenu"} className="dropdown-menu dropdown-menu-right pt-0">
                             <div className="dropdown-header bg-light py-2"><strong>Account</strong></div>
@@ -69,4 +68,13 @@ const AdminHeader = (props) => {
             </header>
         )
 }
-export default AdminHeader;
+function mapStateToProps(state) {
+    return {
+        session: state[SESSION_STATE_KEY]
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(AdminHeader);

@@ -5,15 +5,12 @@ import DataList from "../../../views/components/Tables/DataList";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import Admin from "../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
+import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
+import {UserApiTokensPageName} from "../profile/api-tokens";
 
 const Properties = (props) => {
     Properties.PageName = "manage_properties";
-
-    const getBreadcrumbsConfig = (props) => {
-        return {
-            pageName: Properties.PageName
-        }
-    }
+    setBreadcrumbsPageNameAction(Properties.PageName);
 
     const getTableData = (props) => {
         return {
@@ -103,7 +100,7 @@ const Properties = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={Properties.PageName}>
+        <Admin pageName={Properties.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList

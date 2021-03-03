@@ -2,35 +2,24 @@ import {isNotEmpty, isSet, uCaseFirst} from "../utils";
 
 export const MappingsFormData = ({
                                      mappings = null,
-                                     serviceRequestOptions = [],
                                      providerOptions = [],
                                      categoryOptions = []
                                  }) => {
-    let providerValue = {};
-    let categoryValue = {};
-    let serviceRequestValue = {};
-
-    if (isNotEmpty(mappings?.provider)) {
-        providerValue = mappings?.provider.map((provider, index) => {
+    let providerValue = [];
+    let categoryValue = [];
+    if (isNotEmpty(mappings?.providers)) {
+        providerValue = mappings?.providers.map((provider, index) => {
             return {
                 value: provider.id,
                 label: provider.provider_label
             }
         })
     }
-    if (isNotEmpty(mappings?.category)) {
-        categoryValue = mappings?.category.map((category, index) => {
+    if (isNotEmpty(mappings?.categories)) {
+        categoryValue = mappings?.categories.map((category, index) => {
             return {
                 value: category.id,
                 label: category.category_label
-            }
-        })
-    }
-    if (isNotEmpty(mappings?.service_request)) {
-        serviceRequestValue = mappings?.service_request.map((service_request, index) => {
-            return {
-                value: service_request.id,
-                label: service_request.service_request_label
             }
         })
     }
@@ -51,7 +40,7 @@ export const MappingsFormData = ({
                 value: providerValue,
             },
             {
-                rowIndex: 0,
+                rowIndex: 1,
                 columnIndex: 0,
                 name: "categories",
                 description: "",
@@ -63,20 +52,6 @@ export const MappingsFormData = ({
                 options: categoryOptions,
                 data: [],
                 value: categoryValue,
-            },
-            {
-                rowIndex: 0,
-                columnIndex: 0,
-                name: "service_requests",
-                description: "",
-                label: "Service Requests",
-                labelPosition: "",
-                placeHolder: "",
-                fieldType: "select",
-                multi: true,
-                options: serviceRequestOptions,
-                data: [],
-                value: serviceRequestValue,
             },
         ]
     }

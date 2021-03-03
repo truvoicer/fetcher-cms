@@ -5,16 +5,14 @@ import DataList from "../../../../views/components/Tables/DataList";
 import Admin from "../../../../views/layouts/Admin";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
+import {SettingsApiTokensPageName} from "../../settings/users/[user_id]/api-tokens";
 
 export const FileSystemPageName = "filesystem";
 
 const FileSystemPage = (props) => {
+    setBreadcrumbsPageNameAction(FileSystemPageName)
 
-    const getBreadcrumbsConfig = () => {
-        return {
-            pageName: FileSystemPageName,
-        }
-    }
     const getTableData = () => {
         return {
             title: "",
@@ -122,7 +120,7 @@ const FileSystemPage = (props) => {
     }
 
     return (
-        <Admin breadcrumbsConfig={getBreadcrumbsConfig()} pageName={FileSystemPageName}>
+        <Admin pageName={FileSystemPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList

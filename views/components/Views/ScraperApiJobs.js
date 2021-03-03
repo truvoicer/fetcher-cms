@@ -1,20 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
-import Dropdown from "react-bootstrap/Dropdown";
-import SettingsDropdown from "../Dropdowns/SettingsDropdown";
-import Select from "react-select";
-import {fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
-import ApiConfig from "../../../config/api-config";
-import {error} from "next/dist/build/output/log";
-import {isNotEmpty} from "../../../library/utils";
-import ScrapersSelect from "../Forms/Selects/ScrapersSelect";
+import React, {useEffect, useState} from 'react';
 import Modal from "react-bootstrap/Modal";
-import Admin from "../../layouts/Admin";
-import ScheduleForm from "../Forms/Scraper/ScheduleForm";
-import {UserContext} from "../Context/UserContext";
 import {
     getScraperToken, scraperFetchRequest,
-    scraperTokenCheck,
-    scraperTokenRequest
+    scraperTokenCheck
 } from "../../../library/api/scraper-api/scraper-middleware";
 import {setScraperApiSession} from "../../../library/session/authenticate";
 import {ScraperApiConfig} from "../../../config/scraper-api-config";
@@ -29,8 +17,6 @@ const ScraperApiJobs = () => {
     const AUTH_FAIL = "auth_fail";
     const AUTH_USER_NOT_EXIST = "auth_user_not_exist";
 
-    const [responseKeys, setResponseKeys] = useState([])
-    const [selectedScraper, setSelectedScraper] = useState(null)
     const [scraperList, setScraperList] = useState([])
     const [authStatus, setAuthStatus] = useState({
         status: "",
