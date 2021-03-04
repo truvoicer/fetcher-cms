@@ -47,7 +47,7 @@ export const Routes =
                     label: "Manage Scrapers",
                     name: "manage_scrapers",
                     route: "/admin/scrapers",
-                    parent: "dashboard",
+                    parent: "scrapers",
                     icon: "cil-wc",
                     sidebar: true
                 },
@@ -67,7 +67,7 @@ export const Routes =
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers",
-                    parent: "dashboard",
+                    parent: "provider",
                     icon: "cil-wc",
                     sidebar: true
                 },
@@ -143,7 +143,7 @@ export const Routes =
                     label: "Manage Properties",
                     name: "manage_properties",
                     route: "/admin/properties",
-                    parent: "dashboard",
+                    parent: "properties",
                     icon: "cil-wc",
                     sidebar: true
                 }
@@ -231,7 +231,7 @@ export const Routes =
                     label: "Profile",
                     name: "user_profile",
                     route: "/admin/profile/manage",
-                    parent: "dashboard",
+                    parent: "user_admin",
                     icon: "cil-wc",
                     sidebar: true
                 },
@@ -261,7 +261,7 @@ export const Routes =
                     label: "Manage Users",
                     name: "manage_users",
                     route: "/admin/settings/users/manage",
-                    parent: "dashboard",
+                    parent: "settings",
                     icon: "cil-wc",
                     sidebar: true
                 },

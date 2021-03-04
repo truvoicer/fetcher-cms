@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Admin from "../../../views/layouts/Admin";
+import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
@@ -8,13 +8,17 @@ import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher
 import ApiConfig from "../../../config/api-config";
 import {Alert} from "react-bootstrap";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
+import {UserProfilePageName} from "../profile/manage";
 
 const sprintf = require("sprintf-js").sprintf
 
 export const ExporterPageName = "exporter";
 
 const ExporterPage = (props) => {
-    setBreadcrumbsPageNameAction(ExporterPageName)
+
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ExporterPageName)
+    }, []);
 
     const [exportFormList, setExportFormList] = useState([]);
     const [exportData, setExportData] = useState([]);
@@ -176,7 +180,7 @@ const ExporterPage = (props) => {
             })
     }
     return (
-        <Admin pageName={ExporterPageName}>
+        <SidebarLayout pageName={ExporterPageName}>
             <Card>
                 <Card.Header>Exporter</Card.Header>
                 <Card.Body>
@@ -268,7 +272,7 @@ const ExporterPage = (props) => {
                     </Row>
                 </Card.Body>
             </Card>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

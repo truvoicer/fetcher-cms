@@ -1,5 +1,5 @@
-import Admin from '../../../views/layouts/Admin'
-import React, {useState} from "react";
+import SidebarLayout from '../../../views/layouts/SidebarLayout'
+import React, {useEffect, useState} from "react";
 import Col from "react-bootstrap/Col";
 import Accordion from "react-bootstrap/Accordion";
 import Card from "react-bootstrap/Card";
@@ -16,8 +16,10 @@ import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/bread
 
 export const UserProfilePageName = "user_profile";
 const ManageUsers = ({session}) => {
-    setBreadcrumbsPageNameAction(UserProfilePageName)
 
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(UserProfilePageName)
+    }, []);
     const [showModal, setShowModal] = useState(false)
     const [modalTitle, setModalTitle] = useState("")
     const [modalSize, setModalSize] = useState("md")
@@ -26,7 +28,7 @@ const ManageUsers = ({session}) => {
     const [modalFooterComponent, setModalFooterComponent] = useState(null)
 
     return (
-        <Admin pageName={UserProfilePageName}>
+        <SidebarLayout pageName={UserProfilePageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <Accordion defaultValue={"0"} activeKey={"0"}>
@@ -117,7 +119,7 @@ const ManageUsers = ({session}) => {
                 </Modal.Footer>
                 }
             </Modal>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

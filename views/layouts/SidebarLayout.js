@@ -16,45 +16,28 @@ import {
     setSessionAuthenticatingAction,
     setSessionUserAction
 } from "../../library/redux/actions/session-actions";
+import ProtectedLayout from "./ProtectedLayout";
 
 const sprintf = require("sprintf-js").sprintf;
 
-const Admin = (props) => {
-    const router = useRouter();
-    useEffect(() => {
-        getApiUser()
-            .then((response) => {
-                if (response.status !== 200) {
-                    router.replace('/auth/login')
-                    return;
-                }
-                if (checkAccessControl(getRouteItem(Routes.items, props.pageName), response.data.data)) {
-                    setSessionUserAction(response.data.data);
-                    setSessionAuthenticatedAction(true);
-                }
-                setSessionAuthenticatingAction(false);
-            })
-            .catch((error) => {
-                console.error(error)
-                router.replace('/auth/login')
-            });
-    }, []);
-
+const SidebarLayout = ({pageName, children}) => {
     return (
         <App>
             <Head>
-                <title>{props.pageName ? sprintf("%s | %s", SiteConfig.siteName, getRouteItem(Routes.items, props.pageName).label) : SiteConfig.siteName}</title>
+                <title>{pageName ? sprintf("%s | %s", SiteConfig.siteName, getRouteItem(Routes.items, pageName).label) : SiteConfig.siteName}</title>
                 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
             </Head>
             <div className={"c-app"}>
-                <AdminSidebar/>
+                <AdminSidebar pageName={pageName}/>
                 <div className="c-wrapper c-fixed-components">
-                    <AdminHeader/>
+                    <AdminHeader pageName={pageName}/>
                     <div className="c-body">
                         <main className="c-main">
                             <Container fluid={true}>
                                 <div className="fade-in">
-                                    {props.children}
+                                    <ProtectedLayout pageName={pageName}>
+                                        {children}
+                                    </ProtectedLayout>
                                 </div>
                             </Container>
                         </main>
@@ -66,4 +49,4 @@ const Admin = (props) => {
         </App>
     )
 }
-export default Admin;
+export default SidebarLayout;

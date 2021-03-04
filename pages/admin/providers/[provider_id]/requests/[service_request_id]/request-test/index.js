@@ -1,8 +1,8 @@
 import ApiConfig from "../../../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
-import Admin from "../../../../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
-import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
+import {isNotEmpty, isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import ApiClient from "../../../../../../../views/components/ApiTools/ApiClient";
 import {
     setBreadcrumbsDataAction,
@@ -16,11 +16,11 @@ export const ServiceRequestTestPageName = "request_test";
 
 const ServiceRequestTest = (props) => {
 
-    const [provider, setProvider] = useState({});
-    const [serviceRequest, setServiceRequest] = useState({});
+    const [provider, setProvider] = useState(null);
+    const [serviceRequest, setServiceRequest] = useState(null);
 
     useEffect(() => {
-        if (!isObjectEmpty(provider.data) && !isObjectEmpty(serviceRequest.data)) {
+        if (isNotEmpty(provider) && isNotEmpty(serviceRequest)) {
             setBreadcrumbsPageNameAction(ServiceRequestTestPageName)
             setBreadcrumbsDataAction({
                 provider: {
@@ -52,13 +52,13 @@ const ServiceRequestTest = (props) => {
 
     return (
         <>
-            {!isObjectEmpty(provider) && !isObjectEmpty(serviceRequest) &&
-            <Admin pageName={ServiceRequestTestPageName}>
+            {isNotEmpty(provider) && isNotEmpty(serviceRequest) &&
+            <SidebarLayout pageName={ServiceRequestTestPageName}>
                 <ApiClient
                     provider={provider}
                     serviceRequest={serviceRequest}
                 />
-            </Admin>
+            </SidebarLayout>
             }
         </>
     )

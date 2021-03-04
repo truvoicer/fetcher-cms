@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Admin from "../../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
@@ -47,7 +47,7 @@ const ProviderRequests = (props) => {
     }
 
     return (
-        <Admin pageName={ProviderRequestsPageName}>
+        <SidebarLayout pageName={ProviderRequestsPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                 {showTable &&
@@ -55,7 +55,7 @@ const ProviderRequests = (props) => {
                 }
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

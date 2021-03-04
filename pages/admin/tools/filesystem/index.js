@@ -1,17 +1,21 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ApiConfig from "../../../../config/api-config";
 import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
-import Admin from "../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
 import {SettingsApiTokensPageName} from "../../settings/users/[user_id]/api-tokens";
+import {UserProfilePageName} from "../../profile/manage";
 
 export const FileSystemPageName = "filesystem";
 
 const FileSystemPage = (props) => {
-    setBreadcrumbsPageNameAction(FileSystemPageName)
+
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(FileSystemPageName)
+    }, []);
 
     const getTableData = () => {
         return {
@@ -120,7 +124,7 @@ const FileSystemPage = (props) => {
     }
 
     return (
-        <Admin pageName={FileSystemPageName}>
+        <SidebarLayout pageName={FileSystemPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList
@@ -131,7 +135,7 @@ const FileSystemPage = (props) => {
                     />
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

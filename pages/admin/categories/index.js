@@ -1,16 +1,18 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ApiConfig from "../../../config/api-config";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import CategoryForm from "../../../views/components/Forms/CategoryForm";
-import Admin from "../../../views/layouts/Admin";
+import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const Categories = (props) => {
     Categories.PageName = "manage_categories";
-    setBreadcrumbsPageNameAction(Categories.PageName)
 
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(Categories.PageName)
+    }, []);
     const getTableData = () => {
         return {
             title: "",
@@ -101,7 +103,7 @@ const Categories = (props) => {
     }
 
     return (
-        <Admin pageName={Categories.PageName}>
+        <SidebarLayout pageName={Categories.PageName}>
             <>
                 <Col sm={12} md={6} lg={6}>
                     <DataList
@@ -112,7 +114,7 @@ const Categories = (props) => {
                     />
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

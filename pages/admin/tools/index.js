@@ -1,13 +1,17 @@
-import Admin from '../../../views/layouts/Admin'
-import React from "react";
+import SidebarLayout from '../../../views/layouts/SidebarLayout'
+import React, {useEffect} from "react";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
+import {UserProfilePageName} from "../profile/manage";
 
 export const ToolsPagePageName = "tools";
 const Tools = (props) => {
-    setBreadcrumbsPageNameAction(ToolsPagePageName)
+
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ToolsPagePageName)
+    }, []);
 
     return (
-        <Admin pageName={ToolsPagePageName}>
+        <SidebarLayout pageName={ToolsPagePageName}>
             <>
                 <div className="row">
                     <div className="col-sm-12">
@@ -15,7 +19,7 @@ const Tools = (props) => {
                     </div>
                 </div>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 export default Tools;

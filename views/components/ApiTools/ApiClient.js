@@ -1,4 +1,4 @@
-import Admin from "../../layouts/Admin";
+import SidebarLayout from "../../layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";

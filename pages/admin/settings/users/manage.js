@@ -1,8 +1,8 @@
-import Admin from '../../../../views/layouts/Admin'
+import SidebarLayout from '../../../../views/layouts/SidebarLayout'
 import ApiConfig from "../../../../config/api-config";
 import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
-import React from "react";
+import React, {useEffect} from "react";
 import UserForm from "../../../../views/components/Forms/UserForm";
 import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../../library/session/authenticate";
@@ -10,11 +10,14 @@ import {Routes} from "../../../../config/routes";
 import {SettingsApiTokensPageName} from "./[user_id]/api-tokens";
 import UserMappings from "../../../../views/components/Forms/User/UserMappings";
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
+import {UserProfilePageName} from "../../profile/manage";
 
 export const ManageUsersPageName = "manage_users";
 const ManageUsers = (props) => {
-    setBreadcrumbsPageNameAction(ManageUsersPageName)
 
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ManageUsersPageName)
+    }, []);
     const getTableData = () => {
         return {
             title: "Users",
@@ -138,7 +141,7 @@ const ManageUsers = (props) => {
     }
 
     return (
-        <Admin pageName={ManageUsersPageName}>
+        <SidebarLayout pageName={ManageUsersPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList
@@ -149,7 +152,7 @@ const ManageUsers = (props) => {
                     />
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 export default ManageUsers;

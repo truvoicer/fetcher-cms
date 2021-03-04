@@ -1,6 +1,6 @@
 import ApiConfig from "../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
-import Admin from "../../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ProviderPropertiesTable from "../../../../../views/components/Tables/ProviderPropertiesTable";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
@@ -40,7 +40,7 @@ const ProviderProperties = (props) => {
     }, [props.provider_id]);
 
     return (
-        <Admin pageName={ProviderProperties.PageName}>
+        <SidebarLayout pageName={ProviderProperties.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                 {showTable &&
@@ -48,7 +48,7 @@ const ProviderProperties = (props) => {
                 }
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 
 }

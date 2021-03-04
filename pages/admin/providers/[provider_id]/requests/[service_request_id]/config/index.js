@@ -2,7 +2,7 @@ import ApiConfig from "../../../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
 import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
-import Admin from "../../../../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import ServiceConfigForm from "../../../../../../../views/components/Forms/ServiceConfigForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
@@ -168,7 +168,7 @@ const ServiceRequestConfig = (props) => {
     return (
         <>
             {serviceRequest.received && provider.received &&
-            <Admin pageName={ServiceRequestConfigPageName}>
+            <SidebarLayout pageName={ServiceRequestConfigPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                         <DataList
@@ -179,7 +179,7 @@ const ServiceRequestConfig = (props) => {
                         />
                     </Col>
                 </>
-            </Admin>
+            </SidebarLayout>
             }
         </>
     )

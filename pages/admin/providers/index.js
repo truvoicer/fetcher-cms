@@ -1,6 +1,6 @@
-import Admin from '../../../views/layouts/Admin'
+import SidebarLayout from '../../../views/layouts/SidebarLayout'
 import ApiConfig from '../../../config/api-config'
-import React from "react";
+import React, {useEffect} from "react";
 import ProviderForm from "../../../views/components/Forms/ProviderForm";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import Col from "react-bootstrap/Col";
@@ -11,7 +11,10 @@ import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/bread
 
 const ManageProviders = (props) => {
     ManageProviders.PageName = "manage_providers";
-    setBreadcrumbsPageNameAction(ManageProviders.PageName)
+
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ManageProviders.PageName)
+    }, []);
 
     const getTableData = () => {
         return {
@@ -183,7 +186,7 @@ const ManageProviders = (props) => {
     }
 
     return (
-        <Admin pageName={ManageProviders.PageName}>
+        <SidebarLayout pageName={ManageProviders.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList
@@ -201,7 +204,7 @@ const ManageProviders = (props) => {
                     />
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 export default ManageProviders;

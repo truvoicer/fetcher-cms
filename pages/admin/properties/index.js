@@ -1,16 +1,19 @@
 import ApiConfig from '../../../config/api-config'
-import React from "react";
+import React, {useEffect} from "react";
 import PropertyForm from "../../../views/components/Forms/PropertyForm";
 import DataList from "../../../views/components/Tables/DataList";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
-import Admin from "../../../views/layouts/Admin";
+import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 import {UserApiTokensPageName} from "../profile/api-tokens";
+import {UserProfilePageName} from "../profile/manage";
 
 const Properties = (props) => {
     Properties.PageName = "manage_properties";
-    setBreadcrumbsPageNameAction(Properties.PageName);
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(Properties.PageName);
+    }, []);
 
     const getTableData = (props) => {
         return {
@@ -100,7 +103,7 @@ const Properties = (props) => {
     }
 
     return (
-        <Admin pageName={Properties.PageName}>
+        <SidebarLayout pageName={Properties.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList
@@ -111,7 +114,7 @@ const Properties = (props) => {
                     />
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 export default Properties;

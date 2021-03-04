@@ -2,7 +2,7 @@ import ApiConfig from "../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
 import DeleteForm from "../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../views/components/Tables/DataList";
-import Admin from "../../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 import Col from "react-bootstrap/Col";
 import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
@@ -148,7 +148,7 @@ const ServiceResponseKeys = (props) => {
     return (
         <>
             {showTable &&
-            <Admin pageName={ServiceResponseKeysPageName}>
+            <SidebarLayout pageName={ServiceResponseKeysPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
                         <DataList
@@ -159,7 +159,7 @@ const ServiceResponseKeys = (props) => {
                         />
                     </Col>
                 </>
-            </Admin>
+            </SidebarLayout>
             }
         </>
     )

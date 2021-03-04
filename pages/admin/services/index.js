@@ -1,9 +1,9 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ApiConfig from "../../../config/api-config";
 import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import DataList from "../../../views/components/Tables/DataList";
 import ServiceForm from "../../../views/components/Forms/ServiceForm";
-import Admin from "../../../views/layouts/Admin";
+import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
@@ -12,8 +12,9 @@ import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/bread
 
 const ManageServices = (props) => {
     ManageServices.PageName = "manage_services";
-    setBreadcrumbsPageNameAction(ManageServices.PageName)
-
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ManageServices.PageName)
+    }, []);
     const getTableData = () => {
         return {
             title: "",
@@ -124,7 +125,7 @@ const ManageServices = (props) => {
     }
 
     return (
-        <Admin pageName={ManageServices.PageName}>
+        <SidebarLayout pageName={ManageServices.PageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     <DataList
@@ -135,7 +136,7 @@ const ManageServices = (props) => {
                     />
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 export default ManageServices

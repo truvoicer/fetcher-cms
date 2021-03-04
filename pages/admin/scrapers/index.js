@@ -1,4 +1,4 @@
-import Admin from '../../../views/layouts/Admin'
+import SidebarLayout from '../../../views/layouts/SidebarLayout'
 import ApiConfig from '../../../config/api-config'
 import React, {createRef, useEffect, useRef, useState} from "react";
 import Select from "react-select";
@@ -27,11 +27,15 @@ import {
     setBreadcrumbsPageNameAction
 } from "../../../library/redux/actions/breadcrumbs-actions";
 import {ServiceRequestResponseKeysPageName} from "../providers/[provider_id]/requests/[service_request_id]/response-keys";
+import {UserProfilePageName} from "../profile/manage";
 
 
 const ManageScrapers = ({scraperApi}) => {
     ManageScrapers.PageName = "manage_scrapers";
-    setBreadcrumbsPageNameAction(ManageScrapers.PageName)
+
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ManageScrapers.PageName)
+    }, []);
 
     const MANAGE_SCRAPER_JOBS_KEY = "manage_scraper_jobs";
     const MANAGE_SCRAPERS_KEY = "manage_scrapers";
@@ -188,7 +192,7 @@ const ManageScrapers = ({scraperApi}) => {
     }, [selectedProvider])
 
     return (
-        <Admin pageName={ManageScrapers.PageName}>
+        <SidebarLayout pageName={ManageScrapers.PageName}>
             <div className={"scrapers"}>
                 <div className="row">
                     <div className="col-sm-12 col-md-12 col-lg-12">
@@ -387,7 +391,7 @@ const ManageScrapers = ({scraperApi}) => {
                 </Modal.Footer>
                 }
             </Modal>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

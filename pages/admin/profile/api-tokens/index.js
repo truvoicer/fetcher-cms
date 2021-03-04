@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Admin from "../../../../views/layouts/Admin";
+import SidebarLayout from "../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {formatDate, isObjectEmpty, isSet} from "../../../../library/utils";
 import ApiTokensTable from "../../../../views/components/Tables/ApiTokensTable";
@@ -31,7 +31,7 @@ const ApiTokens = ({session}) => {
     }, [session, session[SESSION_AUTHENTICATING], session[SESSION_AUTHENTICATED]])
     return (
 
-        <Admin pageName={UserApiTokensPageName}>
+        <SidebarLayout pageName={UserApiTokensPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     {!isObjectEmpty(session[SESSION_USER]) &&
@@ -41,7 +41,7 @@ const ApiTokens = ({session}) => {
                     }
                 </Col>
             </>
-        </Admin>
+        </SidebarLayout>
     )
 }
 

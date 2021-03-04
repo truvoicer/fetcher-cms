@@ -77,10 +77,6 @@ const Breadcrumbs = ({breadcrumbs}) => {
         setDropDownItems(dropDownItems);
     }
 
-    useEffect(() => {
-        console.log(breadcrumbs)
-    }, [breadcrumbs])
-
     return (
         <div className="c-subheader px-3">
             <ol className="breadcrumb border-0 m-0">

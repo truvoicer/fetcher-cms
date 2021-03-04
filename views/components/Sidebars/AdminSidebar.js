@@ -10,9 +10,9 @@ import {
     SESSION_STATE_KEY, SESSION_USER
 } from "../../../library/redux/constants/session-constants";
 import {connect} from "react-redux";
-import {isObjectEmpty} from "../../../library/utils";
+import {isNotEmpty, isObjectEmpty} from "../../../library/utils";
 
-const Sidebar = ({session}) => {
+const Sidebar = ({session, pageName}) => {
     const [showSidebar, setShowSidebar] = useState(false);
 
     const menuClick = (e) => {
@@ -42,17 +42,24 @@ const Sidebar = ({session}) => {
         }
     }, [session, session[SESSION_AUTHENTICATING], session[SESSION_AUTHENTICATED]])
 
+    const getCurrentRoute = getRouteItem(Routes.items, pageName)
+    const getParentRoute = getRouteItem(Routes.items, getCurrentRoute.parent)
+
     const ListItems = () => {
         return Routes.items.map(function (item, index) {
             if (checkAccessControl(getRouteItem(Routes.items, item.name), session[SESSION_USER])) {
                 let i = 0;
+                let expand = false;
+                if (isNotEmpty(getParentRoute?.name) && item.name === getParentRoute.name) {
+                    expand = true;
+                }
                 return (
                     <div key={index.toString()}>
                         {item.heading &&
                         <li className="c-sidebar-nav-title" key={"sidebar_heading_" + i.toString()}>{item.heading}</li>
                         }
                         {item.sidebar &&
-                        <li className={item.subs ? "c-sidebar-nav-dropdown" : "c-sidebar-nav-item"}>
+                        <li className={item.subs ? `c-sidebar-nav-dropdown ${expand? "c-show" : ""}` : "c-sidebar-nav-item"}>
                             <Link href={item.route} as={item.route}>
                                 <a className={item.subs
                                     ? "c-sidebar-nav-dropdown-toggle"
@@ -110,7 +117,7 @@ const Sidebar = ({session}) => {
 
 function mapStateToProps(state) {
     return {
-        session: state[SESSION_STATE_KEY]
+        session: state[SESSION_STATE_KEY],
     };
 }
 

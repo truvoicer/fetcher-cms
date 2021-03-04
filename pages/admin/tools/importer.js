@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import Admin from "../../../views/layouts/Admin";
+import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
@@ -15,6 +15,7 @@ import {fetchData, sendData, sendFileData} from "../../../library/api/fetcher-ap
 import {isSet} from "../../../library/utils";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 import {ExporterPageName} from "./exporter";
+import {UserProfilePageName} from "../profile/manage";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -34,7 +35,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ImporterPage = (props) => {
-    setBreadcrumbsPageNameAction(ImporterPageName)
+
+    useEffect(() => {
+        setBreadcrumbsPageNameAction(ImporterPageName)
+    }, []);
 
     const classes = useStyles();
     const [activeStep, setActiveStep] = useState(0);
@@ -357,7 +361,7 @@ const ImporterPage = (props) => {
     }
 
     return (
-        <Admin pageName={ImporterPageName}>
+        <SidebarLayout pageName={ImporterPageName}>
             <Row>
                 <Col sm={12} md={12} lg={12}>
                     <Card>
@@ -387,7 +391,7 @@ const ImporterPage = (props) => {
                     </Card>
                 </Col>
             </Row>
-        </Admin>
+        </SidebarLayout>
     )
 }
 
