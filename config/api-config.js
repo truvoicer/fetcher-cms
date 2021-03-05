@@ -17,6 +17,7 @@ export default
         "merge": "/%s/merge",
         "admin": "/admin",
         "scraper": "/scraper",
+        "permission": "/permission",
         "provider": "/provider/%d",
         "providerList": "/providers",
         "providerProperty": "/provider/%d/property/%d",

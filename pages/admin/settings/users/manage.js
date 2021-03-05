@@ -11,6 +11,7 @@ import {SettingsApiTokensPageName} from "./[user_id]/api-tokens";
 import UserMappings from "../../../../views/components/Forms/User/UserMappings";
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
 import {UserProfilePageName} from "../../profile/manage";
+import {SettingsUserPermissionsPageName} from "./[user_id]/permissions";
 
 export const ManageUsersPageName = "manage_users";
 const ManageUsers = (props) => {
@@ -96,16 +97,23 @@ const ManageUsers = (props) => {
                 classes: "outline-primary"
             },
             {
-                control: "button",
-                text: "Mappings",
-                action: "mappings",
-                modal: {
-                    showModal: true,
-                    modalTitle: "Update User Mappings",
-                    modalFormName: "mappings"
+                control: "link",
+                location: "inline",
+                text: "Permissions",
+                action: "permissions",
+                href: getRouteItem(Routes.items, SettingsUserPermissionsPageName).route,
+                hrefConfig: {
+                    replace: true,
+                    data: {
+                        user: {
+                            dynamic: true,
+                            column: "id",
+                            key: "id"
+                        }
+                    }
                 },
                 size: "md",
-                classes: "outline-primary"
+                classes: "btn btn-outline-primary btn-md"
             },
             {
                 control: "button",

@@ -3,14 +3,11 @@ import {isNotEmpty} from "../../../../library/utils";
 import {fetchData, fetchRequest, postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../config/api-config";
 import DataForm from "../DataForm/DataForm";
-import {UserProfileFormData} from "../../../../library/forms/user-profile-form";
 import {MappingsFormData} from "../../../../library/forms/mappings-form";
 
 const UserMappings = ({data, config}) => {
-    const [userData, setUserData] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [mappings, setMappings] = useState(null);
-    const [serviceRequestOptions, setServiceRequestOptions] = useState([]);
     const [providerOptions, setProviderOptions] = useState([]);
     const [categoryOptions, setCategoryOptions] = useState([]);
     const [response, setResponse] = useState({
@@ -47,8 +44,9 @@ const UserMappings = ({data, config}) => {
     }, [])
 
     useEffect(() => {
+        console.log(data)
         if (isNotEmpty(data?.itemId)) {
-            getUserMappings(data.itemId)
+            // getUserMappings(data.itemId)
         }
     }, [data.itemId])
 

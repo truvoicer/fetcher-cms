@@ -266,10 +266,28 @@ export const Routes =
                     sidebar: true
                 },
                 {
+                    access_control: ["ROLE_SUPER_ADMIN"],
+                    label: "Manage Permissions",
+                    name: "manage_permissions",
+                    route: "/admin/settings/permissions",
+                    parent: "settings",
+                    icon: "cil-wc",
+                    sidebar: true
+                },
+                {
                     access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Api Tokens",
                     name: "settings_api_tokens",
                     route: "/admin/settings/users/%(user.id)d/api-tokens",
+                    parent: "settings",
+                    icon: "cil-wc",
+                    sidebar: false
+                },
+                {
+                    access_control: ["ROLE_SUPER_ADMIN"],
+                    label: "User Entity Permissions",
+                    name: "settings_user_permissions",
+                    route: "/admin/settings/users/%(user.id)d/permissions",
                     parent: "settings",
                     icon: "cil-wc",
                     sidebar: false
