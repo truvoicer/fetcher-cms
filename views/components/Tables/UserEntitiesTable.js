@@ -2,14 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {formatDate, isSet} from "../../../library/utils";
 import {fetchData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
-import ApiTokenForm from "../Forms/ApiTokenForm";
-import DeleteForm from "../Forms/DeleteForm";
 import DataList from "./DataList";
-import UserMappings from "../Forms/User/UserMappings";
+import UserEntityPermissionsTable from "./UserEntityPermissionsTable";
 
 const sprintf = require("sprintf-js").sprintf
-const UserPermissionsTable = ({userId}) => {
-
+const UserEntitiesTable = ({userId}) => {
     const [user, setUser] = useState({});
     const [showTable, setShowTable] = useState(false);
 
@@ -26,13 +23,13 @@ const UserPermissionsTable = ({userId}) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: `/permission/user/${user.id}/entities`,
-            defaultColumnName: "entity",
-            defaultColumnLabel: "entity",
+            endpoint: `/permission/user/${user.id}/entity/list`,
+            defaultColumnName: "entity_label",
+            defaultColumnLabel: "entity_label",
             query: {
                 count: 1000,
                 order: "desc",
-                sort: "entity"
+                sort: "entity_label"
             },
         };
     }
@@ -41,14 +38,14 @@ const UserPermissionsTable = ({userId}) => {
         return [
             {
                 name: 'Entity',
-                selector: 'entity',
+                selector: 'entity_label',
                 sortable: true,
                 maxWidth: "300px",
             },
         ];
     }
 
-    const getTableDropdownControls = () => {
+    const getTableInlineControls = () => {
         return [
             {
                 control: "button",
@@ -57,7 +54,7 @@ const UserPermissionsTable = ({userId}) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Edit Permissions",
-                    modalFormName: "mappings"
+                    modalFormName: "permissions"
                 },
                 size: "md",
                 classes: "outline-primary"
@@ -68,19 +65,18 @@ const UserPermissionsTable = ({userId}) => {
     const getModalConfig = () => {
         return {
             default: {
-                modalForm: UserMappings,
+                modalForm: UserEntityPermissionsTable,
                 config: {
                     userId: user.id,
+                    size: "lg"
                 }
             },
-            mappings: {
-                modalForm: UserMappings,
+            permissions: {
+                modalForm: UserEntityPermissionsTable,
                 config: {
                     userId: user.id,
+                    size: "lg"
                 }
-            },
-            delete: {
-                modalForm: DeleteForm
             }
         };
     }
@@ -91,12 +87,27 @@ const UserPermissionsTable = ({userId}) => {
                 <DataList
                     tableData={getTableData()}
                     tableColumns={getTableColumns()}
-                    tableDropdownControls={getTableDropdownControls()}
+                    tableInlineControls={getTableInlineControls()}
                     modalConfig={getModalConfig()}
+                    inlineOnly
+                    titleConfig={{
+                        type: "text",
+                        text: "User Entities Permissions"
+                    }}
+                    expandedRowData={{
+                        title: "Service Requests",
+                        component: UserEntityPermissionsTable,
+                        props: {
+                            entity: "entity",
+                            config: {
+                                userId: user.id
+                            }
+                        }
+                    }}
                 />
             }
         </>
     )
 };
 
-export default UserPermissionsTable;
+export default UserEntitiesTable;

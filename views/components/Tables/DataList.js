@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
-import {isSet} from "../../../library/utils";
+import {isNotEmpty, isSet} from "../../../library/utils";
 import TextField from "./Fields/TextField";
 import Switcher from "./Fields/Switcher";
 import SelectField from "./Fields/SelectField";
@@ -16,7 +16,18 @@ import SettingsDropdown from "../Dropdowns/SettingsDropdown";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
-const DataList = (props) => {
+const DataList = ({
+                      tableSettingsDropdown,
+                      tableInlineControls,
+                      expandedRowData,
+                      tableDropdownControls,
+                      tableColumns,
+                      tableData,
+                      modalConfig,
+                      inlineOnly = false,
+                      dropdownOnly = true,
+                      titleConfig = null
+                  }) => {
     const [modal, setModal] = useState({
         showModal: false,
         modalTitle: "",
@@ -33,12 +44,12 @@ const DataList = (props) => {
     const [rowData, setRowData] = useState({});
 
     const setTableData = () => {
-        responseHandler(fetchData(props.tableData.endpoint, props.tableData.query),
+        responseHandler(fetchData(tableData.endpoint, tableData.query),
             getTableDataResponseHandler);
     }
     useEffect(() => {
         setTableData();
-    }, [props.tableData.endpoint, props.tableData.query])
+    }, [tableData.endpoint, tableData.query])
 
     const getTableSettingsDropdown = (config = null) => {
         if (config === null) {
@@ -53,7 +64,8 @@ const DataList = (props) => {
                 />
                 <Dropdown.Menu>
                     {config.map((item, index) => (
-                        <Dropdown.Item key={index} onClick={showModal.bind(this, item, false)}>Merge Response Keys</Dropdown.Item>
+                        <Dropdown.Item key={index} onClick={showModal.bind(this, item, false)}>Merge Response
+                            Keys</Dropdown.Item>
                     ))}
                 </Dropdown.Menu>
             </Dropdown>
@@ -74,10 +86,16 @@ const DataList = (props) => {
 
     const getTableColumns = (columns, dropdownControls = [], inlineControls = []) => {
         let hasColumnsConfig = false;
+        let allToggle = false;
+        let toggleType = null;
+        if (inlineOnly) {
+            allToggle = true;
+            toggleType = "inline"
+        }
         let processColumns = columns.map((column, index) => {
             if (isSet(column.controlsColumn) && column.controlsColumn) {
                 hasColumnsConfig = true;
-                column.cell = row => getColumnControls(dropdownControls, inlineControls, row, showModal)
+                column.cell = row => getColumnControls(dropdownControls, inlineControls, row, showModal, allToggle, toggleType)
             }
             if (isSet(column.editable) && column.editable) {
                 column.cell = row => getColumnEditable(row,
@@ -89,9 +107,10 @@ const DataList = (props) => {
             const controlObject = {
                 name: 'Controls',
                 allowOverflow: true,
-                maxWidth: "200px",
+                // maxWidth: "200px",
+                flex: 1,
                 // hide: "sm",
-                cell: row => getColumnControls(dropdownControls, inlineControls, row, showModal)
+                cell: row => getColumnControls(dropdownControls, inlineControls, row, showModal, allToggle, toggleType)
             }
             processColumns.push(controlObject);
         }
@@ -148,8 +167,8 @@ const DataList = (props) => {
             endpoint: (isSet(config.modal.endpoint)) ? config.modal.endpoint : null,
             action: config.action,
             data: row,
-            itemName: (!row) ? null : row[props.tableData.defaultColumnName],
-            itemLabel: (!row) ? null : row[props.tableData.defaultColumnLabel],
+            itemName: (!row) ? null : row[tableData.defaultColumnName],
+            itemLabel: (!row) ? null : row[tableData.defaultColumnLabel],
             itemId: (!row) ? null : row.id,
             item_id: (!row) ? null : row.id,
             modalFormName: (isSet(config.modal.modalFormName)) ? config.modal.modalFormName : null,
@@ -159,10 +178,10 @@ const DataList = (props) => {
 
     const getModalForm = (modalFormName) => {
         if (typeof modalFormName != "undefined") {
-            const ModalForm = props.modalConfig[modalFormName].modalForm
-            const modalConfig = props.modalConfig[modalFormName].config
+            const ModalForm = modalConfig[modalFormName].modalForm
+            const getModalConfig = modalConfig[modalFormName].config
             return (
-                <ModalForm data={modal} config={modalConfig} formResponse={formResponse}/>
+                <ModalForm data={modal} config={getModalConfig} formResponse={formResponse}/>
             )
         }
         return null;
@@ -203,8 +222,15 @@ const DataList = (props) => {
     }
 
     const GetModal = () => {
+        let getModalConfig;
+        let modalSize = "md";
+        if (isNotEmpty(modal?.modalFormName)) {
+            getModalConfig = modalConfig[modal.modalFormName].config
+            modalSize = getModalConfig?.size || modalSize;
+        }
+
         return (
-            <Modal show={modal.showModal} onHide={handleClose}>
+            <Modal show={modal.showModal} onHide={handleClose} size={modalSize}>
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.modalTitle}</Modal.Title>
                 </Modal.Header>
@@ -215,21 +241,26 @@ const DataList = (props) => {
         );
     }
 
-    const createButton = () => {
+    const titleModalButton = ({
+                                  modalAction = "create",
+                                  modalTitle = "New",
+                                  buttonTitle = "New",
+                                  buttonClass = "btn btn-sm btn-primary",
+                                  modalFormName = "default"
+                              }) => {
         let config = {
-            action: "create",
+            action: modalAction,
             modal: {
                 showModal: true,
-                modalTitle: "New",
-                modalFormName: "default"
+                modalTitle: modalTitle,
+                modalFormName: modalFormName
             }
         }
         return (
-            <Button variant="primary"
-                    size={"sm"}
+            <button className={buttonClass}
                     onClick={showModal.bind(this, config, false)}>
-                New
-            </Button>
+                {buttonTitle}
+            </button>
         );
     }
 
@@ -243,7 +274,32 @@ const DataList = (props) => {
         setRowClicked(true);
         setRowData(data)
     }
-
+    const getTitleProp = () => {
+        switch (titleConfig?.type) {
+            case "modal":
+            default:
+                return titleModalButton({
+                    modalAction: titleConfig?.modal?.modalAction,
+                    modalFormName: titleConfig?.modal?.modalFormName,
+                    modalTitle: titleConfig?.modal?.modalTitle,
+                    buttonTitle: titleConfig?.modal?.buttonTitle,
+                    buttonClass: titleConfig?.modal?.buttonClass,
+                });
+            case "text":
+                return titleConfig?.text || "";
+            case "hide":
+                return false;
+        }
+    }
+    const getExtraProps = () => {
+        let extraProps = {};
+        const titleProp = getTitleProp();
+        if (titleProp) {
+            extraProps.title = titleProp
+        }
+        return extraProps
+    }
+    const tableSettingsDropdownMenu = getTableSettingsDropdown(tableSettingsDropdown);
     return (
         <div>
             {alert.showAlert &&
@@ -252,14 +308,16 @@ const DataList = (props) => {
             </Alert>
             }
             <div className="card border-success">
+                {isNotEmpty(tableSettingsDropdownMenu) &&
                 <div className="card-header">
                     <div className="card-header-actions">
-                        {getTableSettingsDropdown(props.tableSettingsDropdown)}
+                        {tableSettingsDropdownMenu}
                     </div>
                 </div>
+                }
                 <div className="card-body">
                     <DataTable
-                        title={createButton()}
+                        {...getExtraProps()}
                         className={"datalist"}
                         striped={true}
                         highlightOnHover={false}
@@ -267,16 +325,16 @@ const DataList = (props) => {
                         overflowY={true}
                         pagination={true}
                         paginationPerPage={100}
-                        columns={getTableColumns(props.tableColumns, props.tableDropdownControls,
-                            props.tableInlineControls)}
+                        columns={getTableColumns(tableColumns, tableDropdownControls,
+                            tableInlineControls)}
                         data={data}
                         // onRowClicked={this.rowClickHandler}
                         expandableRows={true}
                         expandableRowsComponent={
-                            <ExpandableRow inlineControls={props.tableInlineControls}
-                                           dropdownControls={props.tableDropdownControls}
+                            <ExpandableRow inlineControls={tableInlineControls}
+                                           dropdownControls={tableDropdownControls}
                                            showModalCallback={showModal}
-                                           expandedRowData={props.expandedRowData}
+                                           expandedRowData={expandedRowData}
                             />
                         }
                     />
@@ -285,8 +343,8 @@ const DataList = (props) => {
             </div>
             <GetModal/>
             {rowClicked &&
-            <RowMenu inlineControls={props.tableInlineControls}
-                     dropdownControls={props.tableDropdownControls}
+            <RowMenu inlineControls={tableInlineControls}
+                     dropdownControls={tableDropdownControls}
                      style={rowClickedStyle}
                      data={rowData}
                      closeMenuCallback={closeMenu}

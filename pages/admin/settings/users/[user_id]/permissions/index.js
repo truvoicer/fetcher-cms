@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {formatDate, isObjectEmpty, isSet} from "../../../../../../library/utils";
-import ApiTokensTable from "../../../../../../views/components/Tables/ApiTokensTable";
 import {
     SESSION_AUTHENTICATED,
     SESSION_AUTHENTICATING,
@@ -14,9 +13,7 @@ import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceResponseKeysPageName} from "../../../../services/[service_id]/response-keys";
-import {UserApiTokensPageName} from "../../../../profile/api-tokens";
-import UserPermissionsTable from "../../../../../../views/components/Tables/UserPermissionsTable";
+import UserEntitiesTable from "../../../../../../views/components/Tables/UserEntitiesTable";
 
 export const SettingsUserPermissionsPageName = "settings_user_permissions";
 const SettingsUserPermissions = ({session}) => {
@@ -38,7 +35,7 @@ const SettingsUserPermissions = ({session}) => {
             <>
                 <Col sm={12} md={12} lg={12}>
                     {!isObjectEmpty(session[SESSION_USER]) &&
-                        <UserPermissionsTable
+                        <UserEntitiesTable
                             userId={session[SESSION_USER].id}
                         />
                     }

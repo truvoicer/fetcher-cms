@@ -1,41 +1,26 @@
 import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
-import {formatDate, isObjectEmpty, isSet} from "../../../../library/utils";
-import ApiTokensTable from "../../../../views/components/Tables/ApiTokensTable";
 import {
-    SESSION_AUTHENTICATED,
-    SESSION_AUTHENTICATING,
     SESSION_STATE_KEY,
-    SESSION_USER
 } from "../../../../library/redux/constants/session-constants";
 import {connect} from "react-redux";
 import {
-    setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../library/redux/actions/breadcrumbs-actions";
-import {fetchData, fetchRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../config/api-config";
-import ApiTokenForm from "../../../../views/components/Forms/ApiTokenForm";
 import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
 import PermissionForm from "../../../../views/components/Forms/Admin/PermissionForm";
-import {UserApiTokensPageName} from "../../profile/api-tokens";
 
 export const ManagePermissionsPageName = "manage_permissions";
 const ManagePermissions = ({session}) => {
-    const [user, setUser] = useState({});
     const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
         setBreadcrumbsPageNameAction(ManagePermissionsPageName);
         setShowTable(true)
     }, [])
-
-
-    useEffect(() => {
-    }, []);
-
 
     const getTableData = () => {
         return {
@@ -57,12 +42,6 @@ const ManagePermissions = ({session}) => {
                 name: 'Label',
                 selector: 'label',
                 sortable: true,
-            },
-            {
-                name: 'Name',
-                selector: 'name',
-                sortable: true,
-                maxWidth: "300px",
             },
         ];
     }
@@ -112,7 +91,7 @@ const ManagePermissions = ({session}) => {
     }
 
     return (
-        <SidebarLayout pageName={UserApiTokensPageName}>
+        <SidebarLayout pageName={ManagePermissionsPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     {showTable &&

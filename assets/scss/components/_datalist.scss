@@ -1,4 +1,9 @@
 .datalist {
+  .permission-list-column {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
   .rdt_TableCell {
     .dropdown, a, button {
       margin-right: 10px;

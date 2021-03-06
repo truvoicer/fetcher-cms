@@ -8,9 +8,8 @@ import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../../library/session/authenticate";
 import {Routes} from "../../../../config/routes";
 import {SettingsApiTokensPageName} from "./[user_id]/api-tokens";
-import UserMappings from "../../../../views/components/Forms/User/UserMappings";
+import UserEntitiesPermissionsForm from "../../../../views/components/Forms/Admin/UserEntitiesPermissionsForm";
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
-import {UserProfilePageName} from "../../profile/manage";
 import {SettingsUserPermissionsPageName} from "./[user_id]/permissions";
 
 export const ManageUsersPageName = "manage_users";
@@ -143,7 +142,7 @@ const ManageUsers = (props) => {
                 modalForm: DeleteForm
             },
             mappings: {
-                modalForm: UserMappings
+                modalForm: UserEntitiesPermissionsForm
             }
         };
     }

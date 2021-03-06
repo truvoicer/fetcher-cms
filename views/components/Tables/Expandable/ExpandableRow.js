@@ -27,6 +27,9 @@ const ExpandableRow = (props) => {
                 propsObject[key] = props.expandedRowData.props[key];
             }
         })
+        propsObject.data = {
+            data: props.data
+        };
         return propsObject;
     }
     const expandedContent = getContent();
