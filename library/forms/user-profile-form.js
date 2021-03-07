@@ -1,11 +1,10 @@
-import {isNotEmpty, isSet, uCaseFirst} from "../utils";
+import {isNotEmpty} from "../utils";
 
 export const UserProfileFormData = (
-    update = false,
+    operation = false,
     user = null,
     roles = [],
 ) => {
-
     let userRoles = [];
     if (isNotEmpty(user?.roles)) {
         userRoles = user.roles.map((item, index) => {
@@ -14,6 +13,27 @@ export const UserProfileFormData = (
                 label: item
             }
         })
+    }
+
+    let extraFields = [];
+    switch (operation) {
+        case "new_user":
+        case "update_user":
+            extraFields.push({
+                    rowIndex: 2,
+                    columnIndex: 0,
+                    name: "roles",
+                    description: "",
+                    label: "Roles",
+                    labelPosition: "",
+                    placeHolder: "",
+                    fieldType: "select",
+                    multi: true,
+                    options: roles,
+                    data: [],
+                    value: userRoles,
+            })
+            break;
     }
     return {
         fields: [
@@ -40,20 +60,6 @@ export const UserProfileFormData = (
                 fieldType: "text",
                 type: "email",
                 value: !isNotEmpty(user?.email)? "" : user.email,
-            },
-            {
-                rowIndex: 2,
-                columnIndex: 0,
-                name: "roles",
-                description: "",
-                label: "Roles",
-                labelPosition: "",
-                placeHolder: "",
-                fieldType: "select",
-                multi: true,
-                options: roles,
-                data: [],
-                value: userRoles,
             },
             {
                 rowIndex: 3,
@@ -114,6 +120,7 @@ export const UserProfileFormData = (
                     },
                 ]
             },
+            ...extraFields
         ]
     }
 }

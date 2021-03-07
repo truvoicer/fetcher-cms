@@ -7,14 +7,16 @@ import DeleteForm from "../Forms/DeleteForm";
 import DataList from "./DataList";
 
 const sprintf = require("sprintf-js").sprintf
-const ApiTokensTable = ({userId}) => {
+const ApiTokensTable = ({userId, admin = false}) => {
 
     const [user, setUser] = useState({});
     const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
         if (isSet(userId)) {
-            fetchData(sprintf(ApiConfig.endpoints.getUser, userId)).then((response) => {
+            fetchData(
+                (admin)? `${ApiConfig.endpoints.admin}/user/${userId}` : `${ApiConfig.endpoints.user}/detail`
+            ).then((response) => {
                 setUser(response.data.data);
                 setShowTable(true);
             });
@@ -25,7 +27,7 @@ const ApiTokensTable = ({userId}) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.getApiTokenList, user.id),
+            endpoint: (admin)? `${ApiConfig.endpoints.admin}/user/${userId}/api-tokens` : `${ApiConfig.endpoints.user}/api-tokens`,
             defaultColumnName: "token",
             defaultColumnLabel: "token",
             query: {
@@ -76,7 +78,7 @@ const ApiTokensTable = ({userId}) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Api Token",
-                    endpoint: "admin/user/api-token",
+                    endpoint: (admin)? `admin/user/${userId}/api-token` : `user/api-token`,
                     modalFormName: "delete"
                 },
                 size: "md",
@@ -91,12 +93,14 @@ const ApiTokensTable = ({userId}) => {
                 modalForm: ApiTokenForm,
                 config: {
                     userId: user.id,
+                    admin: admin
                 }
             },
             apiToken: {
                 modalForm: ApiTokenForm,
                 config: {
                     userId: user.id,
+                    admin: admin
                 }
             },
             delete: {

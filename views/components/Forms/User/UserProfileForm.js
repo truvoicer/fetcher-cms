@@ -5,9 +5,10 @@ import ApiConfig from "../../../../config/api-config";
 import DataForm from "../DataForm/DataForm";
 import {UserProfileFormData} from "../../../../library/forms/user-profile-form";
 
-const UserProfileForm = ({operation, user = null}) => {
+const UserProfileForm = ({operation, user = null, data, config}) => {
 
     const [userData, setUserData] = useState(null);
+    const [formOperation, setFormOperation] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [response, setResponse] = useState({
         show: false,
@@ -52,12 +53,10 @@ const UserProfileForm = ({operation, user = null}) => {
     }
 
     const getUserProfileData = () => {
-        console.log(ApiConfig.endpoints.admin)
         fetchRequest({
-            endpoint: ApiConfig.endpoints.admin,
-            operation: "user/profile",
+            endpoint: ApiConfig.endpoints.user,
+            operation: "detail",
             onSuccess: (responseData) => {
-                console.log(responseData)
                 if (responseData.status === "success") {
                     setUserData(responseData.data)
                     setShowForm(true);
@@ -70,80 +69,80 @@ const UserProfileForm = ({operation, user = null}) => {
     }
 
     useEffect(() => {
-        switch (operation) {
+        switch (formOperation) {
             case "new_user":
                 setUserData(null);
                 setShowForm(true);
                 break;
             case "update_user":
-                if (isNotEmpty(user?.id)) {
-                    getUserDataById(user.id)
+                if (isNotEmpty(data?.itemId)) {
+                    getUserDataById(data.itemId)
                 }
                 break;
             case "update_user_profile":
                 getUserProfileData()
                 break;
         }
-    }, [operation, user])
+    }, [formOperation])
+
+    useEffect(() => {
+        if (isNotEmpty(config?.operation)) {
+            setFormOperation(config.operation)
+        } else {
+            setFormOperation(operation)
+        }
+    }, [operation, config])
 
     const submitHandler = (values) => {
-        console.log(operation, values)
-        values.roles = values.roles.map((item) => {
-            return item.value;
-        });
-        if (operation === "update_user" || operation === "update_user_profile") {
-                values.user_id = userData.id;
-                values.id = userData.id;
-                postRequest({
-                endpoint: ApiConfig.endpoints.admin,
-                operation: `user/update`,
-                requestData: values,
-                onSuccess: (responseData) => {
-                    setUserData(responseData.data)
-                    setResponse({
-                        show: true,
-                        variant: "success",
-                        message: responseData.message
-                    })
-                },
-                onError: (error) => {
-                    setResponse({
-                        show: true,
-                        variant: "success",
-                        message: "Error"
-                    })
-                }
-            })
-        } else if (operation === "new_user") {
-            postRequest({
-                endpoint: ApiConfig.endpoints.admin,
-                operation: "user/create",
-                requestData: values,
-                onSuccess: (responseData) => {
-                    // setOperation("update")
-                    setUserData(responseData.data)
-                    setResponse({
-                        show: true,
-                        variant: "success",
-                        message: responseData.message
-                    })
-                },
-                onError: (error) => {
-                    setResponse({
-                        show: true,
-                        variant: "danger",
-                        message: "Error"
-                    })
-                }
-            })
-        } else {
-            console.error("Form operation not set")
+        let requestData = {...values};
+        let endpoint;
+        let endpointOperation;
+        switch (formOperation) {
+            case "new_user":
+                endpoint = ApiConfig.endpoints.admin;
+                endpointOperation = "user/create";
+                requestData.roles = values.roles.map(item => item.value);
+                break;
+            case "update_user":
+                endpoint = ApiConfig.endpoints.admin;
+                endpointOperation = "user/update";
+                requestData.user_id = userData.id;
+                requestData.id = userData.id;
+                requestData.roles = values.roles.map(item => item.value);
+                break;
+            case "update_user_profile":
+                endpoint = ApiConfig.endpoints.user;
+                endpointOperation = "update";
+                break;
+            default:
+                console.error("Form operation not set")
+                return;
         }
+        postRequest({
+            endpoint: endpoint,
+            operation: endpointOperation,
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                setUserData(responseData.data)
+                setResponse({
+                    show: true,
+                    variant: "success",
+                    message: responseData.message
+                })
+            },
+            onError: (error) => {
+                console.log(error.response)
+                setResponse({
+                    show: true,
+                    variant: "danger",
+                    message: error?.response?.data?.message || "Error saving user"
+                })
+            }
+        })
     }
 
     return (
         <>
-            {/*{operation === "insert" && showForm  &&*/}
             {response.show &&
             <div className={`alert alert-${response.variant}`} role="alert">
                 {response.message}
@@ -151,11 +150,12 @@ const UserProfileForm = ({operation, user = null}) => {
             }
             <DataForm
                 formType={"single"}
-                data={UserProfileFormData((operation === "update"), userData, roles)}
+                data={UserProfileFormData(formOperation, userData, roles)}
                 submitCallback={submitHandler}
-                submitButtonText={(operation === "update") ? updateButtonLabel : addButtonLabel}
+                submitButtonText={
+                    (formOperation === "update_user" || formOperation === "update_user_profile") ? updateButtonLabel : addButtonLabel
+                }
             />
-            {/*}*/}
         </>
     );
 }

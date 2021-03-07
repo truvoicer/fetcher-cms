@@ -13,7 +13,7 @@ const fetcherApiRequest = axios.create({
 export const getApiUser = async () => {
     const requestData = {
         method: "post",
-        url: apiConfig.endpoints.getApiUser,
+        url: `${apiConfig.endpoints.auth}/token/user`,
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
     return await fetcherApiRequest.request(requestData);

@@ -14,8 +14,6 @@ import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceResponseKeysPageName} from "../../../../services/[service_id]/response-keys";
-import {UserApiTokensPageName} from "../../../../profile/api-tokens";
 
 
 export const SettingsApiTokensPageName = "settings_api_tokens";
@@ -40,6 +38,7 @@ const SettingsUserApiTokens = ({session}) => {
                     {!isObjectEmpty(session[SESSION_USER]) &&
                         <ApiTokensTable
                             userId={session[SESSION_USER].id}
+                            admin
                         />
                     }
                 </Col>

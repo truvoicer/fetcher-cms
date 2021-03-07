@@ -13,7 +13,7 @@ export const Routes =
             sidebar: true
         },
         {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "Api Services",
             label: "Categories",
             name: "categories",
@@ -23,7 +23,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Categories",
                     name: "manage_categories",
                     route: "/admin/categories",
@@ -34,7 +34,7 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Scrapers",
             name: "scrapers",
             route: "/admin/scrapers2",
@@ -43,7 +43,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Scrapers",
                     name: "manage_scrapers",
                     route: "/admin/scrapers",
@@ -54,7 +54,7 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Providers",
             name: "provider",
             route: "/admin/providers",
@@ -63,7 +63,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Providers",
                     name: "manage_providers",
                     route: "/admin/providers",
@@ -72,7 +72,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Properties",
                     name: "provider_properties",
                     route: "/admin/providers/properties",
@@ -81,7 +81,7 @@ export const Routes =
                     sidebar: false
                 },
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Service Requests",
                     name: "service_requests",
                     route: "/admin/providers/%(provider.id)d/requests",
@@ -90,7 +90,7 @@ export const Routes =
                     sidebar: false,
                     subs : [
                         {
-                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Request Parameters",
                             name: "requests_parameters",
                             route: "/admin/providers/%(provider.id)d/requests/%(service_requests.id)d/parameters",
@@ -99,7 +99,7 @@ export const Routes =
                             sidebar: false,
                         },
                         {
-                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Request Config",
                             name: "requests_config",
                             route: "/admin/providers/%(provider.id)d/requests/%(service_requests.id)d/config",
@@ -108,7 +108,7 @@ export const Routes =
                             sidebar: false,
                         },
                         {
-                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Response Keys",
                             name: "requests_response_keys",
                             route: "/admin/providers/%(provider.id)d/requests/%(service_requests.id)d/response-keys",
@@ -117,7 +117,7 @@ export const Routes =
                             sidebar: false,
                         },
                         {
-                            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                             label: "Request Test",
                             name: "request_test",
                             route: "/admin/providers/%(provider.id)d/requests/%(service_requests.id)d/request-test",
@@ -150,7 +150,7 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Services",
             name: "services",
             route: "/admin/services",
@@ -159,7 +159,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Services",
                     name: "manage_services",
                     route: "/admin/services",
@@ -168,7 +168,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Response Keys",
                     name: "response_keys",
                     route: "/admin/services/%(services.id)d/response-keys",
@@ -179,7 +179,7 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             label: "Tools",
             name: "tools",
             route: "/admin/tools",
@@ -188,7 +188,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "FileSystem",
                     name: "filesystem",
                     route: "/admin/tools/filesystem",
@@ -197,7 +197,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Importer",
                     name: "importer",
                     route: "/admin/tools/importer",
@@ -206,7 +206,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Exporter",
                     name: "exporter",
                     route: "/admin/tools/exporter",
@@ -217,7 +217,7 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "User Admin",
             label: "User Admin",
             name: "user_admin",
@@ -227,7 +227,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Profile",
                     name: "user_profile",
                     route: "/admin/profile/manage",
@@ -236,7 +236,7 @@ export const Routes =
                     sidebar: true
                 },
                 {
-                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Api Tokens",
                     name: "api_tokens",
                     route: "/admin/profile/api-tokens",
@@ -247,7 +247,7 @@ export const Routes =
             ]
         },
         {
-            access_control: ["ROLE_SUPER_ADMIN"],
+            access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
             heading: "Site Settings",
             label: "Admin",
             name: "settings",
@@ -257,7 +257,7 @@ export const Routes =
             sidebar: true,
             subs: [
                 {
-                    access_control: ["ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "Manage Users",
                     name: "manage_users",
                     route: "/admin/settings/users/manage",
@@ -284,7 +284,7 @@ export const Routes =
                     sidebar: false
                 },
                 {
-                    access_control: ["ROLE_SUPER_ADMIN"],
+                    access_control: ["ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
                     label: "User Entity Permissions",
                     name: "settings_user_permissions",
                     route: "/admin/settings/users/%(user.id)d/permissions",

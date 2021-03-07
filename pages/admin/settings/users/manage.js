@@ -3,7 +3,6 @@ import ApiConfig from "../../../../config/api-config";
 import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
 import React, {useEffect} from "react";
-import UserForm from "../../../../views/components/Forms/UserForm";
 import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../../library/session/authenticate";
 import {Routes} from "../../../../config/routes";
@@ -11,6 +10,7 @@ import {SettingsApiTokensPageName} from "./[user_id]/api-tokens";
 import UserEntitiesPermissionsForm from "../../../../views/components/Forms/Admin/UserEntitiesPermissionsForm";
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
 import {SettingsUserPermissionsPageName} from "./[user_id]/permissions";
+import UserProfileForm from "../../../../views/components/Forms/User/UserProfileForm";
 
 export const ManageUsersPageName = "manage_users";
 const ManageUsers = (props) => {
@@ -133,10 +133,16 @@ const ManageUsers = (props) => {
     const getModalConfig = () => {
         return {
             default: {
-                modalForm: UserForm
+                modalForm: UserProfileForm,
+                config: {
+                    operation: "new_user"
+                }
             },
             user: {
-                modalForm: UserForm
+                modalForm: UserProfileForm,
+                config: {
+                    operation: "update_user"
+                }
             },
             delete: {
                 modalForm: DeleteForm
