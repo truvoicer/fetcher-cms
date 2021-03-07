@@ -41,7 +41,7 @@ const ProviderPropertiesTable = (props) => {
                     field: "property_value",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "provider/property",
+                        endpoint: `provider/${props.provider_id}/property`,
                         extraData: {
                             provider_id: props.provider_id,
                             property_id: {
@@ -75,7 +75,7 @@ const ProviderPropertiesTable = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Property",
-                    endpoint: "provider/property",
+                    endpoint: `provider/${props.provider_id}/property`,
                     modalFormName: "delete"
                 },
                 size: "sm",

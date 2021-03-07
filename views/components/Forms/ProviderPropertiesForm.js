@@ -28,11 +28,12 @@ const ProviderPropertiesForm = (props) => {
     }, [props.data.itemId, props.data.action])
 
     const submitHandler = (values) => {
+        let requestData = {...values};
+        requestData.provider_id = props.config.provider_id;
         if (props.data.action === "update") {
-            values.provider_id = props.config.provider_id;
-            values.property_id = providerProperty.property_id;
+            requestData.property_id = providerProperty.property_id;
         }
-        responseHandler(sendData(props.data.action, "provider/property", values), props.formResponse);
+        responseHandler(sendData(props.data.action, `provider/${requestData.provider_id}/property`, requestData), props.formResponse);
     }
 
     return (

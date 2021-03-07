@@ -151,7 +151,7 @@ const DataList = ({
         }
         responseHandler(
             sendData(action,
-                config.fieldConfig.endpoint,
+                `${config.fieldConfig.endpoint}/${row.id}`,
                 row), (!formResponse) ? formResponse : formResponse);
     }
 

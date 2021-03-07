@@ -20,7 +20,6 @@ export default
         "providerList": "/providers",
         "providerProperty": "/provider/%d/property/%d",
         "providerPropertyList": "/provider/%d/properties",
-        "providerPropertyRelation": "/provider/property/relation/%d",
         "property": "/property/%d",
         "propertyList": "/properties",
         "category": "/category/%d",

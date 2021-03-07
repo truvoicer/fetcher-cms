@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {sendData, fetchData, responseHandler} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchData, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -53,17 +53,17 @@ const ProviderForm = (props) => {
     }
 
     const submitHandler = (values) => {
+        let requestData = {...values};
         if (props.data.action === "update") {
-            values.id = props.data.itemId;
+            requestData.id = props.data.itemId;
         }
 
-        const category = values.category.map((item) => {
+        requestData.category = requestData.category.map((item) => {
             return {
                 id: item.value
             }
-        })
-        values.category = category;
-        responseHandler(sendData(props.data.action, "provider", values), props.formResponse);
+        });
+        responseHandler(sendData(props.data.action, `provider/${props.data.itemId}`, requestData), props.formResponse);
     }
 
     return (
