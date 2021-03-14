@@ -22,7 +22,11 @@ const MergeResponseKeysForm = (props) => {
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.serviceRequestList), {provider_id: props.config.provider_id}).then((response) => {
+        fetchData(
+            sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id, props.config.service_request_id),
+            {
+                provider_id: props.config.provider_id
+            }).then((response) => {
             setServiceRequestSelectOptions({
                 source_service_request: getServicesRequestsSelect(response.data.data)
             })

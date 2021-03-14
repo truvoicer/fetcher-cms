@@ -3,14 +3,12 @@ import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ProviderPropertiesTable from "../../../../../views/components/Tables/ProviderPropertiesTable";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../library/redux/actions/breadcrumbs-actions";
-
-const sprintf = require("sprintf-js").sprintf;
 
 const ProviderProperties = (props) => {
     ProviderProperties.PageName = "provider_properties";
@@ -21,21 +19,21 @@ const ProviderProperties = (props) => {
 
     useEffect(() => {
         if (isSet(props.provider_id)) {
-            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id))
-            .then((response) => {
-                setProvider(response.data.data)
-                setShowTable(true)
-                setBreadcrumbsPageNameAction(ProviderProperties.PageName)
-                setBreadcrumbsDataAction({
-                    provider_properties: {
-                        id: response.data.data.id,
-                        name: response.data.data.provider_name
-                    }
-                })
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.provider,
+                operation: `${props.provider_id}`,
+                onSuccess: (responseData) => {
+                    setProvider(responseData.data)
+                    setShowTable(true)
+                    setBreadcrumbsPageNameAction(ProviderProperties.PageName)
+                    setBreadcrumbsDataAction({
+                        provider_properties: {
+                            id: responseData.data.id,
+                            name: responseData.data.provider_name
+                        }
+                    })
+                }
             })
-                .catch((error) => {
-                    console.error(error)
-                })
         }
     }, [props.provider_id]);
 

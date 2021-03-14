@@ -20,7 +20,7 @@ const ProviderRequestsTable = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.serviceRequestList, props.provider_id),
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id) + "/list",
             defaultColumnName: "service_request_name",
             defaultColumnLabel: "service_request_label",
             query: {

@@ -42,11 +42,13 @@ const ServiceRequestTest = (props) => {
                     return {...provider, ...response.data.data}
                 })
             })
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.service_request_id)).then((response) => {
-                setServiceRequest(serviceRequest => {
-                    return {...serviceRequest, ...response.data.data}
+            fetchData(
+                sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id, props.service_request_id))
+                .then((response) => {
+                    setServiceRequest(serviceRequest => {
+                        return {...serviceRequest, ...response.data.data}
+                    })
                 })
-            })
         }
     }, [props.provider_id, props.service_request_id]);
 

@@ -38,7 +38,7 @@ const ServiceRequestForm = (props) => {
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.data.itemId)).then((response) => {
+            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id, props.data.itemId)).then((response) => {
                 setServiceRequest(response.data.data);
                 setServicesData({
                     services: {

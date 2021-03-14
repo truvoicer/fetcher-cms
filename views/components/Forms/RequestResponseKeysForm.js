@@ -50,7 +50,11 @@ const RequestResponseKeysForm = (props) => {
     });
     const [showForm, setShowForm] = useState(false);
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.serviceRequestList), {provider_id: props.config.provider_id}).then((response) => {
+        fetchData(
+            sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id) + "/list",
+            {
+                provider_id: props.config.provider_id
+            }).then((response) => {
             setServiceRequestSelectOptions({
                 response_key_request_item: getServicesRequestsSelect(response.data.data)
             })

@@ -54,12 +54,14 @@ const ServiceRequestResponseKeys = (props) => {
                     data: response.data.data
                 })
             })
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.service_request_id)).then((response) => {
-                setServiceRequest({
-                    received: true,
-                    data: response.data.data
+            fetchData(
+                sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id, props.service_request_id))
+                .then((response) => {
+                    setServiceRequest({
+                        received: true,
+                        data: response.data.data
+                    })
                 })
-            })
         }
     }, [props.provider_id, props.service_request_id]);
 

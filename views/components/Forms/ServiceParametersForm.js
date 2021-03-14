@@ -1,5 +1,11 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {
+    fetchData,
+    fetchRequest,
+    postRequest,
+    responseHandler,
+    sendData
+} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -35,20 +41,46 @@ const ServiceParametersForm = (props) => {
     });
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequestParameter, props.data.itemId)).then((response) => {
-                setServiceRequestParameter(response.data.data);
-                setShowForm(true);
+            fetchRequest({
+                endpoint: sprintf(
+                    `${ApiConfig.endpoints.serviceRequestParameter}/%d`,
+                    props.config.provider_id, props.config.service_request_id, props.data.itemId
+                ),
+                onSuccess: (data) => {
+                    setServiceRequestParameter(data.data);
+                    setShowForm(true);
+                },
+                onError: (error) => {
+                    if (error.response) {
+                        props.formResponse(error.response.status, error.response.data.message);
+                    }
+                }
             })
-
         }
     }, [props.data.itemId, props.data.action])
 
+
     const submitHandler = (values) => {
+        let endpoint = sprintf(ApiConfig.endpoints.serviceRequestParameter, props.config.provider_id, props.config.service_request_id);
+        let requestData = {...values};
         if (props.data.action === "update") {
-            values.id = props.data.itemId;
+            requestData.id = props.data.itemId;
+            endpoint = `${endpoint}/${props.data.itemId}`
         }
-        values.service_request_id = props.config.service_request_id;
-        responseHandler(sendData(props.data.action, "service/request/parameter", values),  props.formResponse);
+        requestData.service_request_id = props.config.service_request_id;
+        postRequest({
+            endpoint: endpoint,
+            operation: props.data.action,
+            requestData: requestData,
+            onSuccess: (data) => {
+                props.formResponse(200, data.message, data);
+            },
+            onError: (error) => {
+                if (error.response) {
+                    props.formResponse(error.response.status, error.response.data.message);
+                }
+            }
+        })
     }
 
     return (

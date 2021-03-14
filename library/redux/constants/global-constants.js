@@ -1,0 +1,11 @@
+export const GLOBAL_STATE_KEY = "global";
+export const GLOBAL_TOAST = "global_toast";
+export const GLOBAL_TOAST_SHOW = "global_toast_show";
+export const GLOBAL_TOAST_TIMEOUT = "global_toast_timeout";
+export const GLOBAL_TOAST_TITLE = "global_toast_title";
+export const GLOBAL_TOAST_TEXT = "global_toast_text";
+export const GLOBAL_ALERT = "global_alert";
+export const GLOBAL_ALERT_SHOW = "global_alert_show";
+export const GLOBAL_ALERT_TIMEOUT = "global_alert_timeout";
+export const GLOBAL_ALERT_VARIANT = "global_alert_variant";
+export const GLOBAL_ALERT_TEXT = "global_alert_text";

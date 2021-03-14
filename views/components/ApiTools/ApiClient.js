@@ -1,4 +1,3 @@
-import SidebarLayout from "../../layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -14,8 +13,8 @@ import ApiConfig from "../../../config/api-config";
 const sprintf = require("sprintf-js").sprintf;
 
 const ApiClient = (props) => {
-    const [provider, setProvider] = useState(isSet(props.provider)? props.provider : {});
-    const [serviceRequest, setServiceRequest] = useState(isSet(props.serviceRequest)? props.serviceRequest : {});
+    const [provider, setProvider] = useState(isSet(props.provider) ? props.provider : {});
+    const [serviceRequest, setServiceRequest] = useState(isSet(props.serviceRequest) ? props.serviceRequest : {});
 
     const [requestTypeOptions, setRequestTypeOptions] = useState([]);
     const [queryParameterData, setQueryParameterData] = useState([]);
@@ -53,12 +52,14 @@ const ApiClient = (props) => {
                 })
                 setRequestTypeOptions(getRequestTypeOptions(response.data.data.service_requests))
             })
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.service_request_id)).then((response) => {
-                setServiceRequest({
-                    received: true,
-                    data: response.data.data
+            fetchData(
+                sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id, props.service_request_id))
+                .then((response) => {
+                    setServiceRequest({
+                        received: true,
+                        data: response.data.data
+                    })
                 })
-            })
         }
     }, [props.provider_id, props.service_request_id, props.provider, props.serviceRequest]);
 
@@ -78,7 +79,7 @@ const ApiClient = (props) => {
 
     const parametersFetchRequest = (serviceRequestId) => {
         fetchRequest({
-            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, serviceRequestId),
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, provider.id, serviceRequestId),
             operation: `parameters`,
             onSuccess: (responseData) => {
                 if (responseData.status === "success" && Array.isArray(responseData?.data?.service_request_parameters)) {
@@ -140,53 +141,53 @@ const ApiClient = (props) => {
     return (
         <>
             {!isObjectEmpty(serviceRequest) && !isObjectEmpty(provider) &&
-                <>
-                    <Col sm={12} md={12} lg={12}>
-                        <Card>
-                            <Card.Header>Request Test</Card.Header>
-                            <Card.Body>
-                                <Form onSubmit={submitHandler}>
-                                    <Row>
-                                        <Col sm={12} md={3} lg={3}>
-                                            <Form.Group controlId="formRequestType">
-                                                <Form.Label>Request Type</Form.Label>
-                                                <Select
-                                                    value={requestType}
-                                                    options={requestTypeOptions}
-                                                    onChange={selectChangeHandler}
-                                                />
-                                            </Form.Group>
-                                            <Form.Group controlId="formRequestType"
-                                                        className={"text-right"}>
-                                                <Button variant="primary" type="submit">
-                                                    Submit
-                                                </Button>
-                                            </Form.Group>
-                                        </Col>
-                                        <Col sm={12} md={9} lg={9}>
-                                            <Form.Group controlId="formRequestType">
-                                                <FormList callback={formListCallback}
-                                                          listItemKeyLabel={"Parameter name"}
-                                                          listItemValueLabel={"Parameter value"}
-                                                          addRowLabel={"Add Parameter"}
-                                                          data={formListData}
-                                                />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
-                                </Form>
+            <>
+                <Col sm={12} md={12} lg={12}>
+                    <Card>
+                        <Card.Header>Request Test</Card.Header>
+                        <Card.Body>
+                            <Form onSubmit={submitHandler}>
                                 <Row>
-                                    <Col sm={12} md={12} lg={12}>
+                                    <Col sm={12} md={3} lg={3}>
+                                        <Form.Group controlId="formRequestType">
+                                            <Form.Label>Request Type</Form.Label>
+                                            <Select
+                                                value={requestType}
+                                                options={requestTypeOptions}
+                                                onChange={selectChangeHandler}
+                                            />
+                                        </Form.Group>
+                                        <Form.Group controlId="formRequestType"
+                                                    className={"text-right"}>
+                                            <Button variant="primary" type="submit">
+                                                Submit
+                                            </Button>
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm={12} md={9} lg={9}>
+                                        <Form.Group controlId="formRequestType">
+                                            <FormList callback={formListCallback}
+                                                      listItemKeyLabel={"Parameter name"}
+                                                      listItemValueLabel={"Parameter value"}
+                                                      addRowLabel={"Add Parameter"}
+                                                      data={formListData}
+                                            />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                            </Form>
+                            <Row>
+                                <Col sm={12} md={12} lg={12}>
                                             <textarea className={"request-results"}
                                                       value={request.resultString}
                                                       readOnly={true}>
                                             </textarea>
-                                    </Col>
-                                </Row>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </>
             }
         </>
     )

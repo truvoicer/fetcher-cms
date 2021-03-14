@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
-import {formatDate, isObjectEmpty, isSet} from "../../../../../../library/utils";
+import {formatDate, isNotEmpty, isObjectEmpty, isSet} from "../../../../../../library/utils";
 import {
     SESSION_AUTHENTICATED,
     SESSION_AUTHENTICATING,
@@ -16,8 +16,7 @@ import {
 import UserEntitiesTable from "../../../../../../views/components/Tables/UserEntitiesTable";
 
 export const SettingsUserPermissionsPageName = "settings_user_permissions";
-const SettingsUserPermissions = ({session}) => {
-
+const SettingsUserPermissions = ({session, userId}) => {
     useEffect(() => {
         if (!session[SESSION_AUTHENTICATING] && session[SESSION_AUTHENTICATED] && !isObjectEmpty(session[SESSION_USER])) {
             setBreadcrumbsPageNameAction(SettingsUserPermissionsPageName)
@@ -34,9 +33,9 @@ const SettingsUserPermissions = ({session}) => {
         <SidebarLayout pageName={SettingsUserPermissionsPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
-                    {!isObjectEmpty(session[SESSION_USER]) &&
+                    {isNotEmpty(userId) &&
                         <UserEntitiesTable
-                            userId={session[SESSION_USER].id}
+                            userId={userId}
                         />
                     }
                 </Col>

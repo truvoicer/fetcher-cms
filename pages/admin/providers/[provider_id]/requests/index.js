@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../../config/api-config";
 import {getRouteItem} from "../../../../../library/session/authenticate";
 import {Routes} from "../../../../../config/routes";
@@ -35,9 +35,13 @@ const ProviderRequests = (props) => {
     }, [provider]);
     useEffect(() => {
         if (isSet(props.provider_id)) {
-            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
-                setProvider(response.data.data)
-                setShowTable(true)
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.provider,
+                operation: `${props.provider_id}`,
+                onSuccess: (responseData) => {
+                    setProvider(responseData.data)
+                    setShowTable(true)
+                }
             })
         }
     }, [props.provider_id])

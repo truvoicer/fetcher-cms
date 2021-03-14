@@ -48,19 +48,21 @@ const ServiceRequestParameters = (props) => {
                     data: response.data.data
                 })
             })
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.service_request_id)).then((response) => {
-                setServiceRequest({
-                    received: true,
-                    data: response.data.data
+            fetchData(
+                sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id, props.service_request_id))
+                .then((response) => {
+                    setServiceRequest({
+                        received: true,
+                        data: response.data.data
+                    })
                 })
-            })
         }
     }, [props.provider_id, props.service_request_id]);
 
     const getTableData = () => {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.serviceRequestParameterList,
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameterList, provider.data.id, serviceRequest.data.id) + "/list",
             defaultColumnName: "parameter_name",
             defaultColumnLabel: "parameter_value",
             query: {
@@ -84,9 +86,10 @@ const ServiceRequestParameters = (props) => {
                     field: "parameter_name",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "service/request/parameter",
+                        endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameter, provider.data.id, serviceRequest.data.id),
                         extraData: {
                             service_request_id: serviceRequest.data.id,
+                            provider_id: provider.data.id,
                         }
                     }
                 },
@@ -101,9 +104,10 @@ const ServiceRequestParameters = (props) => {
                     field: "parameter_value",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "service/request/parameter",
+                        endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameter, provider.data.id, serviceRequest.data.id),
                         extraData: {
                             service_request_id: serviceRequest.data.id,
+                            provider_id: provider.data.id,
                         }
                     }
                 },
@@ -132,7 +136,7 @@ const ServiceRequestParameters = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Parameter",
-                    endpoint: "service/request/parameter",
+                    endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameter, provider.data.id, serviceRequest.data.id),
                     modalFormName: "delete"
                 },
                 size: "md",
@@ -146,13 +150,15 @@ const ServiceRequestParameters = (props) => {
             default: {
                 modalForm: ServiceParametersForm,
                 config: {
-                    service_request_id: serviceRequest.data.id
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
                 }
             },
             requestParams: {
                 modalForm: ServiceParametersForm,
                 config: {
-                    service_request_id: serviceRequest.data.id
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
                 }
             },
             delete: {

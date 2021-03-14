@@ -8,8 +8,14 @@ import {
     setSessionAuthenticatingAction,
     setSessionUserAction
 } from "../../library/redux/actions/session-actions";
+import {
+    SESSION_AUTHENTICATED,
+    SESSION_AUTHENTICATING,
+    SESSION_STATE_KEY
+} from "../../library/redux/constants/session-constants";
+import {connect} from "react-redux";
 
-const ProtectedLayout = ({children, pageName}) => {
+const ProtectedLayout = ({children, pageName, session}) => {
     const router = useRouter();
     useEffect(() => {
         getApiUser()
@@ -32,9 +38,23 @@ const ProtectedLayout = ({children, pageName}) => {
 
     return (
         <>
-            {children}
+            {!session[SESSION_AUTHENTICATING] && session[SESSION_AUTHENTICATED]
+                ?
+                <>{children}</>
+                :
+                <>Loading...</>
+            }
         </>
     );
 };
 
-export default ProtectedLayout;
+function mapStateToProps(state) {
+    return {
+        session: state[SESSION_STATE_KEY]
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(ProtectedLayout);
