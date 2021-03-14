@@ -1,7 +1,7 @@
 import DataTable from 'react-data-table-component';
 import Button from "react-bootstrap/Button";
 import React, {useEffect, useState} from "react";
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import {isNotEmpty, isSet} from "../../../library/utils";
@@ -15,6 +15,11 @@ import Dropdown from "react-bootstrap/Dropdown";
 import SettingsDropdown from "../Dropdowns/SettingsDropdown";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import ApiConfig from "../../../config/api-config";
+import {
+    setBreadcrumbsDataAction,
+    setBreadcrumbsPageNameAction
+} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const DataList = ({
                       tableSettingsDropdown,
@@ -44,8 +49,21 @@ const DataList = ({
     const [rowData, setRowData] = useState({});
 
     const setTableData = () => {
-        responseHandler(fetchData(tableData.endpoint, tableData.query),
-            getTableDataResponseHandler);
+        fetchRequest({
+            endpoint: tableData.endpoint,
+            operation: `${props.provider_id}`,
+            data: tableData.query,
+            onSuccess: (responseData) => {
+                setData(responseData.data)
+            },
+            onError: (error) => {
+                setAlert({
+                    showAlert: true,
+                    alertStatus: "danger",
+                    responseMessage: error?.response?.data?.message || error?.response?.message || "Error"
+                });
+            }
+        })
     }
     useEffect(() => {
         setTableData();
@@ -70,18 +88,6 @@ const DataList = ({
                 </Dropdown.Menu>
             </Dropdown>
         )
-    }
-
-    const getTableDataResponseHandler = (status, message, data = null) => {
-        if (status === 200) {
-            setData(data.data)
-        } else {
-            setAlert({
-                showAlert: true,
-                alertStatus: "danger",
-                responseMessage: message
-            });
-        }
     }
 
     const getTableColumns = (columns, dropdownControls = [], inlineControls = []) => {

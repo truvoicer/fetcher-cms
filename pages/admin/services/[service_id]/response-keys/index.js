@@ -5,7 +5,7 @@ import DataList from "../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ServiceResponseKeysForm from "../../../../../views/components/Forms/ServiceResponseKeysForm";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,
@@ -34,9 +34,13 @@ const ServiceResponseKeys = (props) => {
     }, [service]);
     useEffect(() => {
         if (isSet(props.service_id)) {
-            fetchData(sprintf(ApiConfig.endpoints.service, props.service_id)).then((response) => {
-                setService(response.data.data);
-                setShowTable(true);
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.service,
+                operation: `${props.service_id}`,
+                onSuccess: (responseData) => {
+                    setService(responseData.data);
+                    setShowTable(true);
+                }
             })
         }
     }, [props.service_id]);

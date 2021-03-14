@@ -5,7 +5,7 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchData, fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import Row from "react-bootstrap/Row";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import Card from "react-bootstrap/Card";
@@ -48,20 +48,26 @@ const ServiceRequestResponseKeys = (props) => {
 
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
-                setProvider({
-                    received: true,
-                    data: response.data.data
-                })
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.provider,
+                operation: `${props.provider_id}`,
+                onSuccess: (responseData) => {
+                    setProvider({
+                        received: true,
+                        data: responseData.data
+                    })
+                }
             })
-            fetchData(
-                sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id, props.service_request_id))
-                .then((response) => {
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.serviceRequest,
+                operation: `${props.service_request_id}`,
+                onSuccess: (responseData) => {
                     setServiceRequest({
                         received: true,
-                        data: response.data.data
+                        data: responseData.data
                     })
-                })
+                }
+            })
         }
     }, [props.provider_id, props.service_request_id]);
 
