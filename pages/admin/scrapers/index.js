@@ -1,8 +1,8 @@
 import SidebarLayout from '../../../views/layouts/SidebarLayout'
 import ApiConfig from '../../../config/api-config'
-import React, {createRef, useEffect, useRef, useState} from "react";
+import React, {createRef, useEffect, useState} from "react";
 import Select from "react-select";
-import {fetchData, fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isNotEmpty} from "../../../library/utils";
 import Modal from "react-bootstrap/Modal";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -19,15 +19,11 @@ import {
     SCRAPER_API_STATUS, SCRAPER_API_STATUS_OFFLINE,
     SCRAPER_API_STATUS_ONLINE
 } from "../../../library/redux/constants/scraper-constants";
-import {event} from "next/dist/build/output/log";
 import ScraperSendJob from "../../../views/components/Views/ScraperSendJob";
 import Button from "react-bootstrap/Button";
 import {
-    setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceRequestResponseKeysPageName} from "../providers/[provider_id]/requests/[service_request_id]/response-keys";
-import {UserProfilePageName} from "../profile/manage";
 
 
 const ManageScrapers = ({scraperApi}) => {

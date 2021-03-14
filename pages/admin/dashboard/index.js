@@ -17,14 +17,14 @@ const Dashboard = (props) => {
                         <InfoCard
                             header={"Active Providers"}
                             classes={"bg-gradient-primary"}
-                            endpoint={ApiConfig.endpoints.providerList}
+                            endpoint={`${ApiConfig.endpoints.provider}/list`}
                         />
                     </div>
                     <div className="col-sm-6 col-lg-3">
                         <InfoCard
                             header={"Active Categories"}
                             classes={"bg-gradient-danger"}
-                            endpoint={ApiConfig.endpoints.categoryList}
+                            endpoint={`${ApiConfig.endpoints.category}/list`}
                         />
                     </div>
                 </div>

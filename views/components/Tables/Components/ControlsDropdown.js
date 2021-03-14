@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
 import ControlsDropdownItem from "./ControlsDropdownItem";
 

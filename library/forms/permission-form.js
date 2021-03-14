@@ -1,4 +1,4 @@
-import {isNotEmpty, isSet, uCaseFirst} from "../utils";
+import {isNotEmpty} from "../utils";
 
 export const PermissionFormData = (
     update = false,

@@ -1,7 +1,6 @@
 import SidebarLayout from '../../../views/layouts/SidebarLayout'
 import React, {useEffect} from "react";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
-import {UserProfilePageName} from "../profile/manage";
 
 export const ToolsPagePageName = "tools";
 const Tools = (props) => {

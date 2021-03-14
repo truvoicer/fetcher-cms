@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchData, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchRequest, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -38,10 +38,14 @@ const UserForm = (props) => {
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.getUser, props.data.itemId)).then((response) => {
-                setUser(response.data.data);
-                setSelectData({roles: getRoles(response.data.data.roles)});
-                setShowForm(true);
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.admin,
+                operation: `user/${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    setUser(responseData.data);
+                    setSelectData({roles: getRoles(responseData.data.roles)});
+                    setShowForm(true);
+                }
             })
         }
     }, [props.data.itemId, props.data.action])

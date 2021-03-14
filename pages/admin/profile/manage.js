@@ -10,7 +10,6 @@ import {connect} from "react-redux";
 import {SESSION_STATE_KEY, SESSION_USER} from "../../../library/redux/constants/session-constants";
 import UserProfileForm from "../../../views/components/Forms/User/UserProfileForm";
 import Modal from "react-bootstrap/Modal";
-import ScraperSettings from "../../../views/components/Views/ScraperSettings";
 import ApiTokensTable from "../../../views/components/Tables/ApiTokensTable";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 

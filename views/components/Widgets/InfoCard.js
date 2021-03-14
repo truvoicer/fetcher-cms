@@ -1,15 +1,17 @@
 import React, {useEffect, useState} from "react";
-import {fetchData, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 
 const InfoCard = (props) => {
 
     const [listData, setListData] = useState([]);
 
     useEffect(() => {
-        responseHandler(
-            fetchData(props.endpoint),
-            getDataResponseHandler
-        );
+        fetchRequest({
+            endpoint: props.endpoint,
+            onSuccess: (responseData) => {
+                getDataResponseHandler(200, responseData.message, responseData)
+            }
+        })
     }, [props.endpoint])
 
     const getDataResponseHandler = (status, message, data = null) => {

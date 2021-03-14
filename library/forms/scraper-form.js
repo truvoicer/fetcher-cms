@@ -1,4 +1,4 @@
-import {isNotEmpty, isSet, uCaseFirst} from "../utils";
+import {isNotEmpty, isSet} from "../utils";
 
 export const ScraperFormData = (
     update = false,

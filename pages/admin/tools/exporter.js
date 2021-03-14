@@ -4,11 +4,10 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import {Alert} from "react-bootstrap";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
-import {UserProfilePageName} from "../profile/manage";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -30,65 +29,81 @@ const ExporterPage = (props) => {
     });
 
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.serviceList)).then((response) => {
-            setExportFormList(exportFormList => {
-                let cloneList = [...exportFormList];
-                cloneList.push({
-                    show: false,
-                    id: "id",
-                    name: "services",
-                    label: "Services",
-                    nameField: "service_name",
-                    labelField: "service_label",
-                    data: response.data.data
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.service,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setExportFormList(exportFormList => {
+                    let cloneList = [...exportFormList];
+                    cloneList.push({
+                        show: false,
+                        id: "id",
+                        name: "services",
+                        label: "Services",
+                        nameField: "service_name",
+                        labelField: "service_label",
+                        data: responseData.data
+                    })
+                    return cloneList;
                 })
-                return cloneList;
-            })
+            }
         })
-        fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
-            setExportFormList(exportFormList => {
-                let cloneList = [...exportFormList];
-                cloneList.push({
-                    show: false,
-                    id: "id",
-                    name: "categories",
-                    label: "Categories",
-                    nameField: "category_name",
-                    labelField: "category_label",
-                    data: response.data.data
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.category,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setExportFormList(exportFormList => {
+                    let cloneList = [...exportFormList];
+                    cloneList.push({
+                        show: false,
+                        id: "id",
+                        name: "categories",
+                        label: "Categories",
+                        nameField: "category_name",
+                        labelField: "category_label",
+                        data: responseData.data
+                    })
+                    return cloneList;
                 })
-                return cloneList;
-            })
+            }
         })
-        fetchData(sprintf(ApiConfig.endpoints.providerList)).then((response) => {
-            setExportFormList(exportFormList => {
-                let cloneList = [...exportFormList];
-                cloneList.push({
-                    show: false,
-                    id: "id",
-                    name: "providers",
-                    label: "Providers",
-                    nameField: "provider_name",
-                    labelField: "provider_label",
-                    data: response.data.data
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.provider,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setExportFormList(exportFormList => {
+                    let cloneList = [...exportFormList];
+                    cloneList.push({
+                        show: false,
+                        id: "id",
+                        name: "providers",
+                        label: "Providers",
+                        nameField: "provider_name",
+                        labelField: "provider_label",
+                        data: responseData.data
+                    })
+                    return cloneList;
                 })
-                return cloneList;
-            })
+            }
         })
-        fetchData(sprintf(ApiConfig.endpoints.propertyList)).then((response) => {
-            setExportFormList(exportFormList => {
-                let cloneList = [...exportFormList];
-                cloneList.push({
-                    show: false,
-                    id: "id",
-                    name: "properties",
-                    label: "Properties",
-                    nameField: "property_name",
-                    labelField: "property_label",
-                    data: response.data.data
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.property,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setExportFormList(exportFormList => {
+                    let cloneList = [...exportFormList];
+                    cloneList.push({
+                        show: false,
+                        id: "id",
+                        name: "properties",
+                        label: "Properties",
+                        nameField: "property_name",
+                        labelField: "property_label",
+                        data: responseData.data
+                    })
+                    return cloneList;
                 })
-                return cloneList;
-            })
+            }
         })
     }, []);
 

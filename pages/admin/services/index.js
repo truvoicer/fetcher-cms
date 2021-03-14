@@ -7,7 +7,7 @@ import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
-import ServiceResponseKeys, {ServiceResponseKeysPageName} from "./[service_id]/response-keys";
+import {ServiceResponseKeysPageName} from "./[service_id]/response-keys";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const ManageServices = (props) => {

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {formatDate, isSet} from "../../../library/utils";
-import {fetchData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {isSet} from "../../../library/utils";
+import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import DataList from "./DataList";
 import UserEntityPermissionsTable from "./UserEntityPermissionsTable";
@@ -12,10 +12,14 @@ const UserEntitiesTable = ({userId}) => {
 
     useEffect(() => {
         if (isSet(userId)) {
-            fetchData(sprintf(ApiConfig.endpoints.getUser, userId)).then((response) => {
-                setUser(response.data.data);
-                setShowTable(true);
-            });
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.admin,
+                operation: `user/${userId}`,
+                onSuccess: (responseData) => {
+                    setUser(responseData.data);
+                    setShowTable(true);
+                }
+            })
         }
     }, [userId]);
 

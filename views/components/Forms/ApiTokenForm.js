@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {sendData, fetchData, responseHandler} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {sendData, responseHandler, fetchRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Row from "react-bootstrap/Row";
@@ -19,16 +19,19 @@ const ApiTokenForm = ({data, formResponse, config}) => {
 
     useEffect(() => {
         if (isSet(data.action) && data.action === "update") {
-            fetchData(
-                (config.admin)
+            fetchRequest({
+                endpoint:
+                    (config.admin)
                     ?
-                    `${ApiConfig.endpoints.admin}/user/api-token/${data.itemId}/detail`
+                    `${ApiConfig.endpoints.admin}/user/api-token`
                     :
-                    `${ApiConfig.endpoints.user}/api-token/${data.itemId}/detail`
-            ).then((response) => {
-                setApiToken(response.data.data);
-                setExpiresAt(response.data.data.expires_at);
-                setShowForm(true);
+                    `${ApiConfig.endpoints.user}/api-token`,
+                operation: `${data.itemId}/detail`,
+                onSuccess: (responseData) => {
+                    setApiToken(responseData.data);
+                    setExpiresAt(responseData.data.expires_at);
+                    setShowForm(true);
+                }
             })
         }
     }, [data.itemId, data.action, config.admin])
@@ -42,16 +45,19 @@ const ApiTokenForm = ({data, formResponse, config}) => {
 
     const generateApiToken = (e) => {
         e.preventDefault()
-        responseHandler(
-            fetchData(
+
+        fetchRequest({
+            endpoint:
                 (config.admin)
                     ?
-                    `${ApiConfig.endpoints.admin}/user/${config.userId}/api-token/generate`
+                    `${ApiConfig.endpoints.admin}/user/${config.userId}`
                     :
-                    `${ApiConfig.endpoints.user}/api-token/generate`
-            ),
-            formResponse
-        );
+                    `${ApiConfig.endpoints.user}`,
+            operation: `api-token/generate`,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        });
     }
 
     return (

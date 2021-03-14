@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {isNotEmpty, isObjectEmpty, isSet} from "../../../../library/utils";
-import {fetchData, fetchRequest, postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import {isNotEmpty} from "../../../../library/utils";
+import {fetchRequest, postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../config/api-config";
 import DataForm from "../DataForm/DataForm";
 import {UserEntityPermissionsFormData} from "../../../../library/forms/user-entity-permissions-form";
@@ -19,8 +19,12 @@ const UserEntitiesPermissionsForm = ({data, config, formResponse}) => {
     const updateButtonLabel = "Save";
 
     const entityInit = (entityData) => {
-        fetchData(`/permission/${entityData.entity}/list`).then((response) => {
-            setEntityOptionsData(entityData, response?.data?.data)
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.permission,
+            operation: `${entityData.entity}/list`,
+            onSuccess: (responseData) => {
+                setEntityOptionsData(entityData, responseData?.data)
+            }
         })
     }
 
@@ -42,8 +46,12 @@ const UserEntitiesPermissionsForm = ({data, config, formResponse}) => {
     }
 
     useEffect(() => {
-        fetchData(`${ApiConfig.endpoints.permission}/list`).then((response) => {
-            setPermissionsOptions(getPermissionsSelect(response.data.data))
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.permission,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setPermissionsOptions(getPermissionsSelect(responseData.data))
+            }
         })
     }, [])
 

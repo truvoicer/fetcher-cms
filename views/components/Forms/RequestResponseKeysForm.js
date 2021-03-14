@@ -1,5 +1,5 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet, uCaseFirst} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -50,22 +50,29 @@ const RequestResponseKeysForm = (props) => {
     });
     const [showForm, setShowForm] = useState(false);
     useEffect(() => {
-        fetchData(
-            sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id) + "/list",
-            {
+        fetchRequest({
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id),
+            operation: `list`,
+            data: {
                 provider_id: props.config.provider_id
-            }).then((response) => {
-            setServiceRequestSelectOptions({
-                response_key_request_item: getServicesRequestsSelect(response.data.data)
-            })
+            },
+            onSuccess: (responseData) => {
+                setServiceRequestSelectOptions({
+                    response_key_request_item: getServicesRequestsSelect(responseData.data)
+                })
+            }
         })
     }, [])
     useEffect(() => {
         if (isSet(props.data.action) && isSet(props.data.data.service_response_key) && props.data.action === "update") {
-            console.log(props.config)
-            fetchData(sprintf(ApiConfig.endpoints.requestResponseKey, props.config.service_request_id, props.data.data.service_response_key.id))
-                .then((response) => {
-                    const data = response.data.data;
+            fetchRequest({
+                endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, props.config.provider_id, props.config.service_request_id),
+                operation: `${props.data.data.service_response_key.id}`,
+                data: {
+                    provider_id: props.config.provider_id
+                },
+                onSuccess: (responseData) => {
+                    const data = responseData.data;
                     setRequestResponseKey(data);
                     if (isSet(data.return_data_type)) {
                         const returnDataType = getReturnDataType(data.return_data_type);
@@ -96,8 +103,8 @@ const RequestResponseKeysForm = (props) => {
                         });
                     }
                     setShowForm(true);
-                })
-
+                }
+            })
         }
     }, [props.data.itemId, props.data.action, props.data.data.service_response_key])
 

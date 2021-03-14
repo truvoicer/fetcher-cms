@@ -1,7 +1,7 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import Form from "react-bootstrap/Form";
 import ApiConfig from "../../../config/api-config"
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../library/utils";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
@@ -22,7 +22,13 @@ const SearchComponent = (props) => {
         setQuery(e.target.value)
 
         if (isSet(e.target.value) && e.target.value !== "") {
-            responseHandler(fetchData(sprintf(ApiConfig.endpoints.search, e.target.value), false), searchRequestCallback);
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.search,
+                operation: `${e.target.value}`,
+                onSuccess: (responseData) => {
+                    searchRequestCallback(200, responseData.message, responseData)
+                }
+            })
             return true;
         } else {
             setShowSearchResults(false)
@@ -34,7 +40,13 @@ const SearchComponent = (props) => {
         if (!isSet(query) || query === "") {
             return false;
         }
-        responseHandler(fetchData(sprintf(ApiConfig.endpoints.search, query), false), searchRequestCallback);
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.search,
+            operation: `${query}`,
+            onSuccess: (responseData) => {
+                searchRequestCallback(200, responseData.message, responseData)
+            }
+        })
     }
 
     const searchRequestCallback = (status, message, data = null) => {

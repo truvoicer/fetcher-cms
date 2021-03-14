@@ -4,10 +4,8 @@ import DeleteForm from "../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
-import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
-import {SettingsApiTokensPageName} from "../../settings/users/[user_id]/api-tokens";
-import {UserProfilePageName} from "../../profile/manage";
 
 export const FileSystemPageName = "filesystem";
 
@@ -78,17 +76,13 @@ const FileSystemPage = (props) => {
     }
 
     const downloadCallback = (data, e) => {
-        fetchData(sprintf(ApiConfig.endpoints.fileDownload, data.id))
-            .then(response => {
-                if (response.data.status === "success") {
-                    window.open(response.data.data.url, "_blank")
-                    return true;
-                }
-                console.error(response.data)
-            })
-            .catch(error => {
-                console.error(error)
-            })
+        fetchRequest({
+            endpoint: sprintf(ApiConfig.endpoints.fileDownload, data.id),
+            onSuccess: (responseData) => {
+                window.open(responseData.data.url, "_blank")
+                return true;
+            }
+        })
     }
 
     const getTableDropdownControls = () => {

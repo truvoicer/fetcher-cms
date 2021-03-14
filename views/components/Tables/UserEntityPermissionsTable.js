@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {isNotEmpty, isSet} from "../../../library/utils";
+import {isNotEmpty} from "../../../library/utils";
 import UserEntitiesPermissionsForm from "../Forms/Admin/UserEntitiesPermissionsForm";
 import DataList from "./DataList";
 import DeleteEntityPermissionsForm from "../Forms/Admin/DeleteEntityPermissionsForm";

@@ -16,7 +16,7 @@ const Categories = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.categoryList,
+            endpoint: `${ApiConfig.endpoints.category}/list`,
             defaultColumnName: "category_name",
             defaultColumnLabel: "category_label",
             query: {

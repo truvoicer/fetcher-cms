@@ -1,11 +1,6 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Select from "react-select";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
 import {ServiceRequestFormData} from "../../../library/forms/service-request-form";
@@ -24,39 +19,50 @@ const ServiceRequestForm = (props) => {
     const updateButtonLabel = "Update Service Request";
 
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.serviceList)).then((response) => {
-            setServicesOptions({
-                services: getServicesSelect(response.data.data)
-            })
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.service,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setServicesOptions({
+                    services: getServicesSelect(responseData.data)
+                })
+            }
         })
-        fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
-            setCategoryOptions({
-                category: getCategoriesSelect(response.data.data)
-            })
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.category,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setCategoryOptions({
+                    category: getCategoriesSelect(responseData.data)
+                })
+            }
         })
     }, [])
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id, props.data.itemId)).then((response) => {
-                setServiceRequest(response.data.data);
-                setServicesData({
-                    services: {
-                        value: response?.data?.data?.service?.id,
-                        label: response?.data?.data?.service?.service_label
-                    }
-                })
-                if (isSet(response.data.data.category) && response.data.data.category !== null) {
-                    setCategoryData({
-                        category: {
-                            value: response?.data?.data?.category?.id,
-                            label: response?.data?.data?.category?.category_label
+            fetchRequest({
+                endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id),
+                operation: `${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    setServiceRequest(responseData.data);
+                    setServicesData({
+                        services: {
+                            value: responseData?.data?.service?.id,
+                            label: responseData?.data?.service?.service_label
                         }
                     })
+                    if (isSet(responseData.data.category) && responseData.data.category !== null) {
+                        setCategoryData({
+                            category: {
+                                value: responseData?.data?.category?.id,
+                                label: responseData?.data?.category?.category_label
+                            }
+                        })
+                    }
+                    setShowForm(true);
                 }
-                setShowForm(true);
-            })
-
+            });
         }
     }, [props.data.itemId, props.data.action])
 

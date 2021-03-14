@@ -5,13 +5,12 @@ import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
-import {fetchData, fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceRequestConfigPageName} from "../config";
 
 const sprintf = require("sprintf-js").sprintf
 export const ServiceRequestParametersPageName = "requests_parameters";

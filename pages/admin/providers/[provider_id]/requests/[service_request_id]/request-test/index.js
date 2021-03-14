@@ -1,14 +1,13 @@
 import ApiConfig from "../../../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
-import {fetchData, fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
-import {isNotEmpty, isObjectEmpty, isSet} from "../../../../../../../library/utils";
+import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
+import {isNotEmpty, isSet} from "../../../../../../../library/utils";
 import ApiClient from "../../../../../../../views/components/ApiTools/ApiClient";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceRequestParametersPageName} from "../parameters";
 
 const sprintf = require("sprintf-js").sprintf
 

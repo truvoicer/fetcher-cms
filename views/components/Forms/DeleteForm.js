@@ -1,7 +1,7 @@
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import {sendData, responseHandler, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 
@@ -12,7 +12,7 @@ const DeleteForm = (props) => {
         data.extra = props.config;
         postRequest({
             endpoint: props.data.endpoint,
-            operation: "delete",
+            operation: `${data.item_id}/delete`,
             requestData: data,
             onSuccess: (data) => {
                 props.formResponse(200, data.message, data);

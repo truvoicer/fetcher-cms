@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ProviderPropertiesTable from "../../../../../views/components/Tables/ProviderPropertiesTable";
 import Col from "react-bootstrap/Col";
-import {fetchData, fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,

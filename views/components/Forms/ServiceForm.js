@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {sendData, fetchData, responseHandler} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {sendData, responseHandler, fetchRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -16,9 +16,13 @@ const ServiceForm = (props) => {
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.service, props.data.itemId)).then((response) => {
-                setService(response.data.data);
-                setShowForm(true);
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.service,
+                operation: `${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    setService(responseData.data);
+                    setShowForm(true);
+                }
             })
         }
     }, [props.data.itemId, props.data.action])

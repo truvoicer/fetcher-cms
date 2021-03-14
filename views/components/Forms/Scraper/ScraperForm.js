@@ -1,17 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {
-    fetchData,
     fetchRequest,
-    postRequest,
-    responseHandler,
-    sendData
+    postRequest
 } from "../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../config/api-config";
-import {isNotEmpty, isSet} from "../../../../library/utils";
+import {isNotEmpty} from "../../../../library/utils";
 import DataForm from "../DataForm/DataForm";
-import {ServiceRequestFormData} from "../../../../library/forms/service-request-form";
 import {ScraperFormData} from "../../../../library/forms/scraper-form";
-import {ScraperConfigFormData} from "../../../../library/forms/scraper-config-form";
 
 const ScraperForm = ({provider = null, operationData = null, scraperData = null}) => {
 
@@ -51,11 +46,19 @@ const ScraperForm = ({provider = null, operationData = null, scraperData = null}
     }, [scraperData])
 
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.serviceList)).then((response) => {
-            setServicesOptions(getServicesSelect(response.data.data))
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.service,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setServicesOptions(getServicesSelect(responseData.data))
+            }
         })
-        fetchData(sprintf(ApiConfig.endpoints.providerList)).then((response) => {
-            setProviderOptions(getProvidersSelect(response.data.data))
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.provider,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setProviderOptions(getProvidersSelect(responseData.data))
+            }
         })
     }, [])
 

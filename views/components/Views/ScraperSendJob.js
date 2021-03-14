@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {getScraperConfigByScraperId, getScraperScheduleByScraperId} from "../../../library/api/helpers/scraper-helpers";
 import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";

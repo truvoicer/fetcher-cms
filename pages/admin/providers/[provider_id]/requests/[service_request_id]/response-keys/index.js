@@ -5,7 +5,7 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 import Col from "react-bootstrap/Col";
-import {fetchData, fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import Row from "react-bootstrap/Row";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import Card from "react-bootstrap/Card";
@@ -14,7 +14,6 @@ import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceRequestTestPageName} from "../request-test";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -74,7 +73,7 @@ const ServiceRequestResponseKeys = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.requestResponseKeyList, serviceRequest.data.id),
+            endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, provider.data.id, serviceRequest.data.id),
             defaultColumnName: "key_name",
             defaultColumnLabel: "key_value",
             query: {

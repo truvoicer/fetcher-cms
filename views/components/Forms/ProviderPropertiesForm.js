@@ -1,11 +1,8 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
-import {ProviderFormData} from "../../../library/forms/provider-form";
 import {ProviderPropertyFormData} from "../../../library/forms/provider-property-form";
 
 const sprintf = require("sprintf-js").sprintf;
@@ -18,12 +15,14 @@ const ProviderPropertiesForm = (props) => {
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.providerProperty, props.config.provider_id, props.data.itemId))
-            .then((response) => {
-                setProviderProperty(response.data.data);
-                setShowForm(true);
+            fetchRequest({
+                endpoint: sprintf(ApiConfig.endpoints.providerProperty, props.config.provider_id),
+                operation: `${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    setProviderProperty(responseData.data);
+                    setShowForm(true);
+                }
             })
-
         }
     }, [props.data.itemId, props.data.action])
 

@@ -1,9 +1,8 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
-import {isSet, uCaseFirst} from "../../../library/utils";
+import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
-import {ServiceRequestResponseKeysFormData} from "../../../library/forms/service-request-response-keys-form";
 import {MergeResponseKeysFormData} from "../../../library/forms/merge-response-keys-form";
 
 const sprintf = require("sprintf-js").sprintf;
@@ -22,15 +21,19 @@ const MergeResponseKeysForm = (props) => {
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        fetchData(
-            sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id, props.config.service_request_id),
-            {
+
+        fetchRequest({
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id),
+            operation: `${props.config.service_request_id}`,
+            data: {
                 provider_id: props.config.provider_id
-            }).then((response) => {
-            setServiceRequestSelectOptions({
-                source_service_request: getServicesRequestsSelect(response.data.data)
-            })
-            setShowForm(true)
+            },
+            onSuccess: (responseData) => {
+                setServiceRequestSelectOptions({
+                    source_service_request: getServicesRequestsSelect(responseData.data)
+                })
+                setShowForm(true)
+            }
         })
     }, [])
 

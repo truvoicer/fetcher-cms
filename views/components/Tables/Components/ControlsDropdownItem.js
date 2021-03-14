@@ -1,9 +1,6 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import Dropdown from "react-bootstrap/Dropdown";
-import DropdownButton from "react-bootstrap/DropdownButton";
-import Link from "next/link";
-import {getLinkData, isSet} from "../../../../library/utils";
+import {getLinkData} from "../../../../library/utils";
 
 const ControlsDropdownItem = (props) => {
     if (props.config.control === "link") {

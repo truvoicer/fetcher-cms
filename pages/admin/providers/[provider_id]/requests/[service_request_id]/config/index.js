@@ -5,13 +5,12 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import ServiceConfigForm from "../../../../../../../views/components/Forms/ServiceConfigForm";
 import Col from "react-bootstrap/Col";
-import {fetchData, fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
-import {ProviderRequestsPageName} from "../../index";
 
 const sprintf = require("sprintf-js").sprintf
 

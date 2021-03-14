@@ -1,10 +1,8 @@
 import {Routes} from '../../../config/routes'
-import {BreadcrumbsContext} from "../Context/BreadcrumbsContext";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {isSet} from "../../../library/utils";
-import React, {useContext, useEffect, useState} from "react";
-import ProviderRequests, {ProviderRequestsPageName} from "../../../pages/admin/providers/[provider_id]/requests";
-import {SESSION_STATE_KEY} from "../../../library/redux/constants/session-constants";
+import React, {useState} from "react";
+import {ProviderRequestsPageName} from "../../../pages/admin/providers/[provider_id]/requests";
 import {connect} from "react-redux";
 import {
     BREADCRUMBS_DATA,

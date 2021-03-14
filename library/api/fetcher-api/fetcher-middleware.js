@@ -32,7 +32,7 @@ export const fetchRequest = ({endpoint, operation = "", args = [], data={}, onSu
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
     responseHandler({
-        promise: request,
+        promise: fetcherApiRequest.request(request),
         onError: onError,
         onSuccess: onSuccess
     })
@@ -46,19 +46,10 @@ export const postRequest = ({endpoint, operation, requestData, args = [], method
         headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
     }
     responseHandler({
-        promise: request,
+        promise: fetcherApiRequest.request(request),
         onError: onError,
         onSuccess: onSuccess
     })
-}
-export const fetchData = async (endpoint, queryObj) => {
-    const requestData = {
-        method: "get",
-        url: process.env.NEXT_PUBLIC_API_URL + endpoint,
-        params: queryObj,
-        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
-    }
-    return await fetcherApiRequest.request(requestData);
 }
 
 export const sendData = async (operation, endpoint, data) => {
@@ -86,8 +77,7 @@ export const sendFileData = async (operation, endpoint, data) => {
 
 
 export const responseHandler = ({promise, onSuccess, onError}) => {
-    promise.request(request)
-    .then(response => {
+    promise.then(response => {
         onSuccess(response.data)
     }).catch(error => {
         if (isSet(onError)) {

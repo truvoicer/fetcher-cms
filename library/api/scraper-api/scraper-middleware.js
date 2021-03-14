@@ -1,7 +1,6 @@
 import {ScraperApiConfig} from "../../../config/scraper-api-config";
-import {getSessionObject, setScraperApiSession} from "../../session/authenticate";
-import apiConfig from "../../../config/api-config";
-import {isNotEmpty, isSet} from "../../utils";
+import {getSessionObject} from "../../session/authenticate";
+import {isNotEmpty} from "../../utils";
 import {buildRequestUrl} from "../helpers/api-helpers";
 
 const axios = require("axios");

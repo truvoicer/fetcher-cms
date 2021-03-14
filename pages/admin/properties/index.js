@@ -6,8 +6,6 @@ import DeleteForm from "../../../views/components/Forms/DeleteForm";
 import SidebarLayout from "../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
-import {UserApiTokensPageName} from "../profile/api-tokens";
-import {UserProfilePageName} from "../profile/manage";
 
 const Properties = (props) => {
     Properties.PageName = "manage_properties";

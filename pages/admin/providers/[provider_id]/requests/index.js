@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../views/layouts/SidebarLayout";
 import ProviderRequestsTable from "../../../../../views/components/Tables/ProviderRequestsTable";
 import Col from "react-bootstrap/Col";
-import {fetchData, fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../../../config/api-config";
 import {getRouteItem} from "../../../../../library/session/authenticate";
 import {Routes} from "../../../../../config/routes";
@@ -11,7 +11,6 @@ import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../library/redux/actions/breadcrumbs-actions";
-import {ServiceRequestResponseKeysPageName} from "./[service_request_id]/response-keys";
 
 const sprintf = require("sprintf-js").sprintf
 

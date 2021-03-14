@@ -1,17 +1,10 @@
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
-import {sendData, responseHandler, postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import {postRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
-import Alert from "react-bootstrap/Alert";
-import {isNotEmpty, isSet} from "../../../../library/utils";
-import {fetchData} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import {isNotEmpty} from "../../../../library/utils";
 import ApiConfig from "../../../../config/api-config";
 import DataForm from "../DataForm/DataForm";
-import {UserFormData} from "../../../../library/forms/user-form";
 import {
     getScraperList,
-    getScraperSchedule,
     getScraperScheduleByScraperId
 } from "../../../../library/api/helpers/scraper-helpers";
 import {ScraperScheduleFormData} from "../../../../library/forms/scraper-schedule-form";

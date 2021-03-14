@@ -18,7 +18,7 @@ const ManageProviders = (props) => {
 
     const getTableData = () => {
         return {
-            endpoint: ApiConfig.endpoints.providerList,
+            endpoint: `${ApiConfig.endpoints.provider}/list`,
             defaultColumnName: "provider_name",
             defaultColumnLabel: "provider_label",
             query: {

@@ -1,7 +1,6 @@
 import DataTable from 'react-data-table-component';
-import Button from "react-bootstrap/Button";
 import React, {useEffect, useState} from "react";
-import {fetchData, fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import {isNotEmpty, isSet} from "../../../library/utils";
@@ -13,13 +12,6 @@ import RowMenu from "./Components/RowMenu";
 import ExpandableRow from "./Expandable/ExpandableRow";
 import Dropdown from "react-bootstrap/Dropdown";
 import SettingsDropdown from "../Dropdowns/SettingsDropdown";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import ApiConfig from "../../../config/api-config";
-import {
-    setBreadcrumbsDataAction,
-    setBreadcrumbsPageNameAction
-} from "../../../library/redux/actions/breadcrumbs-actions";
 
 const DataList = ({
                       tableSettingsDropdown,
@@ -51,7 +43,6 @@ const DataList = ({
     const setTableData = () => {
         fetchRequest({
             endpoint: tableData.endpoint,
-            operation: `${props.provider_id}`,
             data: tableData.query,
             onSuccess: (responseData) => {
                 setData(responseData.data)

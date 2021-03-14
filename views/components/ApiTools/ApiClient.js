@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import FormList from "../Forms/Components/FormList";
 import React, {useEffect, useState} from "react";
 import {isObjectEmpty, isSet} from "../../../library/utils";
-import {fetchData, fetchRequest, responseHandler} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 
 const sprintf = require("sprintf-js").sprintf;
@@ -45,21 +45,27 @@ const ApiClient = (props) => {
             return;
         }
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchData(sprintf(ApiConfig.endpoints.provider, props.provider_id)).then((response) => {
-                setProvider({
-                    received: true,
-                    data: response.data.data
-                })
-                setRequestTypeOptions(getRequestTypeOptions(response.data.data.service_requests))
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.provider,
+                operation: `${props.provider_id}`,
+                onSuccess: (responseData) => {
+                    setProvider({
+                        received: true,
+                        data: responseData.data
+                    })
+                    setRequestTypeOptions(getRequestTypeOptions(responseData.data.service_requests))
+                }
             })
-            fetchData(
-                sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id, props.service_request_id))
-                .then((response) => {
+            fetchRequest({
+                endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id),
+                operation: `${props.service_request_id}`,
+                onSuccess: (responseData) => {
                     setServiceRequest({
                         received: true,
-                        data: response.data.data
+                        data: responseData.data
                     })
-                })
+                }
+            })
         }
     }, [props.provider_id, props.service_request_id, props.provider, props.serviceRequest]);
 
@@ -85,9 +91,6 @@ const ApiClient = (props) => {
                 if (responseData.status === "success" && Array.isArray(responseData?.data?.service_request_parameters)) {
                     setRequestParameterData(responseData.data.service_request_parameters)
                 }
-            },
-            onError: (error) => {
-
             }
         })
     }
@@ -112,8 +115,18 @@ const ApiClient = (props) => {
         queryParameterData.map((item) => {
             queryData[item.name] = item.value
         })
-        responseHandler(fetchData(ApiConfig.endpoints.serviceApiRequest, queryData),
-            getRequestCallback);
+
+        fetchRequest({
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id),
+            operation: `test-run`,
+            data: queryData,
+            onSuccess: (responseData) => {
+                getRequestCallback(200, responseData.message, responseData.data)
+            },
+            onError: (error) => {
+                getRequestCallback(400, error?.response?.data?.message, error?.response?.data?.data)
+            }
+        })
     }
 
     const getRequestCallback = (status, message, data = null) => {

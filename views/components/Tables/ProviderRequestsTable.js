@@ -6,15 +6,10 @@ import ServiceRequestForm from "../../../views/components/Forms/ServiceRequestFo
 import DuplicateForm from "../Forms/DuplicateForm";
 import {getRouteItem} from "../../../library/session/authenticate";
 import {Routes} from "../../../config/routes";
-import ServiceRequestTest
-    , {ServiceRequestTestPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/request-test";
-import ServiceRequestParameters
-    , {ServiceRequestParametersPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/parameters";
-import ServiceRequestResponseKeys
-    , {ServiceRequestResponseKeysPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/response-keys";
-import ServiceRequestConfig, {ServiceRequestConfigPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/config";
-import ProviderRequests from "../../../pages/admin/providers/[provider_id]/requests";
-import ServiceRequestsExpandableTable from "./Expandable/Tables/ServiceRequestsExpandableTable";
+import {ServiceRequestTestPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/request-test";
+import {ServiceRequestParametersPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/parameters";
+import {ServiceRequestResponseKeysPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/response-keys";
+import {ServiceRequestConfigPageName} from "../../../pages/admin/providers/[provider_id]/requests/[service_request_id]/config";
 import ApiClient from "../ApiTools/ApiClient";
 
 const sprintf = require("sprintf-js").sprintf

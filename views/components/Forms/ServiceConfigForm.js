@@ -1,5 +1,5 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet, uCaseFirst} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -40,20 +40,23 @@ const ServiceConfigForm = (props) => {
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceRequestConfig, props.data.itemId)).then((response) => {
-                let data = response.data.data;
-                setServiceRequestConfig(response.data.data);
-                setSelectData({
-                    value_types: getSelectedValueType(data.value_type)
-                })
-                if (data.item_array_value !== null && data.item_array_value !== "") {
-                    setListData({
-                        item_array_value: data.item_array_value
-                    });
+            fetchRequest({
+                endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, props.config.provider_id, props.config.service_request_id),
+                operation: `${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    let data = responseData.data;
+                    setServiceRequestConfig(responseData.data);
+                    setSelectData({
+                        value_types: getSelectedValueType(data.value_type)
+                    })
+                    if (data.item_array_value !== null && data.item_array_value !== "") {
+                        setListData({
+                            item_array_value: data.item_array_value
+                        });
+                    }
+                    setShowForm(true);
                 }
-                setShowForm(true);
-            })
-
+            });
         }
     }, [props.data.itemId, props.data.action])
 

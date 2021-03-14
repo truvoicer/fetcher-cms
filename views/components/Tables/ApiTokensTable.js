@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {formatDate, isSet} from "../../../library/utils";
-import {fetchData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import ApiTokenForm from "../Forms/ApiTokenForm";
 import DeleteForm from "../Forms/DeleteForm";
@@ -14,12 +14,18 @@ const ApiTokensTable = ({userId, admin = false}) => {
 
     useEffect(() => {
         if (isSet(userId)) {
-            fetchData(
-                (admin)? `${ApiConfig.endpoints.admin}/user/${userId}` : `${ApiConfig.endpoints.user}/detail`
-            ).then((response) => {
-                setUser(response.data.data);
-                setShowTable(true);
-            });
+            fetchRequest({
+                endpoint:
+                    (admin)
+                        ?
+                        `${ApiConfig.endpoints.admin}/user/${userId}`
+                        :
+                        `${ApiConfig.endpoints.user}/detail`,
+                onSuccess: (responseData) => {
+                    setUser(responseData.data);
+                    setShowTable(true);
+                }
+            })
         }
     }, [userId]);
 

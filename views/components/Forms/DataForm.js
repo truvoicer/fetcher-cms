@@ -1,9 +1,8 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import {Field, Formik, isObject} from "formik";
 import {isSet} from "../../../library/utils";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
-import {error} from "next/dist/build/output/log";
 import FormList from "./Components/FormList";
 
 const DataForm = (props) => {

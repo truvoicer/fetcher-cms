@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchData, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchRequest, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -22,23 +22,30 @@ const ProviderForm = (props) => {
     const updateButtonLabel = "Update Provider";
 
     useEffect(() => {
-        fetchData(sprintf(ApiConfig.endpoints.categoryList)).then((response) => {
-            setSelectOptions({
-                category: getCategoriesSelect(response.data.data)
-            })
+        fetchRequest({
+            endpoint: ApiConfig.endpoints.category,
+            operation: `list`,
+            onSuccess: (responseData) => {
+                setSelectOptions({
+                    category: getCategoriesSelect(responseData.data)
+                })
+            }
         })
     }, [])
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.provider, props.data.itemId)).then((response) => {
-                setProvider(response.data.data);
-                setSelectData({
-                    category: getCategoriesSelect(response.data.data.category)
-                })
-                setShowForm(true);
+            fetchRequest({
+                endpoint: ApiConfig.endpoints.provider,
+                operation: `${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    setProvider(responseData.data);
+                    setSelectData({
+                        category: getCategoriesSelect(responseData.data.category)
+                    })
+                    setShowForm(true);
+                }
             })
-
         }
     }, [props.data.itemId, props.data.action])
 

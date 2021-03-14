@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {getColumnControls} from "../../../../library/datalist/datalist-actions";
 
 const RowMenu = (props) => {

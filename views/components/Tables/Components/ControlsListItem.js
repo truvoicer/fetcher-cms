@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 import Link from "next/link";
-import {getLinkData, isSet} from "../../../../library/utils";
+import {getLinkData} from "../../../../library/utils";
 
 const ControlsListItem = (props) => {
     if (props.config.control === "link") {

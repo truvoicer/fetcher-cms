@@ -1,14 +1,8 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchData, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Select from "react-select";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
-import {ProviderFormData} from "../../../library/forms/provider-form";
 import {ServiceResponseKeyFormData} from "../../../library/forms/service-response-key-form";
 
 const sprintf = require("sprintf-js").sprintf;
@@ -23,9 +17,13 @@ const ServiceResponseKeysForm = (props) => {
 
     useEffect(() => {
         if (isSet(props.data.action) && props.data.action === "update") {
-            fetchData(sprintf(ApiConfig.endpoints.serviceResponseKey, props.data.itemId)).then((response) => {
-                setServiceResponseKey(response.data.data);
-                setShowForm(true);
+            fetchRequest({
+                endpoint: sprintf(ApiConfig.endpoints.serviceResponseKey, props.config.service_id),
+                operation: `${props.data.itemId}`,
+                onSuccess: (responseData) => {
+                    setServiceResponseKey(responseData.data);
+                    setShowForm(true);
+                }
             })
         }
     }, [props.data.itemId, props.data.action])

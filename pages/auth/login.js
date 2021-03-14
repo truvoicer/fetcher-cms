@@ -1,4 +1,4 @@
-import Router, {useRouter} from 'next/router'
+import {useRouter} from 'next/router'
 import Auth from '../../views/layouts/Auth'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
