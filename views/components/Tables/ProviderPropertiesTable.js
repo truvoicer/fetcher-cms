@@ -11,7 +11,7 @@ const ProviderPropertiesTable = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.providerPropertyList, props.provider_id),
+            endpoint: `${sprintf(ApiConfig.endpoints.providerProperty, props.provider_id)}/list`,
             defaultColumnName: "property_value",
             defaultColumnLabel: "property_value",
             query: {
@@ -41,7 +41,7 @@ const ProviderPropertiesTable = (props) => {
                     field: "property_value",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: `provider/${props.provider_id}/property`,
+                        endpoint: `${sprintf(ApiConfig.endpoints.providerProperty, props.provider_id)}`,
                         extraData: {
                             provider_id: props.provider_id,
                             property_id: {
@@ -75,7 +75,7 @@ const ProviderPropertiesTable = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Property",
-                    endpoint: `provider/${props.provider_id}/property`,
+                    endpoint: `${sprintf(ApiConfig.endpoints.providerProperty, props.provider_id)}`,
                     modalFormName: "delete"
                 },
                 size: "sm",

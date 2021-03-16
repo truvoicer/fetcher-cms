@@ -52,16 +52,6 @@ export const postRequest = ({endpoint, operation, requestData, args = [], method
     })
 }
 
-export const sendData = async (operation, endpoint, data) => {
-    const requestData = {
-        method: "post",
-        url: process.env.NEXT_PUBLIC_API_URL + sprintf(apiConfig.endpoints[operation], endpoint),
-        data: data,
-        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
-    }
-    return await fetcherApiRequest.request(requestData);
-}
-
 export const sendFileData = async (operation, endpoint, data) => {
     const requestData = {
         method: "post",

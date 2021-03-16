@@ -5,7 +5,6 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import RequestResponseKeysForm from "../../../../../../../views/components/Forms/RequestResponseKeysForm";
 import Col from "react-bootstrap/Col";
-import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import Row from "react-bootstrap/Row";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import Card from "react-bootstrap/Card";
@@ -14,6 +13,7 @@ import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
+import {fetchProvider, fetchServiceRequest} from "../../../../../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -47,20 +47,19 @@ const ServiceRequestResponseKeys = (props) => {
 
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.provider,
-                operation: `${props.provider_id}`,
-                onSuccess: (responseData) => {
+            fetchProvider({
+                providerId: props.provider_id,
+                callback: (responseData) => {
                     setProvider({
                         received: true,
                         data: responseData.data
                     })
                 }
             })
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.serviceRequest,
-                operation: `${props.service_request_id}`,
-                onSuccess: (responseData) => {
+            fetchServiceRequest({
+                providerId: props.provider_id,
+                serviceRequestId: props.service_request_id,
+                callback: (responseData) => {
                     setServiceRequest({
                         received: true,
                         data: responseData.data
@@ -73,7 +72,7 @@ const ServiceRequestResponseKeys = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, provider.data.id, serviceRequest.data.id),
+            endpoint: `${sprintf(ApiConfig.endpoints.requestResponseKey, provider.data.id, serviceRequest.data.id)}/list`,
             defaultColumnName: "key_name",
             defaultColumnLabel: "key_value",
             query: {

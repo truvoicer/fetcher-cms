@@ -10,9 +10,10 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import {Button, FormGroup, FormLabel} from "react-bootstrap";
 import Select from "react-select";
-import {sendData, sendFileData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {postRequest, sendFileData} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../library/utils";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
+import ApiConfig from "../../../config/api-config";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -285,25 +286,29 @@ const ImporterPage = (props) => {
             file_id: response.data.file.id,
             import_type: selectedImportType.value
         }
-        sendData("tools", "import/mappings", extraData)
-            .then(response => {
-                if (response.data.status === "success") {
+        postRequest({
+            endpoint: ApiConfig.endpoints.tools,
+            operation: "import/mappings",
+            requestData: extraData,
+            onSuccess: (responseData) => {
+                if (responseData.status === "success") {
                     setActiveStep(2);
                     setResponse({
                         success: true,
-                        message: response.data.message,
-                        data: response.data.data
+                        message: responseData.message,
+                        data: responseData.data
                     })
                     return true;
                 }
                 setActiveStep(1);
-                console.error(response.data)
+                console.error(responseData)
                 return false;
-            })
-            .catch(error => {
+            },
+            onError: (error) => {
                 setActiveStep(1);
                 console.error(error)
-            })
+            }
+        })
     }
     const finishStepSubmitHandler = (e) => {
         setActiveStep(0)

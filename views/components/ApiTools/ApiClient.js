@@ -9,6 +9,7 @@ import React, {useEffect, useState} from "react";
 import {isObjectEmpty, isSet} from "../../../library/utils";
 import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
+import {fetchProvider, fetchServiceRequest} from "../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf;
 
@@ -45,10 +46,9 @@ const ApiClient = (props) => {
             return;
         }
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.provider,
-                operation: `${props.provider_id}`,
-                onSuccess: (responseData) => {
+            fetchProvider({
+                providerId: props.provider_id,
+                callback: (responseData) => {
                     setProvider({
                         received: true,
                         data: responseData.data
@@ -56,10 +56,10 @@ const ApiClient = (props) => {
                     setRequestTypeOptions(getRequestTypeOptions(responseData.data.service_requests))
                 }
             })
-            fetchRequest({
-                endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id),
-                operation: `${props.service_request_id}`,
-                onSuccess: (responseData) => {
+            fetchServiceRequest({
+                providerId: props.provider_id,
+                serviceRequestId: props.service_request_id,
+                callback: (responseData) => {
                     setServiceRequest({
                         received: true,
                         data: responseData.data
@@ -85,8 +85,8 @@ const ApiClient = (props) => {
 
     const parametersFetchRequest = (serviceRequestId) => {
         fetchRequest({
-            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, provider.id, serviceRequestId),
-            operation: `parameters`,
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameter, provider.id, serviceRequestId),
+            operation: `list/single`,
             onSuccess: (responseData) => {
                 if (responseData.status === "success" && Array.isArray(responseData?.data?.service_request_parameters)) {
                     setRequestParameterData(responseData.data.service_request_parameters)

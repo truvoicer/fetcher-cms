@@ -47,7 +47,7 @@ const ServiceResponseKeys = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.serviceResponseKeyList,
+            endpoint: `${sprintf(ApiConfig.endpoints.serviceResponseKey, service.id)}/list`,
             defaultColumnName: "key_name",
             defaultColumnLabel: "key_value",
             query: {
@@ -71,7 +71,7 @@ const ServiceResponseKeys = (props) => {
                     field: "key_name",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "service/response/key",
+                        endpoint: `${ApiConfig.endpoints.serviceResponseKey}`,
                         extraData: {
                             service_id: service.id
                         }
@@ -88,7 +88,7 @@ const ServiceResponseKeys = (props) => {
                     field: "key_value",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "service/response/key",
+                        endpoint: `${ApiConfig.endpoints.serviceResponseKey}`,
                         extraData: {
                             service_id: service.id
                         }

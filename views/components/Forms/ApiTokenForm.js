@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {sendData, responseHandler, fetchRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import Button from "react-bootstrap/Button";
 import ApiConfig from "../../../config/api-config";
 import Row from "react-bootstrap/Row";
@@ -7,8 +7,6 @@ import Col from "react-bootstrap/Col";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm/DataForm";
 import {ApiTokenFormData} from "../../../library/forms/api-token-form";
-
-const sprintf = require("sprintf-js").sprintf;
 
 const ApiTokenForm = ({data, formResponse, config}) => {
     const [apiToken, setApiToken] = useState({});
@@ -37,10 +35,18 @@ const ApiTokenForm = ({data, formResponse, config}) => {
     }, [data.itemId, data.action, config.admin])
 
     const submitHandler = (values) => {
+        let requestData = {...values};
         if (data.action === "update") {
-            values.id = data.itemId;
+            requestData.id = data.itemId;
         }
-        responseHandler(sendData(data.action, sprintf("admin/user/api-token"), values), formResponse);
+        postRequest({
+            endpoint: ApiConfig.endpoints.admin,
+            operation: `user/api-token/${data.action}`,
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     const generateApiToken = (e) => {

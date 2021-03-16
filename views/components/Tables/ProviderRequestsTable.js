@@ -44,12 +44,12 @@ const ProviderRequestsTable = (props) => {
                     fieldType: "select",
                     fieldConfig: {
                         multiple: true,
-                        endpoint: "service/request",
+                        endpoint: `${sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id)}`,
                         extraData: {
                             provider_id: props.provider_id,
                         },
                         select: {
-                            endpoint: ApiConfig.endpoints.categoryList,
+                            endpoint: `${ApiConfig.endpoints.category}/list`,
                             valueKey: "id",
                             labelKey: "category_label"
                         }

@@ -1,5 +1,8 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {
+    fetchRequest,
+    postRequest,
+} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -7,7 +10,7 @@ import {ServiceResponseKeyFormData} from "../../../library/forms/service-respons
 
 const sprintf = require("sprintf-js").sprintf;
 
-const ServiceResponseKeysForm = (props) => {
+const ServiceResponseKeysForm = ({data, config, formResponse}) => {
 
     const [serviceResponseKey, setServiceResponseKey] = useState({});
     const [showForm, setShowForm] = useState(false);
@@ -16,29 +19,37 @@ const ServiceResponseKeysForm = (props) => {
     const updateButtonLabel = "Update Response Key";
 
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
+        if (isSet(data.action) && data.action === "update") {
             fetchRequest({
-                endpoint: sprintf(ApiConfig.endpoints.serviceResponseKey, props.config.service_id),
-                operation: `${props.data.itemId}`,
+                endpoint: sprintf(ApiConfig.endpoints.serviceResponseKey, config.service_id),
+                operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setServiceResponseKey(responseData.data);
                     setShowForm(true);
                 }
             })
         }
-    }, [props.data.itemId, props.data.action])
+    }, [data.itemId, data.action])
 
     const submitHandler = (values) => {
-        if (props.data.action === "update") {
-            values.id = props.data.itemId;
+        let requestData = {...values};
+        if (data.action === "update") {
+            requestData.id = data.itemId;
         }
-        values.service_id = props.config.service_id;
-        responseHandler(sendData(props.data.action, "service/response/key", values),  props.formResponse);
+        requestData.service_id = config.service_id;
+        postRequest({
+            endpoint: sprintf(ApiConfig.endpoints.serviceResponseKey, config.service_id),
+            operation: (data.action === "update")? `${data.itemId}/update` : "create",
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
+            {data.action === "update" && showForm &&
             <DataForm
                 data={
                     ServiceResponseKeyFormData(
@@ -51,7 +62,7 @@ const ServiceResponseKeysForm = (props) => {
                 submitButtonText={updateButtonLabel}
             />
             }
-            {props.data.action !== "update" &&
+            {data.action !== "update" &&
             <DataForm
                 data={ServiceResponseKeyFormData()}
                 submitCallback={submitHandler}

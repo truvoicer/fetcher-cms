@@ -1,5 +1,8 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {
+    fetchRequest,
+    postRequest,
+} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet, uCaseFirst} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -7,7 +10,7 @@ import {ServiceRequestConfigFormData} from "../../../library/forms/service-reque
 
 const sprintf = require("sprintf-js").sprintf;
 
-const ServiceConfigForm = (props) => {
+const ServiceConfigForm = ({data, config, formResponse}) => {
 
     const addButtonLabel = "Add Request Config";
     const updateButtonLabel = "Update Request Config";
@@ -39,10 +42,10 @@ const ServiceConfigForm = (props) => {
     const [showForm, setShowForm] = useState(false);
 
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
+        if (isSet(data.action) && data.action === "update") {
             fetchRequest({
-                endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, props.config.provider_id, props.config.service_request_id),
-                operation: `${props.data.itemId}`,
+                endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, config.provider_id, config.service_request_id),
+                operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     let data = responseData.data;
                     setServiceRequestConfig(responseData.data);
@@ -58,7 +61,7 @@ const ServiceConfigForm = (props) => {
                 }
             });
         }
-    }, [props.data.itemId, props.data.action])
+    }, [data.itemId, data.action])
 
     const getSelectedValueType = (value_type) => {
         if (isSet(value_type) && value_type !== "") {
@@ -70,17 +73,25 @@ const ServiceConfigForm = (props) => {
     }
 
     const submitHandler = (values) => {
-        if (props.data.action === "update") {
-            values.id = props.data.itemId;
+        let requestData = {...values};
+        if (data.action === "update") {
+            values.id = data.itemId;
         }
-        values.service_request_id = props.config.service_request_id;
-        values.selected_value_type = values.value_types.value;
-        responseHandler(sendData(props.data.action, "service/request/config", values),  props.formResponse);
+        requestData.service_request_id = config.service_request_id;
+        requestData.selected_value_type = values.value_types.value;
+        postRequest({
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, config.provider_id, config.service_request_id),
+            operation: (data.action === "update")? `${data.itemId}/update` : "create",
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
+            {data.action === "update" && showForm &&
             <DataForm
                 data={
                     ServiceRequestConfigFormData(
@@ -96,7 +107,7 @@ const ServiceConfigForm = (props) => {
                 submitButtonText={updateButtonLabel}
             />
             }
-            {props.data.action !== "update" &&
+            {data.action !== "update" &&
             <DataForm
                 data={ServiceRequestConfigFormData()}
                 selectData={selectData}

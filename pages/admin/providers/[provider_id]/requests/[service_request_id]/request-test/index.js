@@ -1,15 +1,12 @@
-import ApiConfig from "../../../../../../../config/api-config";
 import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
-import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isNotEmpty, isSet} from "../../../../../../../library/utils";
 import ApiClient from "../../../../../../../views/components/ApiTools/ApiClient";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
-
-const sprintf = require("sprintf-js").sprintf
+import {fetchProvider, fetchServiceRequest} from "../../../../../../../library/api/helpers/api-helpers";
 
 export const ServiceRequestTestPageName = "request_test";
 
@@ -36,19 +33,18 @@ const ServiceRequestTest = (props) => {
 
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.provider,
-                operation: `${props.provider_id}`,
-                onSuccess: (responseData) => {
+            fetchProvider({
+                providerId: props.provider_id,
+                callback: (responseData) => {
                     setProvider(provider => {
                         return {...provider, ...responseData.data}
                     })
                 }
             })
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.serviceRequest,
-                operation: `${props.service_request_id}`,
-                onSuccess: (responseData) => {
+            fetchServiceRequest({
+                providerId: props.provider_id,
+                serviceRequestId: props.service_request_id,
+                callback: (responseData) => {
                     setServiceRequest(serviceRequest => {
                         return {...serviceRequest, ...responseData.data}
                     })

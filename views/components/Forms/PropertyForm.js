@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {sendData, responseHandler, fetchRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
 import {PropertyFormData} from "../../../library/forms/property-form";
-const sprintf = require("sprintf-js").sprintf;
 
-const PropertyForm = (props) => {
+const PropertyForm = ({data, formResponse}) => {
 
     const [property, setProperty] = useState({})
     const [showForm, setShowForm] = useState(false)
@@ -14,29 +13,37 @@ const PropertyForm = (props) => {
     const updateButtonLabel = "Update Property";
 
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
+        if (isSet(data.action) && data.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.property,
-                operation: `${props.data.itemId}`,
+                operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setProperty(responseData.data);
                     setShowForm(true);
                 }
             })
         }
-    }, [props.data.itemId, props.data.action])
+    }, [data.itemId, data.action])
 
     const submitHandler = (values) => {
-        if (props.data.action === "update") {
-            values.id = props.data.itemId;
+        let requestData = {...values};
+        if (data.action === "update") {
+            requestData.id = data.itemId;
         }
-        responseHandler(sendData(props.data.action, "property", values), props.formResponse)
+        postRequest({
+            endpoint: ApiConfig.endpoints.property,
+            operation: (data.action === "update")? `${data.itemId}/update` : "create",
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
+            {data.action === "update" && showForm &&
             <DataForm
                 data={
                     PropertyFormData(true, property?.property_name, property?.property_label)
@@ -45,7 +52,7 @@ const PropertyForm = (props) => {
                 submitButtonText={updateButtonLabel}
             />
             }
-            {props.data.action !== "update" &&
+            {data.action !== "update" &&
             <DataForm
                 data={PropertyFormData()}
                 submitCallback={submitHandler}

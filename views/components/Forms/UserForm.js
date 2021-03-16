@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {fetchRequest, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
 import {UserFormData} from "../../../library/forms/user-form";
 
-const sprintf = require("sprintf-js").sprintf;
-
-const UserForm = (props) => {
+const UserForm = ({data, formResponse}) => {
 
     const [user, setUser] = useState({});
     const [showForm, setShowForm] = useState(false);
@@ -37,10 +35,10 @@ const UserForm = (props) => {
     const updateUserButtonLabel = "Update User";
 
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
+        if (isSet(data.action) && data.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.admin,
-                operation: `user/${props.data.itemId}`,
+                operation: `user/${data.itemId}`,
                 onSuccess: (responseData) => {
                     setUser(responseData.data);
                     setSelectData({roles: getRoles(responseData.data.roles)});
@@ -48,7 +46,7 @@ const UserForm = (props) => {
                 }
             })
         }
-    }, [props.data.itemId, props.data.action])
+    }, [data.itemId, data.action])
 
     const getRoles = (roles) => {
         return roles.map((item, index) => {
@@ -60,18 +58,26 @@ const UserForm = (props) => {
     }
 
     const submitHandler = (values) => {
-        if (props.data.action === "update") {
-            values.id = props.data.itemId;
+        let requestData = {...values};
+        if (data.action === "update") {
+            requestData.id = data.itemId;
         }
-        values.roles = values.roles.map((item) => {
+        requestData.roles = values.roles.map((item) => {
             return item.value;
         });
-        responseHandler(sendData(props.data.action, "admin/user", values), props.formResponse);
+        postRequest({
+            endpoint: `${ApiConfig.endpoints.admin}/user`,
+            operation: (data.action === "update")? `${data.itemId}/update` : "create",
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
+            {data.action === "update" && showForm &&
             <DataForm
                 data={UserFormData(true, user?.username, user?.email)}
                 selectData={selectData}
@@ -80,7 +86,7 @@ const UserForm = (props) => {
                 submitButtonText={updateUserButtonLabel}
             />
             }
-            {props.data.action !== "update" &&
+            {data.action !== "update" &&
             <DataForm
                 data={UserFormData()}
                 selectData={selectData}

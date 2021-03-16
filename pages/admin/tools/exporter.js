@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
-import {fetchRequest, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import {Alert} from "react-bootstrap";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
@@ -164,27 +164,30 @@ const ExporterPage = (props) => {
         if (!validateExportData(exportData)) {
             return false;
         }
-        sendData("tools", "export", {data: exportData})
-            .then(response => {
-                if (response.data.status === "success") {
+        postRequest({
+            endpoint: ApiConfig.endpoints.tools,
+            operation: "export",
+            requestData: {data: exportData},
+            onSuccess: (responseData) => {
+                if (responseData.status === "success") {
                     setResponse({
                         show: true,
                         success: true,
-                        message: response?.data?.message,
-                        data: response?.data?.data
+                        message: responseData?.message,
+                        data: responseData?.data
                     })
-                } else if (response.data.status === "error") {
+                } else if (responseData.status === "error") {
                     setResponse({
                         show: true,
                         success: false,
-                        message: response?.data?.message,
-                        data: response?.data?.data
+                        message: responseData?.message,
+                        data: responseData?.data
                     })
                 } else {
-                    console.error(response?.data)
+                    console.error(responseData)
                 }
-            })
-            .catch(error => {
+            },
+            onError: (error) => {
                 setResponse({
                     show: true,
                     success: false,
@@ -192,7 +195,8 @@ const ExporterPage = (props) => {
                     data: error?.response?.data?.data
                 })
                 console.error(error?.response)
-            })
+            }
+        })
     }
     return (
         <SidebarLayout pageName={ExporterPageName}>

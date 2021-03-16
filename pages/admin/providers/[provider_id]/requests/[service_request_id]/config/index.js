@@ -5,12 +5,12 @@ import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import ServiceConfigForm from "../../../../../../../views/components/Forms/ServiceConfigForm";
 import Col from "react-bootstrap/Col";
-import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
+import {fetchProvider, fetchServiceRequest} from "../../../../../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf
 
@@ -42,25 +42,24 @@ const ServiceRequestConfig = (props) => {
     }, [provider, serviceRequest]);
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.provider,
-                operation: `${props.provider_id}`,
-                onSuccess: (responseData) => {
+            fetchProvider({
+                providerId: props.provider_id,
+                callback: (responseData) => {
                     setProvider({
                         received: true,
                         data: responseData.data
                     })
-                },
+                }
             })
-            fetchRequest({
-                endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id),
-                operation: `${props.service_request_id}`,
-                onSuccess: (responseData) => {
+            fetchServiceRequest({
+                providerId: props.provider_id,
+                serviceRequestId: props.service_request_id,
+                callback: (responseData) => {
                     setServiceRequest({
                         received: true,
                         data: responseData.data
                     })
-                },
+                }
             })
         }
     }, [props.provider_id, props.service_request_id]);
@@ -68,7 +67,7 @@ const ServiceRequestConfig = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.serviceRequestConfigList,
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, provider.data.id, serviceRequest.data.id) + "/list",
             defaultColumnName: "item_name",
             defaultColumnLabel: "item_value",
             query: {
@@ -157,13 +156,15 @@ const ServiceRequestConfig = (props) => {
             default: {
                 modalForm: ServiceConfigForm,
                 config: {
-                    service_request_id: serviceRequest.data.id
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
                 }
             },
             requestConfig: {
                 modalForm: ServiceConfigForm,
                 config: {
-                    service_request_id: serviceRequest.data.id
+                    service_request_id: serviceRequest.data.id,
+                    provider_id: provider.data.id,
                 }
             },
             delete: {

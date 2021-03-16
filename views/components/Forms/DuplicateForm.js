@@ -1,13 +1,22 @@
-import {responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React from "react";
 import DataForm from "./DataForm";
 import {DuplicateFormData} from "../../../library/forms/duplicate-form";
 
-const DuplicateForm = (props) => {
+const DuplicateForm = ({data, formResponse}) => {
     const buttonLabel = "Duplicate";
+
     const submitHandler = (values) => {
-        values.id = props.data.item_id;
-        responseHandler(sendData("duplicate", props.data.endpoint, values), props.formResponse);
+        let requestData = {...values};
+        requestData.id = data.item_id;
+        postRequest({
+            endpoint: data.endpoint,
+            operation: `duplicate`,
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (

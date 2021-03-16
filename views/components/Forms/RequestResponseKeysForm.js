@@ -1,5 +1,8 @@
 import ApiConfig from '../../../config/api-config'
-import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {
+    fetchRequest,
+    postRequest
+} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet, uCaseFirst} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -7,7 +10,7 @@ import {ServiceRequestResponseKeysFormData} from "../../../library/forms/service
 
 const sprintf = require("sprintf-js").sprintf;
 
-const RequestResponseKeysForm = (props) => {
+const RequestResponseKeysForm = ({data, config, formResponse}) => {
 
     const addButtonLabel = "Add Request Config";
     const updateButtonLabel = "Update Request Config";
@@ -51,10 +54,10 @@ const RequestResponseKeysForm = (props) => {
     const [showForm, setShowForm] = useState(false);
     useEffect(() => {
         fetchRequest({
-            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.config.provider_id),
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequest, config.provider_id),
             operation: `list`,
             data: {
-                provider_id: props.config.provider_id
+                provider_id: config.provider_id
             },
             onSuccess: (responseData) => {
                 setServiceRequestSelectOptions({
@@ -64,12 +67,12 @@ const RequestResponseKeysForm = (props) => {
         })
     }, [])
     useEffect(() => {
-        if (isSet(props.data.action) && isSet(props.data.data.service_response_key) && props.data.action === "update") {
+        if (isSet(data.action) && isSet(data.data.service_response_key) && data.action === "update") {
             fetchRequest({
-                endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, props.config.provider_id, props.config.service_request_id),
-                operation: `${props.data.data.service_response_key.id}`,
+                endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, config.provider_id, config.service_request_id),
+                operation: `${data.data.service_response_key.id}`,
                 data: {
-                    provider_id: props.config.provider_id
+                    provider_id: config.provider_id
                 },
                 onSuccess: (responseData) => {
                     const data = responseData.data;
@@ -106,7 +109,7 @@ const RequestResponseKeysForm = (props) => {
                 }
             })
         }
-    }, [props.data.itemId, props.data.action, props.data.data.service_response_key])
+    }, [data.itemId, data.action, data.data.service_response_key])
 
     const getServicesRequestsSelect = (requests) => {
         return requests.map((item, index) => {
@@ -128,18 +131,26 @@ const RequestResponseKeysForm = (props) => {
     }
 
     const submitHandler = (values) => {
-        if (props.data.action === "update") {
-            values.id = props.data.itemId;
+        let requestData = {...values};
+        if (data.action === "update") {
+            requestData.id = data.itemId;
         }
-        values.service_request_id = props.config.service_request_id;
-        values.return_data_type = values.return_data_type.value;
-        values.service_response_key = props.data.data.service_response_key;
-        responseHandler(sendData(props.data.action, "service/request/response/key", values), props.formResponse);
+        requestData.service_request_id = config.service_request_id;
+        requestData.return_data_type = values.return_data_type.value;
+        requestData.service_response_key = data.data.service_response_key;
+        postRequest({
+            endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, config.provider_id, config.service_request_id),
+            operation: data.action,
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
+            {data.action === "update" && showForm &&
             <DataForm
                 data={
                     ServiceRequestResponseKeysFormData(
@@ -160,7 +171,7 @@ const RequestResponseKeysForm = (props) => {
                 submitButtonText={updateButtonLabel}
             />
             }
-            {props.data.action !== "update" &&
+            {data.action !== "update" &&
             <DataForm
                 data={ServiceRequestResponseKeysFormData()}
                 selectData={selectData}

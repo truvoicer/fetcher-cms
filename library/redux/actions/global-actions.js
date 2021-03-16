@@ -30,7 +30,7 @@ export function setWarningAlertAction({timeout = 6000, text = ""}) {
 }
 export function setErrorAlertAction({timeout = 6000, text = ""}) {
     setGlobalAlertAction({
-        variant: "error",
+        variant: "danger",
         text: text,
         timeout: timeout
     })

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {fetchRequest, responseHandler, sendData} from '../../../library/api/fetcher-api/fetcher-middleware'
+import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm";
@@ -7,7 +7,7 @@ import {ProviderFormData} from "../../../library/forms/provider-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
-const ProviderForm = (props) => {
+const ProviderForm = ({data, formResponse}) => {
     const [provider, setProvider] = useState({});
     const [showForm, setShowForm] = useState(false);
     const [selectData, setSelectData] = useState({
@@ -34,10 +34,10 @@ const ProviderForm = (props) => {
     }, [])
 
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
+        if (isSet(data.action) && data.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.provider,
-                operation: `${props.data.itemId}`,
+                operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setProvider(responseData.data);
                     setSelectData({
@@ -47,7 +47,7 @@ const ProviderForm = (props) => {
                 }
             })
         }
-    }, [props.data.itemId, props.data.action])
+    }, [data.itemId, data.action])
 
 
     const getCategoriesSelect = (data) => {
@@ -61,8 +61,8 @@ const ProviderForm = (props) => {
 
     const submitHandler = (values) => {
         let requestData = {...values};
-        if (props.data.action === "update") {
-            requestData.id = props.data.itemId;
+        if (data.action === "update") {
+            requestData.id = data.itemId;
         }
 
         requestData.category = requestData.category.map((item) => {
@@ -70,12 +70,19 @@ const ProviderForm = (props) => {
                 id: item.value
             }
         });
-        responseHandler(sendData(props.data.action, `provider/${props.data.itemId}`, requestData), props.formResponse);
+        postRequest({
+            endpoint: ApiConfig.endpoints.provider,
+            operation: (data.action === "update")? `${data.itemId}/update` : "create",
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
+            {data.action === "update" && showForm &&
             <DataForm
                 data={
                     ProviderFormData(
@@ -94,7 +101,7 @@ const ProviderForm = (props) => {
                 submitButtonText={updateButtonLabel}
             />
             }
-            {props.data.action !== "update" &&
+            {data.action !== "update" &&
             <DataForm
                 data={ProviderFormData()}
                 selectData={selectData}

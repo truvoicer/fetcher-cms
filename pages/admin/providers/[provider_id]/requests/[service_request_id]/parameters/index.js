@@ -5,12 +5,12 @@ import DeleteForm from "../../../../../../../views/components/Forms/DeleteForm";
 import DataList from "../../../../../../../views/components/Tables/DataList";
 import SidebarLayout from "../../../../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
-import {fetchRequest} from "../../../../../../../library/api/fetcher-api/fetcher-middleware";
 import {isObjectEmpty, isSet} from "../../../../../../../library/utils";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
 } from "../../../../../../../library/redux/actions/breadcrumbs-actions";
+import {fetchProvider, fetchServiceRequest} from "../../../../../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf
 export const ServiceRequestParametersPageName = "requests_parameters";
@@ -41,20 +41,19 @@ const ServiceRequestParameters = (props) => {
     }, [provider, serviceRequest]);
     useEffect(() => {
         if (isSet(props.provider_id) && isSet(props.service_request_id)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.provider,
-                operation: `${props.provider_id}`,
-                onSuccess: (responseData) => {
+            fetchProvider({
+                providerId: props.provider_id,
+                callback: (responseData) => {
                     setProvider({
                         received: true,
                         data: responseData.data
                     })
                 }
             })
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.serviceRequest,
-                operation: `${props.service_request_id}`,
-                onSuccess: (responseData) => {
+            fetchServiceRequest({
+                providerId: props.provider_id,
+                serviceRequestId: props.service_request_id,
+                callback: (responseData) => {
                     setServiceRequest({
                         received: true,
                         data: responseData.data
@@ -67,7 +66,7 @@ const ServiceRequestParameters = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameterList, provider.data.id, serviceRequest.data.id) + "/list",
+            endpoint: sprintf(ApiConfig.endpoints.serviceRequestParameter, provider.data.id, serviceRequest.data.id) + "/list",
             defaultColumnName: "parameter_name",
             defaultColumnLabel: "parameter_value",
             query: {

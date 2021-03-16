@@ -15,8 +15,8 @@ const Properties = (props) => {
 
     const getTableData = (props) => {
         return {
-            title: ApiConfig.endpoints.propertyList,
-            endpoint: ApiConfig.endpoints.propertyList,
+            title: ApiConfig.endpoints.property,
+            endpoint: `${ApiConfig.endpoints.property}/list`,
             query: {
                 count: 1000,
                 order: "asc",

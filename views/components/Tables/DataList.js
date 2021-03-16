@@ -1,6 +1,9 @@
 import DataTable from 'react-data-table-component';
 import React, {useEffect, useState} from "react";
-import {fetchRequest, responseHandler, sendData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {
+    fetchRequest,
+    postRequest
+} from "../../../library/api/fetcher-api/fetcher-middleware";
 import Modal from "react-bootstrap/Modal";
 import Alert from "react-bootstrap/Alert";
 import {isNotEmpty, isSet} from "../../../library/utils";
@@ -146,10 +149,14 @@ const DataList = ({
                 }
             })
         }
-        responseHandler(
-            sendData(action,
-                `${config.fieldConfig.endpoint}/${row.id}`,
-                row), (!formResponse) ? formResponse : formResponse);
+        postRequest({
+            endpoint: `${config.fieldConfig.endpoint}/${row.id}`,
+            operation: action,
+            requestData: row,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     const showModal = (config, row = false, e) => {

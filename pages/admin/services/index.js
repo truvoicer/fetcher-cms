@@ -18,7 +18,7 @@ const ManageServices = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.serviceList,
+            endpoint: `${ApiConfig.endpoints.service}/list`,
             defaultColumnName: "service_name",
             defaultColumnLabel: "service_label",
             query: {
