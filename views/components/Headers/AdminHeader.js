@@ -5,10 +5,14 @@ import {logout} from "../../../library/session/authenticate";
 import React from "react";
 import {SESSION_STATE_KEY, SESSION_USER} from "../../../library/redux/constants/session-constants";
 import {connect} from "react-redux";
+import {useRouter} from "next/router";
 
 const AdminHeader = ({session}) => {
+    const router = useRouter();
+
     const logoutHandler = () => {
-        logout()
+        logout(router.asPath)
+        router.push('/auth/login')
     }
     const showUserDropdown = (e) => {
         e.preventDefault();

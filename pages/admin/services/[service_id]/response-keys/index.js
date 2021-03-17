@@ -71,7 +71,7 @@ const ServiceResponseKeys = (props) => {
                     field: "key_name",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: `${ApiConfig.endpoints.serviceResponseKey}`,
+                        endpoint: `${sprintf(ApiConfig.endpoints.serviceResponseKey, service.id)}`,
                         extraData: {
                             service_id: service.id
                         }
@@ -88,7 +88,7 @@ const ServiceResponseKeys = (props) => {
                     field: "key_value",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: `${ApiConfig.endpoints.serviceResponseKey}`,
+                        endpoint: `${sprintf(ApiConfig.endpoints.serviceResponseKey, service.id)}`,
                         extraData: {
                             service_id: service.id
                         }
@@ -119,7 +119,7 @@ const ServiceResponseKeys = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Response Key",
-                    endpoint: "service/response/key",
+                    endpoint: `${sprintf(ApiConfig.endpoints.serviceResponseKey, service.id)}`,
                     modalFormName: "delete"
                 },
                 size: "md",

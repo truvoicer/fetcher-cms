@@ -18,7 +18,7 @@ const FileSystemPage = (props) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: ApiConfig.endpoints.fileList,
+            endpoint: `${ApiConfig.endpoints.fileSystem}/list`,
             defaultColumnName: "filename",
             query: {
                 count: 1000,
@@ -77,7 +77,8 @@ const FileSystemPage = (props) => {
 
     const downloadCallback = (data, e) => {
         fetchRequest({
-            endpoint: sprintf(ApiConfig.endpoints.fileDownload, data.id),
+            endpoint: ApiConfig.endpoints.fileSystem,
+            operation: `${data.id}/download`,
             onSuccess: (responseData) => {
                 window.open(responseData.data.url, "_blank")
                 return true;
@@ -101,7 +102,7 @@ const FileSystemPage = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete File",
-                    endpoint: "tools/filesystem/file",
+                    endpoint: ApiConfig.endpoints.fileSystem,
                     modalFormName: "delete"
                 },
                 size: "md",
@@ -126,6 +127,10 @@ const FileSystemPage = (props) => {
                         tableColumns={getTableColumns()}
                         tableDropdownControls={getTableDropdownControls()}
                         modalConfig={getModalConfig()}
+                        titleConfig={{
+                            type: "text",
+                            text: "File System"
+                        }}
                     />
                 </Col>
             </>

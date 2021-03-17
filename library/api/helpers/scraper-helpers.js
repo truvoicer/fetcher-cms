@@ -20,6 +20,13 @@ export const getScraperList = ({providerId, onSuccess, onError}) => {
     })
 }
 
+export const getScraperById = ({scraperId, onSuccess}) => {
+    fetchRequest({
+        endpoint: ApiConfig.endpoints.scraper,
+        operation: `${scraperId}`,
+        onSuccess: onSuccess,
+    })
+}
 export const getScraperSchedule = ({scraperId: scraperScheduleId, onSuccess, onError}) => {
     fetchRequest({
         endpoint: ApiConfig.endpoints.scraper,

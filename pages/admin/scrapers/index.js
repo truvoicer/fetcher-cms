@@ -135,7 +135,8 @@ const ManageScrapers = ({scraperApi}) => {
 
     const setProviders = () => {
         fetchRequest({
-            endpoint: ApiConfig.endpoints.providerList,
+            endpoint: ApiConfig.endpoints.provider,
+            operation: "list",
             data: {
                 count: 1000,
                 order: "asc",
@@ -148,14 +149,6 @@ const ManageScrapers = ({scraperApi}) => {
                 console.error(error)
             },
         })
-        return {
-            endpoint: ApiConfig.endpoints.providerList,
-            query: {
-                count: 1000,
-                order: "asc",
-                sort: "provider_name"
-            }
-        };
     }
 
     const setScrapers = () => {
@@ -280,7 +273,7 @@ const ManageScrapers = ({scraperApi}) => {
                                                 onChange={(e) => {
                                                     fetchRequest({
                                                         endpoint: ApiConfig.endpoints.provider,
-                                                        args: [e.value],
+                                                        operation: `${e.value}`,
                                                         onSuccess: (responseData) => {
                                                             setSelectedProvider(responseData.data)
                                                         },

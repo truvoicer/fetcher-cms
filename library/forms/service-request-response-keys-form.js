@@ -11,7 +11,7 @@ export const ServiceRequestResponseKeysFormData = (
                 fieldType: "text",
                 type: "text",
                 placeHolder: "Enter a key name",
-                value: serviceResponseKey.key_name ? serviceResponseKey.key_name : "",
+                value: serviceResponseKey?.key_name ? serviceResponseKey.key_name : "",
             },
             {
                 name: "response_key_value",
@@ -19,14 +19,14 @@ export const ServiceRequestResponseKeysFormData = (
                 fieldType: "text",
                 type: "text",
                 placeHolder: "Enter a key value",
-                value: requestResponseKey.response_key_value ? requestResponseKey.response_key_value : "",
+                value: requestResponseKey?.response_key_value ? requestResponseKey.response_key_value : "",
             },
             {
                 label: "Prepend Extra Data?",
                 name: "prepend_extra_data",
                 fieldType: "checkbox",
                 value: "1",
-                checked: requestResponseKey.prepend_extra_data? requestResponseKey.prepend_extra_data : false,
+                checked: requestResponseKey?.prepend_extra_data? requestResponseKey.prepend_extra_data : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -39,7 +39,7 @@ export const ServiceRequestResponseKeysFormData = (
                         type: "text",
                         fieldType: "text",
                         placeHolder: "Enter extra data to prepend",
-                        value: requestResponseKey.prepend_extra_data_value? requestResponseKey.prepend_extra_data_value : ""
+                        value: requestResponseKey?.prepend_extra_data_value? requestResponseKey.prepend_extra_data_value : ""
                     },
                 ]
             },

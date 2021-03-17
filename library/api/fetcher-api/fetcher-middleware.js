@@ -20,8 +20,17 @@ export const getApiUser = async () => {
     return await fetcherApiRequest.request(requestData);
 }
 
-export const getToken = async (data) => {
-    return axios.post(process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.login, data);
+export const getToken = ({requestData, onSuccess, onError}) => {
+    const request = {
+        method: "post",
+        url: process.env.NEXT_PUBLIC_API_URL + apiConfig.endpoints.login,
+        data: requestData,
+    }
+    responseHandler({
+        promise: fetcherApiRequest.request(request),
+        onError: onError,
+        onSuccess: onSuccess
+    })
 }
 
 export const fetchRequest = ({endpoint, operation = "", args = [], data={}, onSuccess, onError}) => {
@@ -38,12 +47,15 @@ export const fetchRequest = ({endpoint, operation = "", args = [], data={}, onSu
     })
 }
 
-export const postRequest = ({endpoint, operation, requestData, args = [], method = "post", onSuccess, onError}) => {
+export const postRequest = ({endpoint, operation, requestData, args = [], method = "post", headers = {}, onSuccess, onError}) => {
     const request = {
         method: method,
         url: buildRequestUrl({endpoint: endpoint, operation: operation, args: args}),
         data: requestData,
-        headers: {'Authorization': sprintf("Bearer %s", getSessionObject().access_token)}
+        headers: {
+            'Authorization': sprintf("Bearer %s", getSessionObject().access_token),
+            ...headers
+        }
     }
     responseHandler({
         promise: fetcherApiRequest.request(request),
@@ -51,20 +63,6 @@ export const postRequest = ({endpoint, operation, requestData, args = [], method
         onSuccess: onSuccess
     })
 }
-
-export const sendFileData = async (operation, endpoint, data) => {
-    const requestData = {
-        method: "post",
-        url: process.env.NEXT_PUBLIC_API_URL + sprintf(apiConfig.endpoints[operation], endpoint),
-        data: data,
-        headers: {
-            'Authorization': sprintf("Bearer %s", getSessionObject().access_token),
-            "Content-Type": "multipart/form-data"
-        }
-    }
-    return await fetcherApiRequest.request(requestData);
-}
-
 
 export const responseHandler = ({promise, onSuccess, onError}) => {
     promise.then(response => {
@@ -79,14 +77,4 @@ export const responseHandler = ({promise, onSuccess, onError}) => {
         }
         console.error(error)
     });
-}
-
-const buildHttpQuery = (queryObject = {}) => {
-    let esc = encodeURIComponent;
-    if (isObjectEmpty(queryObject)) {
-        return {};
-    }
-    return "?" + Object.keys(queryObject)
-        .map(k => esc(k) + '=' + esc(queryObject[k]))
-        .join('&');
 }

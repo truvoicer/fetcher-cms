@@ -3,12 +3,16 @@ import Auth from '../../views/layouts/Auth'
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
 import Alert from "react-bootstrap/Alert";
-import {setSession} from "../../library/session/authenticate";
+import {getRouteItem, setSession} from "../../library/session/authenticate";
 import React, {useState} from "react";
 import {getToken, responseHandler} from "../../library/api/fetcher-api/fetcher-middleware";
 import Head from "next/head";
+import {SESSION_LOGIN_REDIRECT, SESSION_STATE_KEY} from "../../library/redux/constants/session-constants";
+import {connect} from "react-redux";
+import {isNotEmpty} from "../../library/utils";
+import {Routes} from "../../config/routes";
 
-const Login = (props) => {
+const Login = ({session}) => {
     Login.PageName = "login";
 
     const router = useRouter();
@@ -31,21 +35,32 @@ const Login = (props) => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        responseHandler(getToken({email: email, password: password}), loginResponseHandler);
-    }
-
-    const loginResponseHandler = (status, message, data = null) => {
-        let alertStatus = "danger";
-        if (status === 200) {
-            setSession(data.data)
-            router.push('/admin/dashboard')
-            return;
-        }
-        setResponse({
-            alertStatus: alertStatus,
-            message: message
+        getToken({
+            requestData: {email: email, password: password},
+            onSuccess: (responseData) => {
+                setSession(responseData.data)
+                if (isNotEmpty(session[SESSION_LOGIN_REDIRECT])) {
+                    console.log(session[SESSION_LOGIN_REDIRECT])
+                    router.push(session[SESSION_LOGIN_REDIRECT])
+                    return;
+                }
+                const sessionRedirectUrl = localStorage.getItem("redirect_url")
+                if (isNotEmpty(sessionRedirectUrl)) {
+                    console.log(sessionRedirectUrl)
+                    router.push(sessionRedirectUrl)
+                }
+                console.log(getRouteItem(Routes.items, "dashboard").route)
+                router.push(getRouteItem(Routes.items, "dashboard").route);
+            },
+            onError: (error) => {
+                setResponse({
+                    alertStatus: "danger",
+                    message: error?.response?.data?.message || error?.response?.message || "Error logging in"
+                })
+            }
         })
     }
+
     return (
         <>
             <Head>
@@ -115,4 +130,12 @@ const Login = (props) => {
     )
 }
 
-export default Login;
+function mapStateToProps(state) {
+    return {
+        session: state[SESSION_STATE_KEY]
+    }
+}
+export default connect(
+    mapStateToProps,
+    null
+)(Login)

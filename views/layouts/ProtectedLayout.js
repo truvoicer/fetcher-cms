@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {useRouter} from "next/router";
 import {getApiUser} from "../../library/api/fetcher-api/fetcher-middleware";
-import {checkAccessControl, getRouteItem} from "../../library/session/authenticate";
+import {checkAccessControl, getRouteItem, logout} from "../../library/session/authenticate";
 import {Routes} from "../../config/routes";
 import {
     setSessionAuthenticatedAction,
-    setSessionAuthenticatingAction,
+    setSessionAuthenticatingAction, setSessionLoginRedirectAction,
     setSessionUserAction
 } from "../../library/redux/actions/session-actions";
 import {
@@ -21,6 +21,7 @@ const ProtectedLayout = ({children, pageName, session}) => {
         getApiUser()
             .then((response) => {
                 if (response.status !== 200) {
+                    logout(router.asPath)
                     router.push('/auth/login')
                     return;
                 }

@@ -10,12 +10,10 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import {Button, FormGroup, FormLabel} from "react-bootstrap";
 import Select from "react-select";
-import {postRequest, sendFileData} from "../../../library/api/fetcher-api/fetcher-middleware";
+import {postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../library/utils";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 import ApiConfig from "../../../config/api-config";
-
-const sprintf = require("sprintf-js").sprintf
 
 export const ImporterPageName = "importer";
 
@@ -318,30 +316,36 @@ const ImporterPage = (props) => {
         const data = new FormData();
         data.append("import_type", selectedImportType.value);
         data.append("upload_file", selectedImportFile);
-        sendFileData("tools", "import", data)
-            .then(response => {
+        postRequest({
+            endpoint: ApiConfig.endpoints.tools,
+            operation: "import",
+            requestData: data,
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            onSuccess: (responseData) => {
                 if (response.data.status === "success") {
                     setResponse({
                         success: true,
-                        message: response.data.message,
-                        data: response.data.data
+                        message: responseData.message,
+                        data: responseData.data
                     })
 
-                    if (!isSet(response.data.data.mappings)) {
+                    if (!isSet(responseData.data.mappings)) {
                         setActiveStep(2);
                     } else {
                         setActiveStep(1);
                     }
                 }
-                // console.log(response.data)
-            })
-            .catch(error => {
+            },
+            onError: (error) => {
                 setResponse({
                     success: false,
                     message: error?.response?.data?.message,
                     data: error?.response?.data?.data
                 })
-            })
+            }
+        })
     }
 
     const submitHandler = (e) => {

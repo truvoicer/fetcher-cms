@@ -215,7 +215,7 @@ const ProviderRequestsTable = (props) => {
                     showModal: true,
                     modalTitle: "Duplicate Request",
                     modalFormName: "duplicateRequest",
-                    endpoint: "service/request"
+                    endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id),
                 },
                 size: "md",
                 classes: "outline-primary"
@@ -228,7 +228,7 @@ const ProviderRequestsTable = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Request",
-                    endpoint: "service/request",
+                    endpoint: sprintf(ApiConfig.endpoints.serviceRequest, props.provider_id),
                     modalFormName: "delete"
                 },
                 size: "md",

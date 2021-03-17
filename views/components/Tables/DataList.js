@@ -15,6 +15,7 @@ import RowMenu from "./Components/RowMenu";
 import ExpandableRow from "./Expandable/ExpandableRow";
 import Dropdown from "react-bootstrap/Dropdown";
 import SettingsDropdown from "../Dropdowns/SettingsDropdown";
+import {isFunction} from "formik";
 
 const DataList = ({
                       tableSettingsDropdown,
@@ -140,6 +141,12 @@ const DataList = ({
 
     const editableFieldRequest = (row, config, formResponse = false) => {
         let action = "update";
+        let endpoint;
+        if (typeof config.fieldConfig.endpoint === "function") {
+            endpoint = config.fieldConfig.endpoint(row)
+        } else {
+            endpoint = `${config.fieldConfig.endpoint}/${row.id}`;
+        }
         if (isSet(config.fieldConfig.extraData)) {
             Object.keys(config.fieldConfig.extraData).map((item) => {
                 if (isSet(config.fieldConfig.extraData[item].key) && isSet(row[config.fieldConfig.extraData[item].key])) {
@@ -149,8 +156,9 @@ const DataList = ({
                 }
             })
         }
+
         postRequest({
-            endpoint: `${config.fieldConfig.endpoint}/${row.id}`,
+            endpoint: `${endpoint}`,
             operation: action,
             requestData: row,
             onSuccess: (responseData) => {

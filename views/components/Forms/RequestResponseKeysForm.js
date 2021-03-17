@@ -139,7 +139,10 @@ const RequestResponseKeysForm = ({data, config, formResponse}) => {
         requestData.return_data_type = values.return_data_type.value;
         requestData.service_response_key = data.data.service_response_key;
         postRequest({
-            endpoint: sprintf(ApiConfig.endpoints.requestResponseKey, config.provider_id, config.service_request_id),
+            endpoint: sprintf(
+                ApiConfig.endpoints.requestResponseKey,
+                config.provider_id, config.service_request_id
+            ) + `/${requestData.service_response_key.id}`,
             operation: data.action,
             requestData: requestData,
             onSuccess: (responseData) => {
@@ -174,8 +177,14 @@ const RequestResponseKeysForm = ({data, config, formResponse}) => {
             {data.action !== "update" &&
             <DataForm
                 data={ServiceRequestResponseKeysFormData()}
-                selectData={selectData}
-                selectOptions={selectOptions}
+                selectData={{
+                    ...serviceRequestSelectData,
+                    ...returnDataTypeSelectData
+                }}
+                selectOptions={{
+                    ...serviceRequestSelectOptions,
+                    ...returnDataTypeSelectOptions
+                }}
                 listData={listData}
                 submitCallback={submitHandler}
                 submitButtonText={addButtonLabel}

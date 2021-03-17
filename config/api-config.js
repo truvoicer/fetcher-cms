@@ -22,9 +22,7 @@ export default
         "serviceRequestParameter": "/provider/%d/service/request/%d/parameter",
         "serviceRequestConfig": "/provider/%d/service/request/%d/config",
         "requestResponseKey": "/provider/%d/service/request/%d/response/key",
-        "tools": "/tools/%s",
-        "fileList": "/tools/filesystem/files",
-        "file": "/tools/filesystem/file/%d",
-        "fileDownload": "/tools/filesystem/file/%d/download"
+        "tools": "/tools",
+        "fileSystem": "/tools/filesystem"
     }
 }

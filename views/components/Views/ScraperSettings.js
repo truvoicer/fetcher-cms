@@ -10,6 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import ScheduleForm from "../Forms/Scraper/ScheduleForm";
 import ConfigForm from "../Forms/Scraper/ConfigForm";
 import ScraperForm from "../Forms/Scraper/ScraperForm";
+import {getScraperById} from "../../../library/api/helpers/scraper-helpers";
 
 const ScraperSettings = ({scraper = null, provider = null}) => {
     const [responseKeys, setResponseKeys] = useState([])
@@ -56,9 +57,20 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
         })
     }
 
+    const loadScraperData = (scraperId, serviceId) => {
+        getScraperById({
+            scraperId: scraperId,
+            onSuccess: (responseData) => {
+                setSelectedScraper(responseData.data)
+                fetchServiceResponseKeys(responseData.data.service.id)
+            }
+        })
+    }
+
     const fetchServiceResponseKeys = (serviceId) => {
         fetchRequest({
-            endpoint: ApiConfig.endpoints.serviceResponseKeyList,
+            endpoint: sprintf(ApiConfig.endpoints.serviceResponseKey, serviceId),
+            operation: "list",
             data: {
                 service_id: serviceId
             },
@@ -129,7 +141,7 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                                         setModalComponent(
                                                             <ScraperForm
                                                                 provider={provider}
-                                                                scraperData={scraper}
+                                                                scraperData={selectedScraper}
                                                                 operationData={"update"}
                                                             />
                                                         )
@@ -144,7 +156,7 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                                         setModalTitle("Scraper Schedule Options")
                                                         setModalComponent(
                                                             <ScheduleForm
-                                                                scraper={scraper}
+                                                                scraper={selectedScraper}
                                                                 provider={provider}
                                                             />
                                                         )
@@ -177,10 +189,10 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                         <div className="card-header">Select a Scraper</div>
                                         <div className="card-body">
                                             <ScrapersSelect
-                                                scraper={scraper}
+                                                scraper={selectedScraper}
                                                 provider={provider}
                                                 callback={(data) => {
-                                                    fetchServiceResponseKeys(data.service.id)
+                                                    loadScraperData(data.id)
                                                 }}
                                             />
                                         </div>
@@ -261,7 +273,7 @@ const ScraperSettings = ({scraper = null, provider = null}) => {
                                         <div className="card-header">Configuration</div>
                                         <div className="card-body">
                                             <ConfigForm
-                                                scraper={scraper}
+                                                scraper={selectedScraper}
                                                 provider={provider}
                                             />
                                         </div>

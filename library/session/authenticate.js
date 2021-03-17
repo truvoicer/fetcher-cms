@@ -1,4 +1,5 @@
 import React from 'react'
+import {setSessionLoginRedirectAction} from "../redux/actions/session-actions";
 
 // Sets user details in localStorage
 export const setSession = (authObject) => {
@@ -18,13 +19,14 @@ export const setScraperApiSession = (authObject) => {
 
 
 // removes user details from localStorage
-export const logout = () => {
+export const logout = (redirectUrl) => {
     // Clear access token and ID token from local storage
     localStorage.removeItem('access_token');
     localStorage.removeItem('scraper_token');
     localStorage.removeItem('expires_at');
-    // navigate to the home route
-    window.location.replace("/auth/login")
+    setSessionLoginRedirectAction(redirectUrl);
+    localStorage.setItem("redirect_url", redirectUrl);
+    console.log(redirectUrl)
 }
 
 export const getSessionObject = () => {

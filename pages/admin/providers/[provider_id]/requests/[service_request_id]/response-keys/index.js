@@ -85,7 +85,13 @@ const ServiceRequestResponseKeys = (props) => {
         };
     }
 
+    const getUpdateEndpoint = (providerId, serviceRequestId) => {
+        return sprintf(
+            ApiConfig.endpoints.requestResponseKey, providerId, serviceRequestId
+        );
+    }
     const getTableColumns = () => {
+        const updateEndpoint = getUpdateEndpoint(provider.data.id, serviceRequest.data.id);
         return [
             {
                 name: 'Key Name',
@@ -103,7 +109,7 @@ const ServiceRequestResponseKeys = (props) => {
                     field: "response_key_value",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "service/request/response/key",
+                        endpoint: row => `${updateEndpoint}/${row.service_response_key.id}`,
                         extraData: {
                             service_request_id: serviceRequest.data.id,
                         }
@@ -120,7 +126,7 @@ const ServiceRequestResponseKeys = (props) => {
                     field: "list_item",
                     fieldType: "switch",
                     fieldConfig: {
-                        endpoint: "service/request/response/key",
+                        endpoint: row => `${updateEndpoint}/${row.service_response_key.id}`,
                         extraData: {
                             service_request_id: serviceRequest.data.id,
                         }
@@ -137,7 +143,7 @@ const ServiceRequestResponseKeys = (props) => {
                     field: "show_in_response",
                     fieldType: "switch",
                     fieldConfig: {
-                        endpoint: "service/request/response/key",
+                        endpoint: row => `${updateEndpoint}/${row.service_response_key.id}`,
                         extraData: {
                             service_request_id: serviceRequest.data.id,
                         }
@@ -155,7 +161,7 @@ const ServiceRequestResponseKeys = (props) => {
                     field: "has_array_value",
                     fieldType: "switch",
                     fieldConfig: {
-                        endpoint: "service/request/response/key",
+                        endpoint: row => `${updateEndpoint}/${row.service_response_key.id}`,
                         extraData: {
                             service_request_id: serviceRequest.data.id,
                         }
@@ -173,7 +179,7 @@ const ServiceRequestResponseKeys = (props) => {
                     field: "is_service_request",
                     fieldType: "switch",
                     fieldConfig: {
-                        endpoint: "service/request/response/key",
+                        endpoint: row => `${updateEndpoint}/${row.service_response_key.id}`,
                         extraData: {
                             service_request_id: serviceRequest.data.id,
                         }
@@ -201,6 +207,7 @@ const ServiceRequestResponseKeys = (props) => {
     }
 
     const getTableDropdownControls = () => {
+        const updateEndpoint = getUpdateEndpoint(provider.data.id, serviceRequest.data.id);
         return [
             {
                 control: "button",
@@ -221,7 +228,7 @@ const ServiceRequestResponseKeys = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Response Key",
-                    endpoint: "service/request/response/key",
+                    endpoint: row => `${updateEndpoint}/${row.service_response_key.id}`,
                     modalFormName: "delete"
                 },
                 size: "md",

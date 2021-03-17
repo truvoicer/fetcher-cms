@@ -5,21 +5,27 @@ import {postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React from "react";
 import Alert from "react-bootstrap/Alert";
 
-const DeleteForm = (props) => {
+const DeleteForm = ({data, config, formResponse}) => {
 
     const deleteItem = (e) => {
-        let data = props.data;
-        data.extra = props.config;
+        let endpoint;
+        if (typeof data.endpoint === "function") {
+            endpoint = data.endpoint(data?.data)
+        } else {
+            endpoint = `${data.endpoint}/${data.item_id}`;
+        }
+        let requestData = {...data};
+        requestData.extra = config;
         postRequest({
-            endpoint: props.data.endpoint,
-            operation: `${data.item_id}/delete`,
-            requestData: data,
-            onSuccess: (data) => {
-                props.formResponse(200, data.message, data);
+            endpoint: endpoint,
+            operation: `delete`,
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData);
             },
             onError: (error) => {
                 if (error.response) {
-                    props.formResponse(error.response.status, error.response.data.message);
+                    formResponse(error.response.status, error.response.data.message);
                 }
             }
         })
@@ -29,9 +35,9 @@ const DeleteForm = (props) => {
         <Row>
             <Col>
                 <Alert variant={"warning"} style={{overflow: "hidden"}}>
-                    Are you sure you want to delete ({props.data.itemLabel})?
+                    Are you sure you want to delete ({data.itemLabel})?
                 </Alert>
-                <Button variant="primary" onClick={props.data.closeModalCallBack}>Cancel</Button>
+                <Button variant="primary" onClick={data.closeModalCallBack}>Cancel</Button>
                 <Button variant="danger" onClick={deleteItem} >Confirm</Button>
             </Col>
         </Row>
