@@ -1,16 +1,14 @@
-export const DuplicateFormData = (
-    update = false,
-    itemLabel = null,
-    itemName = null
-) => {
+export const DuplicateFormData = () => {
     return {
         fields: [
             {
+                rowIndex: 0,
+                columnIndex: 0,
                 name: "item_label",
                 label: "Item Label",
+                placeHolder: "Enter an item label",
                 fieldType: "text",
                 type: "text",
-                placeHolder: "Enter an item label",
                 value: "",
                 validation: {
                     rules: [
@@ -26,11 +24,13 @@ export const DuplicateFormData = (
                 }
             },
             {
+                rowIndex: 1,
+                columnIndex: 0,
                 name: "item_name",
                 label: "Item Name",
+                placeHolder: "Enter an item name",
                 fieldType: "text",
                 type: "text",
-                placeHolder: "Enter an item name",
                 value: "",
                 validation: {
                     rules: [

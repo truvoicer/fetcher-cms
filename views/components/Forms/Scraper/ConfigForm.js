@@ -18,7 +18,6 @@ const ConfigForm = ({provider = null, scraper = null}) => {
     const [operation, setOperation] = useState("insert");
     const [scraperConfig, setScraperConfig] = useState(null);
 
-    const saveButtonLabel = "Save";
     const updateButtonLabel = "Save";
 
     useEffect(() => {

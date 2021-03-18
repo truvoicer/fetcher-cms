@@ -1,25 +1,36 @@
 import React, {useEffect, useState} from 'react';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {isSet} from "../../../../library/utils";
+import {isNotEmpty, isSet} from "../../../../library/utils";
 
-const FormList = (props) => {
+const FormList = ({
+                      data,
+                      name = "form_list",
+                      listItemKeyLabel = "Key",
+                      listItemValueLabel = "Value",
+                      addRowLabel = null,
+                      callback,
+                      arrayFieldIndex = false
+}) => {
     const listClass = "form-list";
     const listGroupClass = "form-list-items";
     const listRowClass = "form-list-row";
     const listItemKeyClass = "form-list-item-key";
     const listItemValueClass = "form-list-item-value";
-    const addRowLabel = "Add New";
-    const listItemKeyLabel = "Key";
-    const listItemValueLabel = "Value";
 
-    const [formList, setFormList] = useState(props.data);
+    const [formList, setFormList] = useState(data);
+    const [addRowLabelText, setAddRowLabelText] = useState("Add New");
 
     useEffect(() => {
-        if ((isSet(props.data) && Array.isArray(props.data))) {
-            setFormList(props.data)
+        if (isNotEmpty(addRowLabel)) {
+            setAddRowLabelText(addRowLabel)
         }
-    }, [props.data])
+    }, [addRowLabel])
+    useEffect(() => {
+        if ((isSet(data) && Array.isArray(data))) {
+            setFormList(data)
+        }
+    }, [data])
 
     const addFormListRow = (e) => {
         let formListState = [...formList];
@@ -51,14 +62,14 @@ const FormList = (props) => {
                 value: itemValue.value
             })
         })
-        props.callback(queryData);
+        callback(name, queryData, arrayFieldIndex);
     }
     return (
         <div className={listClass}>
             <button className={"btn btn-primary btn-sm add-row-button"}
                     onClick={addFormListRow}
                     type={"button"}>
-                {props.addRowLabel ? addRowLabel : addRowLabel}
+                {addRowLabelText ? addRowLabelText : addRowLabelText}
             </button>
             <div className={listGroupClass}>
                 {formList.map((item, index) => (

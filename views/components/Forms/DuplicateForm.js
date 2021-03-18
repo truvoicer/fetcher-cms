@@ -1,6 +1,6 @@
 import {postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import React from "react";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {DuplicateFormData} from "../../../library/forms/duplicate-form";
 
 const DuplicateForm = ({data, formResponse}) => {
@@ -21,6 +21,7 @@ const DuplicateForm = ({data, formResponse}) => {
 
     return (
         <DataForm
+            formType={"single"}
             data={DuplicateFormData()}
             submitCallback={submitHandler}
             submitButtonText={buttonLabel}

@@ -1,5 +1,6 @@
 import {fetchRequest} from "../fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
+import {isSet, uCaseFirst} from "../../utils";
 
 const vsprintf = require("sprintf-js").vsprintf;
 
@@ -25,4 +26,32 @@ export const fetchServiceRequest = ({callback, providerId, serviceRequestId}) =>
         onSuccess: callback
     })
 }
+export const buildCategoriesSelectOptions = (data) => {
+    return data.map((item, index) => {
+        return {
+            value: item.id,
+            label: item.category_label
+        }
+    })
+}
 
+
+export const buildServiceRequestSelectOptions = (requests) => {
+    return requests.map((item, index) => {
+        return {
+            value: item.id,
+            label: item.service_request_label
+        }
+    })
+}
+
+
+export const buildResponseKeyReturnDataType = (data) => {
+    if (isSet(data) && data !== "" && data !== null && data !== false) {
+        return {
+            value: data,
+            label: uCaseFirst(data)
+        }
+    }
+    return null;
+}

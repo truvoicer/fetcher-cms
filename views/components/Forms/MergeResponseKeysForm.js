@@ -5,49 +5,29 @@ import {
 } from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {MergeResponseKeysFormData} from "../../../library/forms/merge-response-keys-form";
+import {buildServiceRequestSelectOptions} from "../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf;
 
 const MergeResponseKeysForm = ({data, config, formResponse}) => {
-
-    const addButtonLabel = "Add Request Config";
-
-    const [serviceRequestSelectData, setServiceRequestSelectData] = useState({
-        source_service_request: {}
-    });
-    const [serviceRequestSelectOptions, setServiceRequestSelectOptions] = useState({
-        source_service_request: []
-    });
-
-    const [showForm, setShowForm] = useState(false);
+    const addButtonLabel = "Merge Response Keys";
+    const [serviceRequests, setServiceRequests] = useState([]);
 
     useEffect(() => {
-
         fetchRequest({
             endpoint: sprintf(ApiConfig.endpoints.serviceRequest, config.provider_id),
-            operation: `${config.service_request_id}`,
+            operation: `list`,
             data: {
                 provider_id: config.provider_id
             },
             onSuccess: (responseData) => {
-                setServiceRequestSelectOptions({
-                    source_service_request: getServicesRequestsSelect(responseData.data)
-                })
-                setShowForm(true)
+                setServiceRequests(buildServiceRequestSelectOptions(responseData.data))
             }
         })
     }, [])
 
-    const getServicesRequestsSelect = (requests) => {
-        return requests.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.service_request_label
-            }
-        })
-    }
 
     const submitHandler = (values) => {
         let requestData = {...values};
@@ -67,15 +47,12 @@ const MergeResponseKeysForm = ({data, config, formResponse}) => {
 
     return (
         <>
-            {showForm &&
             <DataForm
-                data={MergeResponseKeysFormData()}
-                selectData={serviceRequestSelectData}
-                selectOptions={serviceRequestSelectOptions}
+                formType={"single"}
+                data={MergeResponseKeysFormData(serviceRequests)}
                 submitCallback={submitHandler}
                 submitButtonText={addButtonLabel}
             />
-            }
         </>
     );
 }

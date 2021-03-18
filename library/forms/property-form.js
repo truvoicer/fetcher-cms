@@ -1,17 +1,20 @@
+import {isNotEmpty} from "../utils";
+
 export const PropertyFormData = (
     update = false,
-    propertyName = null,
-    propertyLabel = null
+    property = null,
 ) => {
     return {
         fields: [
             {
+                rowIndex: 0,
+                columnIndex: 0,
                 name: "property_label",
                 label: "Property Label",
                 type: "text",
                 fieldType: "text",
                 placeHolder: "Enter a property label",
-                value: propertyLabel? propertyLabel : "",
+                value: !isNotEmpty(property?.property_label)? "" : property.property_label,
                 validation: {
                     rules: [
                         {
@@ -26,12 +29,14 @@ export const PropertyFormData = (
                 }
             },
             {
+                rowIndex: 1,
+                columnIndex: 0,
                 name: "property_name",
                 label: "Property Name",
                 fieldType: "text",
                 type: "text",
                 placeHolder: "Enter property name",
-                value: propertyName? propertyName : "",
+                value: !isNotEmpty(property?.property_name)? "" : property.property_name,
                 validation: {
                     rules: [
                         {

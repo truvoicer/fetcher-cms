@@ -5,15 +5,13 @@ import {
 } from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ProviderPropertyFormData} from "../../../library/forms/provider-property-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
 const ProviderPropertiesForm = ({data, config, formResponse}) => {
-
     const [providerProperty, setProviderProperty] = useState({});
-    const [showForm, setShowForm] = useState(false);
     const updateButtonLabel = "Update Property";
 
     useEffect(() => {
@@ -23,7 +21,6 @@ const ProviderPropertiesForm = ({data, config, formResponse}) => {
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setProviderProperty(responseData.data);
-                    setShowForm(true);
                 }
             })
         }
@@ -37,7 +34,7 @@ const ProviderPropertiesForm = ({data, config, formResponse}) => {
         }
         postRequest({
             endpoint: sprintf(ApiConfig.endpoints.providerProperty, config.provider_id),
-            operation: (data.action === "update")? `${data.itemId}` : "create",
+            operation: (data.action === "update")? `${data.itemId}/update` : "create",
             requestData: requestData,
             onSuccess: (responseData) => {
                 formResponse(200, responseData.message, responseData.data)
@@ -47,18 +44,12 @@ const ProviderPropertiesForm = ({data, config, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
             <DataForm
-                data={
-                    ProviderPropertyFormData(
-                        true,
-                        providerProperty.property_value,
-                    )
-                }
+                formType={"single"}
+                data={ProviderPropertyFormData((data.action === "update"), providerProperty)}
                 submitCallback={submitHandler}
                 submitButtonText={updateButtonLabel}
             />
-            }
         </>
     );
 }

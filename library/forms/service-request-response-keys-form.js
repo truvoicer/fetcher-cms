@@ -1,11 +1,41 @@
+import {isSet} from "../utils";
+import {buildResponseKeyReturnDataType} from "../api/helpers/api-helpers";
+import FormList from "../../views/components/Forms/Components/FormList";
+import React from "react";
+
 export const ServiceRequestResponseKeysFormData = (
     update = false,
-    requestResponseKey = false
+    requestResponseKey = null,
+    serviceRequests = [],
+    returnDataTypes = []
 ) => {
+    let serviceRequestData = {};
+    let returnDataTypeData = {};
+    let listData = [];
     const serviceResponseKey = requestResponseKey.service_response_key;
+    if (isSet(requestResponseKey?.response_key_request_item) &&
+        requestResponseKey?.response_key_request_item !== null &&
+        isSet(requestResponseKey?.response_key_request_item?.service_request)
+    ) {
+        const serviceRequest = requestResponseKey.response_key_request_item.service_request;
+        serviceRequestData = {
+            value: serviceRequest.id,
+            label: serviceRequest.service_request_label
+        }
+    }
+    if (isSet(requestResponseKey?.return_data_type)) {
+        returnDataTypeData = buildResponseKeyReturnDataType(requestResponseKey.return_data_type);
+    }
+    if (isSet(requestResponseKey.array_keys)) {
+        if (requestResponseKey.array_keys !== null && requestResponseKey.array_keys !== "") {
+            listData = requestResponseKey.array_keys;
+        }
+    }
     return {
         fields: [
             {
+                rowIndex: 0,
+                columnIndex: 0,
                 name: "key_name",
                 label: "Key name",
                 fieldType: "text",
@@ -14,6 +44,8 @@ export const ServiceRequestResponseKeysFormData = (
                 value: serviceResponseKey?.key_name ? serviceResponseKey.key_name : "",
             },
             {
+                rowIndex: 1,
+                columnIndex: 0,
                 name: "response_key_value",
                 label: "Key Value",
                 fieldType: "text",
@@ -22,12 +54,14 @@ export const ServiceRequestResponseKeysFormData = (
                 value: requestResponseKey?.response_key_value ? requestResponseKey.response_key_value : "",
             },
             {
+                rowIndex: 2,
+                columnIndex: 0,
+                showLabel: false,
                 label: "Prepend Extra Data?",
                 name: "prepend_extra_data",
                 fieldType: "checkbox",
-                value: "1",
-                checked: requestResponseKey?.prepend_extra_data? requestResponseKey.prepend_extra_data : false,
                 checkboxType: "true_false",
+                value: requestResponseKey?.prepend_extra_data? requestResponseKey.prepend_extra_data : false,
                 subFields: [
                     {
                         dependsOn: {
@@ -44,11 +78,13 @@ export const ServiceRequestResponseKeysFormData = (
                 ]
             },
             {
+                rowIndex: 3,
+                columnIndex: 0,
+                showLabel: false,
                 label: "Append Extra Data?",
                 name: "append_extra_data",
                 fieldType: "checkbox",
-                value: "1",
-                checked: requestResponseKey.append_extra_data? requestResponseKey.append_extra_data : false,
+                value: requestResponseKey.append_extra_data? requestResponseKey.append_extra_data : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -66,14 +102,19 @@ export const ServiceRequestResponseKeysFormData = (
                 ]
             },
             {
+                rowIndex: 4,
+                columnIndex: 0,
+                showLabel: false,
                 label: "Show in response?",
                 name: "show_in_response",
                 fieldType: "checkbox",
-                value: "1",
-                checked: requestResponseKey.show_in_response? requestResponseKey.show_in_response : false,
+                value: requestResponseKey.show_in_response? requestResponseKey.show_in_response : false,
                 checkboxType: "true_false",
             },
             {
+                rowIndex: 5,
+                columnIndex: 0,
+                showLabel: false,
                 label: "List item??",
                 name: "list_item",
                 fieldType: "checkbox",
@@ -82,11 +123,13 @@ export const ServiceRequestResponseKeysFormData = (
                 checkboxType: "true_false",
             },
             {
+                rowIndex: 6,
+                columnIndex: 0,
+                showLabel: false,
                 label: "Has array value?",
                 name: "has_array_value",
                 fieldType: "checkbox",
-                value: "1",
-                checked: requestResponseKey.has_array_value? requestResponseKey.has_array_value : false,
+                value: requestResponseKey.has_array_value? requestResponseKey.has_array_value : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -94,28 +137,40 @@ export const ServiceRequestResponseKeysFormData = (
                             field: "has_array_value",
                             value: true
                         },
+                        rowIndex: 0,
+                        columnIndex: 0,
                         name: "return_data_type",
                         label: "Return Data Type",
                         fieldType: "select",
                         multi: false,
+                        options: returnDataTypes,
+                        value: returnDataTypeData,
                     },
                     {
                         dependsOn: {
                             field: "has_array_value",
                             value: true
                         },
+                        rowIndex: 1,
+                        columnIndex: 0,
                         name: "array_keys",
                         label: "List",
-                        fieldType: "list"
+                        fieldType: "form_list",
+                        listItemKeyLabel: "Key",
+                        listItemValueLabel: "Value",
+                        addRowLabel: "Add New",
+                        value: listData,
                     },
                 ]
             },
             {
+                rowIndex: 7,
+                columnIndex: 0,
+                showLabel: false,
                 label: "Is a service request?",
                 name: "is_service_request",
                 fieldType: "checkbox",
-                value: "1",
-                checked: requestResponseKey.is_service_request? requestResponseKey.is_service_request : false,
+                value: requestResponseKey.is_service_request? requestResponseKey.is_service_request : false,
                 checkboxType: "true_false",
                 subFields: [
                     {
@@ -123,10 +178,14 @@ export const ServiceRequestResponseKeysFormData = (
                             field: "is_service_request",
                             value: true
                         },
+                        rowIndex: 0,
+                        columnIndex: 0,
                         name: "response_key_request_item",
                         label: "Service Request",
                         fieldType: "select",
                         multi: false,
+                        options: serviceRequests,
+                        value: serviceRequestData,
                     },
                 ]
             },

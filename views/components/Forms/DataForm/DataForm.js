@@ -38,6 +38,9 @@ const DataForm = (props) => {
             case "file_upload":
                 value = isSet(item.value) ? item.value : "";
                 break;
+            case "form_list":
+                value = Array.isArray(item?.value) ? item.value : [];
+                break;
             case "select":
             case "select_data_source":
             case "radio":

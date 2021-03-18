@@ -1,22 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
-import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ProviderFormData} from "../../../library/forms/provider-form";
-
-const sprintf = require("sprintf-js").sprintf;
+import {buildCategoriesSelectOptions} from "../../../library/api/helpers/api-helpers";
 
 const ProviderForm = ({data, formResponse}) => {
+    const [response, setResponse] = useState({
+        show: false,
+        variant: "",
+        message: ""
+    });
     const [provider, setProvider] = useState({});
-    const [showForm, setShowForm] = useState(false);
-    const [selectData, setSelectData] = useState({
-        category: []
-    });
-
-    const [selectOptions, setSelectOptions] = useState({
-        category: [],
-    });
+    const [categories, setCategories] = useState([]);
 
     const addButtonLabel = "Add Provider";
     const updateButtonLabel = "Update Provider";
@@ -26,38 +22,22 @@ const ProviderForm = ({data, formResponse}) => {
             endpoint: ApiConfig.endpoints.category,
             operation: `list`,
             onSuccess: (responseData) => {
-                setSelectOptions({
-                    category: getCategoriesSelect(responseData.data)
-                })
+                setCategories(buildCategoriesSelectOptions(responseData.data))
             }
         })
     }, [])
 
     useEffect(() => {
-        if (isSet(data.action) && data.action === "update") {
+        if (data?.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.provider,
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setProvider(responseData.data);
-                    setSelectData({
-                        category: getCategoriesSelect(responseData.data.category)
-                    })
-                    setShowForm(true);
                 }
             })
         }
     }, [data.itemId, data.action])
-
-
-    const getCategoriesSelect = (data) => {
-        return data.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.category_label
-            }
-        })
-    }
 
     const submitHandler = (values) => {
         let requestData = {...values};
@@ -75,6 +55,11 @@ const ProviderForm = ({data, formResponse}) => {
             operation: (data.action === "update")? `${data.itemId}/update` : "create",
             requestData: requestData,
             onSuccess: (responseData) => {
+                setResponse({
+                    show: true,
+                    variant: "success",
+                    message: responseData.message
+                })
                 formResponse(200, responseData.message, responseData.data)
             }
         })
@@ -82,34 +67,17 @@ const ProviderForm = ({data, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
-            <DataForm
-                data={
-                    ProviderFormData(
-                        true,
-                        provider.provider_label,
-                        provider.provider_name,
-                        provider.provider_user_id,
-                        provider.provider_api_base_url,
-                        provider.provider_access_key,
-                        provider.provider_secret_key,
-                    )
-                }
-                selectData={selectData}
-                selectOptions={selectOptions}
-                submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
-            />
+            {response.show &&
+            <div className={`alert alert-${response.variant}`} role="alert">
+                {response.message}
+            </div>
             }
-            {data.action !== "update" &&
             <DataForm
-                data={ProviderFormData()}
-                selectData={selectData}
-                selectOptions={selectOptions}
+                formType={"single"}
+                data={ProviderFormData((data.action === "update"), provider, categories)}
                 submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
         </>
     );
 }

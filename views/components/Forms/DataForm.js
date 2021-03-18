@@ -38,8 +38,8 @@ const DataForm = (props) => {
             value = !!(isSet(item.checked) && item.checked);
         } else if (item.fieldType === "date") {
             value = isSet(item.value) ? item.value : "";
-        } else if (item.fieldType === "list") {
-            value = isSet(props.listData[item.name]) ? props.listData[item.name] : [];
+        } else if (item.fieldType === "form_list") {
+            value = Array.isArray(item?.value) ? item.value : [];
         }
         return value;
     }

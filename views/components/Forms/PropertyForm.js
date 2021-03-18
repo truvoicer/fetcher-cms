@@ -1,25 +1,22 @@
 import React, {useEffect, useState} from "react";
 import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
-import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {PropertyFormData} from "../../../library/forms/property-form";
 
 const PropertyForm = ({data, formResponse}) => {
 
     const [property, setProperty] = useState({})
-    const [showForm, setShowForm] = useState(false)
     const addButtonLabel = "Add Property";
     const updateButtonLabel = "Update Property";
 
     useEffect(() => {
-        if (isSet(data.action) && data.action === "update") {
+        if (data?.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.property,
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setProperty(responseData.data);
-                    setShowForm(true);
                 }
             })
         }
@@ -43,22 +40,12 @@ const PropertyForm = ({data, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
             <DataForm
-                data={
-                    PropertyFormData(true, property?.property_name, property?.property_label)
-                }
+                formType={"single"}
+                data={PropertyFormData((data.action === "update"), property)}
                 submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
-            {data.action !== "update" &&
-            <DataForm
-                data={PropertyFormData()}
-                submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
-            />
-            }
         </>
     );
 }

@@ -44,7 +44,7 @@ const ManageProviders = (props) => {
                         multiple: true,
                         endpoint: "provider",
                         select: {
-                            endpoint: ApiConfig.endpoints.categoryList,
+                            endpoint: `${ApiConfig.endpoints.category}/list`,
                             valueKey: "id",
                             labelKey: "category_label"
                         }
@@ -62,7 +62,7 @@ const ManageProviders = (props) => {
                     field: "provider_label",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "provider"
+                        endpoint: ApiConfig.endpoints.provider
                     }
                 },
             },
@@ -79,7 +79,7 @@ const ManageProviders = (props) => {
                     field: "provider_api_base_url",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "provider"
+                        endpoint: ApiConfig.endpoints.provider
                     }
                 },
             },
@@ -94,7 +94,7 @@ const ManageProviders = (props) => {
                     field: "provider_user_id",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "provider"
+                        endpoint: ApiConfig.endpoints.provider
                     }
                 },
             },
@@ -109,7 +109,7 @@ const ManageProviders = (props) => {
                     field: "provider_access_key",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "provider"
+                        endpoint: ApiConfig.endpoints.provider
                     }
                 },
             },
@@ -164,7 +164,7 @@ const ManageProviders = (props) => {
                     showModal: true,
                     modalTitle: "Delete Provider",
                     modalFormName: "delete",
-                    endpoint: "provider"
+                    endpoint: ApiConfig.endpoints.provider
                 },
                 size: "md",
                 classes: "outline-danger"

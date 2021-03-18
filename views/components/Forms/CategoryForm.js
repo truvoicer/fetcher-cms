@@ -1,26 +1,26 @@
 import React, {useEffect, useState} from "react";
 import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
-import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {CategoryFormData} from "../../../library/forms/category-form";
 
-const sprintf = require("sprintf-js").sprintf;
-
 const CategoryForm = ({data, formResponse}) => {
+    const [response, setResponse] = useState({
+        show: false,
+        variant: "",
+        message: ""
+    });
     const [category, setCategory] = useState({})
-    const [showForm, setShowForm] = useState(false)
     const addButtonLabel = "Add Category";
     const updateButtonLabel = "Update Category";
 
     useEffect(() => {
-        if (isSet(data.action) && data.action === "update") {
+        if (data?.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.category,
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setCategory(responseData.data);
-                    setShowForm(true);
                 }
             })
         }
@@ -36,6 +36,12 @@ const CategoryForm = ({data, formResponse}) => {
             operation: (data.action === "update")? `${data.itemId}/update` : "create",
             requestData: requestData,
             onSuccess: (responseData) => {
+                setCategory(responseData.data)
+                setResponse({
+                    show: true,
+                    variant: "success",
+                    message: responseData.message
+                })
                 formResponse(200, responseData.message, responseData.data)
             }
         })
@@ -43,20 +49,17 @@ const CategoryForm = ({data, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
-                <DataForm
-                    data={CategoryFormData(true, category?.category_name, category?.category_label)}
-                    submitCallback={submitCallbackHandler}
-                    submitButtonText={updateButtonLabel}
-                />
+            {response.show &&
+            <div className={`alert alert-${response.variant}`} role="alert">
+                {response.message}
+            </div>
             }
-            {data.action !== "update" &&
-                <DataForm
-                    data={CategoryFormData()}
-                    submitCallback={submitCallbackHandler}
-                    submitButtonText={addButtonLabel}
-                />
-            }
+            <DataForm
+                formType={"single"}
+                data={CategoryFormData((data.action === "update"), category)}
+                submitCallback={submitCallbackHandler}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
+            />
         </>
     );
 }

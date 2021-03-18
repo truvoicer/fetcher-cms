@@ -9,6 +9,7 @@ import ImageUploadField from "./FileUpload/ImageUploadField";
 import FileUploadField from "./FileUpload/FileUploadField";
 import moment from 'moment';
 import TelephoneField from "./Telephone/TelephoneField";
+import FormList from "../../Components/FormList";
 
 function FormFieldItem({
                            formId, field, handleChange, handleBlur,
@@ -260,6 +261,18 @@ function FormFieldItem({
                         callback={imageUploadCallback}
                         arrayFieldIndex={arrayFieldIndex}
                         value={getFieldValue(field.name)}
+                    />
+                );
+            case "form_list":
+                return (
+                    <FormList
+                        name={field.name}
+                        arrayFieldIndex={arrayFieldIndex}
+                        callback={setFormFieldValue}
+                        listItemKeyLabel={field?.listItemKeyLabel}
+                        listItemValueLabel={field?.listItemValueLabel}
+                        addRowLabel={field?.addRowLabel}
+                        data={getFieldValue(field.name)}
                     />
                 );
             default:
