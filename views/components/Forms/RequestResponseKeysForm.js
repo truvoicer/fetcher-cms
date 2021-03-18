@@ -61,24 +61,23 @@ const RequestResponseKeysForm = ({data, config, formResponse}) => {
 
     const submitHandler = (values) => {
         let requestData = {...values};
-        console.log(requestData)
-        // if (data.action === "update") {
-        //     requestData.id = data.itemId;
-        // }
-        // requestData.service_request_id = config.service_request_id;
-        // requestData.return_data_type = values.return_data_type.value;
-        // requestData.service_response_key = data.data.service_response_key;
-        // postRequest({
-        //     endpoint: sprintf(
-        //         ApiConfig.endpoints.requestResponseKey,
-        //         config.provider_id, config.service_request_id
-        //     ) + `/${requestData.service_response_key.id}`,
-        //     operation: data.action,
-        //     requestData: requestData,
-        //     onSuccess: (responseData) => {
-        //         formResponse(200, responseData.message, responseData.data)
-        //     }
-        // })
+        if (data.action === "update") {
+            requestData.id = data.itemId;
+        }
+        requestData.service_request_id = config.service_request_id;
+        requestData.return_data_type = values.return_data_type.value;
+        requestData.service_response_key = data.data.service_response_key;
+        postRequest({
+            endpoint: sprintf(
+                ApiConfig.endpoints.requestResponseKey,
+                config.provider_id, config.service_request_id
+            ) + `/${requestData.service_response_key.id}`,
+            operation: data.action,
+            requestData: requestData,
+            onSuccess: (responseData) => {
+                formResponse(200, responseData.message, responseData.data)
+            }
+        })
     }
 
     return (

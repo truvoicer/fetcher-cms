@@ -1,27 +1,22 @@
 import React, {useEffect, useState} from "react";
 import {fetchRequest, postRequest} from '../../../library/api/fetcher-api/fetcher-middleware'
 import ApiConfig from "../../../config/api-config";
-import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ServiceFormData} from "../../../library/forms/service-form";
-
-const sprintf = require("sprintf-js").sprintf;
 
 const ServiceForm = ({data, formResponse}) => {
     const [service, setService] = useState({});
-    const [showForm, setShowForm] = useState(false);
 
     const addButtonLabel = "Add Service";
     const updateButtonLabel = "Update Service";
 
     useEffect(() => {
-        if (isSet(data.action) && data.action === "update") {
+        if (data?.action === "update") {
             fetchRequest({
                 endpoint: ApiConfig.endpoints.service,
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setService(responseData.data);
-                    setShowForm(true);
                 }
             })
         }
@@ -44,26 +39,12 @@ const ServiceForm = ({data, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
             <DataForm
-                data={
-                    ServiceFormData(
-                        true,
-                        service.service_label,
-                        service.service_name,
-                    )
-                }
+                formType={"single"}
+                data={ServiceFormData((data.action === "update"), service)}
                 submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
-            {data.action !== "update" &&
-            <DataForm
-                data={ServiceFormData()}
-                submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
-            />
-            }
         </>
     );
 }

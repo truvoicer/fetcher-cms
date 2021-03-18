@@ -4,73 +4,29 @@ import {
     postRequest,
 } from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
-import {isSet, uCaseFirst} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ServiceRequestConfigFormData} from "../../../library/forms/service-request-config-form";
+import {formListSelectedValueType} from "../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf;
 
 const ServiceConfigForm = ({data, config, formResponse}) => {
+    const [serviceRequestConfig, setServiceRequestConfig] = useState({});
 
     const addButtonLabel = "Add Request Config";
     const updateButtonLabel = "Update Request Config";
 
-    const [selectData, setSelectData] = useState({
-        value_types: {
-            label: "Text",
-            value: "text"
-        }
-    });
-
-    const [selectOptions, setSelectOptions] = useState({
-        value_types: [
-            {
-                label: "Text",
-                value: "text"
-            },
-            {
-                label: "List",
-                value: "list"
-            }
-        ],
-    });
-
-    const [serviceRequestConfig, setServiceRequestConfig] = useState({});
-    const [listData, setListData] = useState({
-        item_array_value: []
-    });
-    const [showForm, setShowForm] = useState(false);
-
     useEffect(() => {
-        if (isSet(data.action) && data.action === "update") {
+        if (data?.action === "update") {
             fetchRequest({
                 endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, config.provider_id, config.service_request_id),
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
-                    let data = responseData.data;
                     setServiceRequestConfig(responseData.data);
-                    setSelectData({
-                        value_types: getSelectedValueType(data.value_type)
-                    })
-                    if (data.item_array_value !== null && data.item_array_value !== "") {
-                        setListData({
-                            item_array_value: data.item_array_value
-                        });
-                    }
-                    setShowForm(true);
                 }
             });
         }
     }, [data.itemId, data.action])
-
-    const getSelectedValueType = (value_type) => {
-        if (isSet(value_type) && value_type !== "") {
-            return {
-                value: value_type,
-                label: uCaseFirst(value_type)
-            }
-        }
-    }
 
     const submitHandler = (values) => {
         let requestData = {...values};
@@ -91,32 +47,12 @@ const ServiceConfigForm = ({data, config, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
             <DataForm
-                data={
-                    ServiceRequestConfigFormData(
-                        true,
-                        serviceRequestConfig.item_name,
-                        serviceRequestConfig.item_value,
-                    )
-                }
-                selectData={selectData}
-                selectOptions={selectOptions}
-                listData={listData}
+                formType={"single"}
+                data={ServiceRequestConfigFormData((data.action === "update"), serviceRequestConfig, formListSelectedValueType)}
                 submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
-            {data.action !== "update" &&
-            <DataForm
-                data={ServiceRequestConfigFormData()}
-                selectData={selectData}
-                selectOptions={selectOptions}
-                listData={listData}
-                submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
-            />
-            }
         </>
     );
 }

@@ -55,3 +55,23 @@ export const buildResponseKeyReturnDataType = (data) => {
     }
     return null;
 }
+
+export const buildFormListSelectedValueType = (value_type) => {
+    if (isSet(value_type) && value_type !== "") {
+        return {
+            value: value_type,
+            label: uCaseFirst(value_type)
+        }
+    }
+}
+
+export const formListSelectedValueType = [
+    {
+        label: "Text",
+        value: "text"
+    },
+    {
+        label: "List",
+        value: "list"
+    }
+];
