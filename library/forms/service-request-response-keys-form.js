@@ -1,6 +1,6 @@
 import {isSet} from "../utils";
 import {buildResponseKeyReturnDataType} from "../api/helpers/api-helpers";
-import FormList from "../../views/components/Forms/Components/FormList";
+import FormListField from "../../views/components/Forms/DataForm/Fields/Formlist/FormListField";
 import React from "react";
 
 export const ServiceRequestResponseKeysFormData = (

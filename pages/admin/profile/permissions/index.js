@@ -1,29 +1,30 @@
 import React, {useEffect, useState} from "react";
-import SidebarLayout from "../../../../../../views/layouts/SidebarLayout";
+import SidebarLayout from "../../../../views/layouts/SidebarLayout";
 import Col from "react-bootstrap/Col";
-import {isNotEmpty, isObjectEmpty, isSet} from "../../../../../../library/utils";
+import {isNotEmpty, isObjectEmpty, isSet} from "../../../../library/utils";
 import {
     SESSION_AUTHENTICATED,
     SESSION_AUTHENTICATING,
     SESSION_STATE_KEY,
     SESSION_USER
-} from "../../../../../../library/redux/constants/session-constants";
+} from "../../../../library/redux/constants/session-constants";
 import {connect} from "react-redux";
 import {
     setBreadcrumbsDataAction,
     setBreadcrumbsPageNameAction
-} from "../../../../../../library/redux/actions/breadcrumbs-actions";
-import UserEntitiesTable from "../../../../../../views/components/Tables/UserEntitiesTable";
-import {fetchRequest} from "../../../../../../library/api/fetcher-api/fetcher-middleware";
-import ApiConfig from "../../../../../../config/api-config";
+} from "../../../../library/redux/actions/breadcrumbs-actions";
+import UserEntitiesTable from "../../../../views/components/Tables/UserEntitiesTable";
+import {fetchRequest} from "../../../../library/api/fetcher-api/fetcher-middleware";
+import ApiConfig from "../../../../config/api-config";
 
-export const SettingsUserPermissionsPageName = "settings_user_permissions";
-const SettingsUserPermissions = ({session, userId}) => {
+export const UserPermissionsPageName = "user_entity_permissions";
+
+const UserEntityPermissions = ({session}) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
         if (!session[SESSION_AUTHENTICATING] && session[SESSION_AUTHENTICATED] && !isObjectEmpty(session[SESSION_USER])) {
-            setBreadcrumbsPageNameAction(SettingsUserPermissionsPageName)
+            setBreadcrumbsPageNameAction(UserPermissionsPageName)
             setBreadcrumbsDataAction({
                 user: {
                     id: session[SESSION_USER].id,
@@ -34,47 +35,33 @@ const SettingsUserPermissions = ({session, userId}) => {
     }, [session, session[SESSION_AUTHENTICATING], session[SESSION_AUTHENTICATED]])
 
     useEffect(() => {
-        if (isSet(userId)) {
+        if (!session[SESSION_AUTHENTICATING] && session[SESSION_AUTHENTICATED] && !isObjectEmpty(session[SESSION_USER])) {
             fetchRequest({
-                endpoint: ApiConfig.endpoints.admin,
-                operation: `user/${userId}`,
+                endpoint: ApiConfig.endpoints.user,
+                operation: `detail`,
                 onSuccess: (responseData) => {
                     setUser(responseData.data);
                 }
             })
         }
-    }, [userId]);
+
+    }, [session[SESSION_AUTHENTICATING], session[SESSION_AUTHENTICATED]]);
 
     return (
 
-        <SidebarLayout pageName={SettingsUserPermissionsPageName}>
+        <SidebarLayout pageName={UserPermissionsPageName}>
             <>
                 <Col sm={12} md={12} lg={12}>
                     {isNotEmpty(user) &&
                         <UserEntitiesTable
                             user={user}
-                            isSession={false}
+                            isSession={true}
                         />
                     }
                 </Col>
             </>
         </SidebarLayout>
     )
-}
-
-export async function getStaticProps({params}) {
-    return {
-        props: {
-            userId: params.user_id,
-        },
-    }
-}
-
-export async function getStaticPaths() {
-    return {
-        paths: [],
-        fallback: true,
-    }
 }
 
 function mapStateToProps(state) {
@@ -86,4 +73,4 @@ function mapStateToProps(state) {
 export default connect(
     mapStateToProps,
     null
-)(SettingsUserPermissions);
+)(UserEntityPermissions);

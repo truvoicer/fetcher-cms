@@ -45,6 +45,14 @@ export const buildServiceRequestSelectOptions = (requests) => {
     })
 }
 
+export const buildServicesSelectOptions = (requests) => {
+    return requests.map((item, index) => {
+        return {
+            value: item.id,
+            label: item.service_label
+        }
+    })
+}
 
 export const buildResponseKeyReturnDataType = (data) => {
     if (isSet(data) && data !== "" && data !== null && data !== false) {
@@ -73,5 +81,16 @@ export const formListSelectedValueType = [
     {
         label: "List",
         value: "list"
+    }
+];
+
+export const textTypesOptions = [
+    {
+        label: "Text",
+        value: "text"
+    },
+    {
+        label: "Textarea",
+        value: "textarea"
     }
 ];

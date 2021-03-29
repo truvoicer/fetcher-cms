@@ -9,7 +9,7 @@ import ImageUploadField from "./FileUpload/ImageUploadField";
 import FileUploadField from "./FileUpload/FileUploadField";
 import moment from 'moment';
 import TelephoneField from "./Telephone/TelephoneField";
-import FormList from "../../Components/FormList";
+import FormListField from "./Formlist/FormListField";
 
 function FormFieldItem({
                            formId, field, handleChange, handleBlur,
@@ -265,7 +265,7 @@ function FormFieldItem({
                 );
             case "form_list":
                 return (
-                    <FormList
+                    <FormListField
                         name={field.name}
                         arrayFieldIndex={arrayFieldIndex}
                         callback={setFormFieldValue}

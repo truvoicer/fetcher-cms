@@ -1,9 +1,9 @@
 import {isNotEmpty} from "../utils";
+import {userRolesOptions} from "../../config/user-roles";
 
 export const UserProfileFormData = (
     operation = false,
     user = null,
-    roles = [],
 ) => {
     let userRoles = [];
     if (isNotEmpty(user?.roles)) {
@@ -23,14 +23,10 @@ export const UserProfileFormData = (
                     rowIndex: 2,
                     columnIndex: 0,
                     name: "roles",
-                    description: "",
                     label: "Roles",
-                    labelPosition: "",
-                    placeHolder: "",
                     fieldType: "select",
                     multi: true,
-                    options: roles,
-                    data: [],
+                    options: userRolesOptions,
                     value: userRoles,
             })
             break;

@@ -3,8 +3,9 @@ import {isNotEmpty} from "../../../library/utils";
 import UserEntitiesPermissionsForm from "../Forms/Admin/UserEntitiesPermissionsForm";
 import DataList from "./DataList";
 import DeleteEntityPermissionsForm from "../Forms/Admin/DeleteEntityPermissionsForm";
+import ApiConfig from "../../../config/api-config";
 
-const UserEntityPermissionsTable = ({data, config, entity}) => {
+const UserEntityPermissionsTable = ({data, config, isSession}) => {
     const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
@@ -27,9 +28,14 @@ const UserEntityPermissionsTable = ({data, config, entity}) => {
     const getTableData = () => {
         return {
             title: "",
-            endpoint: `/permission/user/${config.userId}/entity/${data.data.entity}/list`,
+            endpoint: config.isSession
+                ?
+                `${ApiConfig.endpoints.user}/permission/entity/${data.data.entity}/list`
+                :
+                `${ApiConfig.endpoints.permission}/user/${config.userId}/entity/${data.data.entity}/list`,
             defaultColumnName: "entity",
             defaultColumnLabel: "entity",
+            hideControlsColumn: config.isSession,
             query: {
                 count: 1000,
                 order: "desc",
@@ -75,6 +81,9 @@ const UserEntityPermissionsTable = ({data, config, entity}) => {
     }
 
     const getTableInlineControls = () => {
+        if (config.isSession) {
+            return [];
+        }
         return [
             {
                 control: "button",
@@ -130,11 +139,22 @@ const UserEntityPermissionsTable = ({data, config, entity}) => {
             }
         };
     }
-
+    const getExtraProps = () => {
+        if (config.isSession) {
+            return {
+                titleConfig: {
+                    type: "text",
+                    text: "Permissions"
+                },
+                expandableRows: false
+            }
+        }
+    }
     return (
         <>
             {showTable &&
             <DataList
+                {...getExtraProps()}
                 tableData={getTableData()}
                 tableColumns={getTableColumns()}
                 tableInlineControls={getTableInlineControls()}

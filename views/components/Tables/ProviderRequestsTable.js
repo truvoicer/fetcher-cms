@@ -274,7 +274,10 @@ const ProviderRequestsTable = (props) => {
                 component: ApiClient,
                 props: {
                     provider_id: props.provider_id,
-                    service_request_id: "id"
+                    service_request_id: "id",
+                    provider: {
+                        id: props.provider_id
+                    }
                 }
             }}
         />

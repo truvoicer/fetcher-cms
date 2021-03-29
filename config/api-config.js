@@ -3,7 +3,6 @@ export default
     "apiUrl": process.env.NEXT_PUBLIC_API_URL,
     "endpoints": {
         "login": "/account/login",
-        "getUserList": "/admin/users",
         "getUser": "/admin/user/%d",
         "search": "/admin/search",
         "duplicate": "/%s/duplicate",

@@ -5,76 +5,56 @@ import {
 } from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ServiceRequestParameterFormData} from "../../../library/forms/service-request-parameter-form";
+import {textTypesOptions} from "../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf;
 
-const ServiceParametersForm = (props) => {
+const ServiceParametersForm = ({data, config, formResponse}) => {
+    const [serviceRequestParameter, setServiceRequestParameter] = useState({});
 
     const addButtonLabel = "Add Request Parameter";
     const updateButtonLabel = "Update Request Parameter";
 
-    const [serviceRequestParameter, setServiceRequestParameter] = useState({});
-    const [showForm, setShowForm] = useState(false);
-    const [selectData, setSelectData] = useState({
-        value_types: {
-            label: "Text",
-            value: "text"
-        }
-    });
-
-    const [selectOptions, setSelectOptions] = useState({
-        value_types: [
-            {
-                label: "Text",
-                value: "text"
-            },
-            {
-                label: "Textarea",
-                value: "textarea"
-            }
-        ],
-    });
     useEffect(() => {
-        if (isSet(props.data.action) && props.data.action === "update") {
+        if (isSet(data.action) && data.action === "update") {
             fetchRequest({
                 endpoint: sprintf(
                     `${ApiConfig.endpoints.serviceRequestParameter}/%d`,
-                    props.config.provider_id, props.config.service_request_id, props.data.itemId
+                    config.provider_id, config.service_request_id, data.itemId
                 ),
                 onSuccess: (data) => {
                     setServiceRequestParameter(data.data);
-                    setShowForm(true);
                 },
                 onError: (error) => {
                     if (error.response) {
-                        props.formResponse(error.response.status, error.response.data.message);
+                        formResponse(error.response.status, error.response.data.message);
                     }
                 }
             })
         }
-    }, [props.data.itemId, props.data.action])
+    }, [data.itemId, data.action])
 
 
     const submitHandler = (values) => {
-        let endpoint = sprintf(ApiConfig.endpoints.serviceRequestParameter, props.config.provider_id, props.config.service_request_id);
+        let endpoint = sprintf(ApiConfig.endpoints.serviceRequestParameter, config.provider_id, config.service_request_id);
         let requestData = {...values};
-        if (props.data.action === "update") {
-            requestData.id = props.data.itemId;
-            endpoint = `${endpoint}/${props.data.itemId}`
+        if (data.action === "update") {
+            requestData.id = data.itemId;
+            endpoint = `${endpoint}/${data.itemId}`
         }
-        requestData.service_request_id = props.config.service_request_id;
+        requestData.service_request_id = config.service_request_id;
         postRequest({
             endpoint: endpoint,
-            operation: props.data.action,
+            operation: data.action,
             requestData: requestData,
             onSuccess: (data) => {
-                props.formResponse(200, data.message, data);
+                formResponse(200, data.message, data);
             },
             onError: (error) => {
                 if (error.response) {
-                    props.formResponse(error.response.status, error.response.data.message);
+                    formResponse(error.response.status, error.response.data.message);
                 }
             }
         })
@@ -82,30 +62,12 @@ const ServiceParametersForm = (props) => {
 
     return (
         <>
-            {props.data.action === "update" && showForm &&
             <DataForm
-                data={
-                    ServiceRequestParameterFormData(
-                        true,
-                        serviceRequestParameter.parameter_name,
-                        serviceRequestParameter.parameter_value,
-                    )
-                }
-                selectData={selectData}
-                selectOptions={selectOptions}
+                formType={"single"}
+                data={ServiceRequestParameterFormData((data.action === "update"), serviceRequestParameter, textTypesOptions)}
                 submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
-            {props.data.action !== "update" &&
-            <DataForm
-                data={ServiceRequestParameterFormData()}
-                selectData={selectData}
-                selectOptions={selectOptions}
-                submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
-            />
-            }
         </>
     );
 }

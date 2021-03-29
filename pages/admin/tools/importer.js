@@ -14,6 +14,7 @@ import {postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import {isSet} from "../../../library/utils";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
 import ApiConfig from "../../../config/api-config";
+import {setErrorAlertAction} from "../../../library/redux/actions/global-actions";
 
 export const ImporterPageName = "importer";
 
@@ -299,12 +300,16 @@ const ImporterPage = (props) => {
                     return true;
                 }
                 setActiveStep(1);
-                console.error(responseData)
+                setErrorAlertAction({
+                    text: responseData?.message || "Error with mappings"
+                })
                 return false;
             },
             onError: (error) => {
+                setErrorAlertAction({
+                    text: error?.response?.data?.message || error?.response?.message || "Error with mappings"
+                })
                 setActiveStep(1);
-                console.error(error)
             }
         })
     }
@@ -324,7 +329,7 @@ const ImporterPage = (props) => {
                 "Content-Type": "multipart/form-data"
             },
             onSuccess: (responseData) => {
-                if (response.data.status === "success") {
+                if (responseData.status === "success") {
                     setResponse({
                         success: true,
                         message: responseData.message,
@@ -334,11 +339,17 @@ const ImporterPage = (props) => {
                     if (!isSet(responseData.data.mappings)) {
                         setActiveStep(2);
                     } else {
+                        setErrorAlertAction({
+                            text: responseData?.message || "Error uploading import file"
+                        })
                         setActiveStep(1);
                     }
                 }
             },
             onError: (error) => {
+                setErrorAlertAction({
+                    text: error?.response?.data?.message || error?.response?.message || "Error with mappings"
+                })
                 setResponse({
                     success: false,
                     message: error?.response?.data?.message,

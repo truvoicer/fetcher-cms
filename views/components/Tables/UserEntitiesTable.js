@@ -1,33 +1,29 @@
 import React, {useEffect, useState} from 'react';
-import {isSet} from "../../../library/utils";
+import {isNotEmpty, isSet} from "../../../library/utils";
 import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
 import DataList from "./DataList";
 import UserEntityPermissionsTable from "./UserEntityPermissionsTable";
 
 const sprintf = require("sprintf-js").sprintf
-const UserEntitiesTable = ({userId}) => {
-    const [user, setUser] = useState({});
+const UserEntitiesTable = ({user = null, isSession = false}) => {
     const [showTable, setShowTable] = useState(false);
 
     useEffect(() => {
-        if (isSet(userId)) {
-            fetchRequest({
-                endpoint: ApiConfig.endpoints.admin,
-                operation: `user/${userId}`,
-                onSuccess: (responseData) => {
-                    setUser(responseData.data);
-                    setShowTable(true);
-                }
-            })
+        if (isNotEmpty(user)) {
+            setShowTable(true)
         }
-    }, [userId]);
+    }, [user]);
 
 
     const getTableData = () => {
         return {
             title: "",
-            endpoint: `/permission/user/${user.id}/entity/list`,
+            endpoint: isSession
+                ?
+                `${ApiConfig.endpoints.user}/permission/entity/list`
+                :
+                `${ApiConfig.endpoints.permission}/user/${user.id}/entity/list`,
             defaultColumnName: "entity_label",
             defaultColumnLabel: "entity_label",
             query: {
@@ -72,14 +68,16 @@ const UserEntitiesTable = ({userId}) => {
                 modalForm: UserEntityPermissionsTable,
                 config: {
                     userId: user.id,
-                    size: "lg"
+                    size: "lg",
+                    isSession: isSession
                 }
             },
             permissions: {
                 modalForm: UserEntityPermissionsTable,
                 config: {
                     userId: user.id,
-                    size: "lg"
+                    size: "lg",
+                    isSession: isSession
                 }
             }
         };
@@ -99,12 +97,13 @@ const UserEntitiesTable = ({userId}) => {
                         text: "User Entities Permissions"
                     }}
                     expandedRowData={{
-                        title: "Service Requests",
+                        title: "Entity Permissions",
                         component: UserEntityPermissionsTable,
                         props: {
                             entity: "entity",
                             config: {
-                                userId: user.id
+                                userId: user.id,
+                                isSession: isSession
                             }
                         }
                     }}

@@ -244,6 +244,15 @@ export const Routes =
                     icon: "cil-wc",
                     sidebar: true
                 },
+                {
+                    access_control: ["ROLE_USER", "ROLE_ADMIN", "ROLE_SUPER_ADMIN"],
+                    label: "Entity Permissions",
+                    name: "user_entity_permissions",
+                    route: "/admin/profile/permissions",
+                    parent: "settings",
+                    icon: "cil-wc",
+                    sidebar: true
+                },
             ]
         },
         {

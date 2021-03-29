@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Select from "react-select";
 import Button from "react-bootstrap/Button";
-import FormList from "../Forms/Components/FormList";
+import FormListField from "../Forms/DataForm/Fields/Formlist/FormListField";
 import React, {useEffect, useState} from "react";
 import {isObjectEmpty, isSet} from "../../../library/utils";
 import {fetchRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
@@ -39,7 +39,6 @@ const ApiClient = (props) => {
             }
         }))
     }, [requestParameterData])
-
     useEffect(() => {
         if (!isObjectEmpty(provider) && !isObjectEmpty(serviceRequest)) {
             setRequestTypeOptions(getRequestTypeOptions(provider.service_requests))
@@ -49,10 +48,7 @@ const ApiClient = (props) => {
             fetchProvider({
                 providerId: props.provider_id,
                 callback: (responseData) => {
-                    setProvider({
-                        received: true,
-                        data: responseData.data
-                    })
+                    setProvider(responseData.data)
                     setRequestTypeOptions(getRequestTypeOptions(responseData.data.service_requests))
                 }
             })
@@ -179,11 +175,11 @@ const ApiClient = (props) => {
                                     </Col>
                                     <Col sm={12} md={9} lg={9}>
                                         <Form.Group controlId="formRequestType">
-                                            <FormList callback={formListCallback}
-                                                      listItemKeyLabel={"Parameter name"}
-                                                      listItemValueLabel={"Parameter value"}
-                                                      addRowLabel={"Add Parameter"}
-                                                      data={formListData}
+                                            <FormListField callback={formListCallback}
+                                                           listItemKeyLabel={"Parameter name"}
+                                                           listItemValueLabel={"Parameter value"}
+                                                           addRowLabel={"Add Parameter"}
+                                                           data={formListData}
                                             />
                                         </Form.Group>
                                     </Col>

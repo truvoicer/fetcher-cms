@@ -5,15 +5,13 @@ import {
 } from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ServiceResponseKeyFormData} from "../../../library/forms/service-response-key-form";
 
 const sprintf = require("sprintf-js").sprintf;
 
 const ServiceResponseKeysForm = ({data, config, formResponse}) => {
-
     const [serviceResponseKey, setServiceResponseKey] = useState({});
-    const [showForm, setShowForm] = useState(false);
 
     const addButtonLabel = "Add Response Key";
     const updateButtonLabel = "Update Response Key";
@@ -25,7 +23,6 @@ const ServiceResponseKeysForm = ({data, config, formResponse}) => {
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setServiceResponseKey(responseData.data);
-                    setShowForm(true);
                 }
             })
         }
@@ -49,26 +46,12 @@ const ServiceResponseKeysForm = ({data, config, formResponse}) => {
 
     return (
         <>
-            {data.action === "update" && showForm &&
             <DataForm
-                data={
-                    ServiceResponseKeyFormData(
-                        true,
-                        serviceResponseKey.key_name,
-                        serviceResponseKey.key_value,
-                    )
-                }
+                formType={"single"}
+                data={ServiceResponseKeyFormData(serviceResponseKey)}
                 submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
-            {data.action !== "update" &&
-            <DataForm
-                data={ServiceResponseKeyFormData()}
-                submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
-            />
-            }
         </>
     );
 }

@@ -4,7 +4,6 @@ export const ScraperApiConfig = {
         "login": "/web/auth/login",
         "webTokenCheck": "/web/auth/token/check",
         "tokenCheck": "/auth/token/check",
-        "getUserList": "/admin/users",
         "getUser": "/admin/user/%d",
         "getApiTokenList": "/admin/user/%d/api-tokens",
         "getApiToken": "/admin/user/api-token/%d",

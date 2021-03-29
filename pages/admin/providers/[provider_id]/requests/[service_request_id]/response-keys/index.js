@@ -271,8 +271,8 @@ const ServiceRequestResponseKeys = (props) => {
 
     return (
         <>
-            {serviceRequest.received && provider.received &&
             <SidebarLayout pageName={ServiceRequestResponseKeysPageName}>
+                {serviceRequest.received && provider.received &&
                 <>
                     <Row>
                         <Col sm={12} md={9} lg={9}>
@@ -302,8 +302,8 @@ const ServiceRequestResponseKeys = (props) => {
                         </Col>
                     </Row>
                 </>
+                }
             </SidebarLayout>
-            }
         </>
     )
 }

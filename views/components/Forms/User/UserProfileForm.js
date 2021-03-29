@@ -9,28 +9,11 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
 
     const [userData, setUserData] = useState(null);
     const [formOperation, setFormOperation] = useState(null);
-    const [showForm, setShowForm] = useState(false);
     const [response, setResponse] = useState({
         show: false,
         variant: "",
         message: ""
     });
-
-
-    const roles = [
-        {
-            value: "ROLE_SUPER_ADMIN",
-            label: "ROLE_SUPER_ADMIN"
-        },
-        {
-            value: "ROLE_ADMIN",
-            label: "ROLE_ADMIN"
-        },
-        {
-            value: "ROLE_USER",
-            label: "ROLE_USER"
-        },
-    ]
 
     const addButtonLabel = "Save";
     const updateButtonLabel = "Update";
@@ -43,7 +26,6 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
                 console.log(responseData)
                 if (responseData.status === "success") {
                     setUserData(responseData.data)
-                    setShowForm(true);
                 }
             },
             onError: (error) => {
@@ -59,7 +41,6 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
             onSuccess: (responseData) => {
                 if (responseData.status === "success") {
                     setUserData(responseData.data)
-                    setShowForm(true);
                 }
             },
             onError: (error) => {
@@ -72,7 +53,6 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
         switch (formOperation) {
             case "new_user":
                 setUserData(null);
-                setShowForm(true);
                 break;
             case "update_user":
                 if (isNotEmpty(data?.itemId)) {
@@ -105,7 +85,7 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
                 break;
             case "update_user":
                 endpoint = ApiConfig.endpoints.admin;
-                endpointOperation = "user/update";
+                endpointOperation = `user/${userData.id}/update`;
                 requestData.user_id = userData.id;
                 requestData.id = userData.id;
                 requestData.roles = values.roles.map(item => item.value);
@@ -150,7 +130,7 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
             }
             <DataForm
                 formType={"single"}
-                data={UserProfileFormData(formOperation, userData, roles)}
+                data={UserProfileFormData(formOperation, userData)}
                 submitCallback={submitHandler}
                 submitButtonText={
                     (formOperation === "update_user" || formOperation === "update_user_profile") ? updateButtonLabel : addButtonLabel

@@ -5,18 +5,19 @@ import {
 } from "../../../library/api/fetcher-api/fetcher-middleware";
 import React, {useEffect, useState} from "react";
 import {isSet} from "../../../library/utils";
-import DataForm from "./DataForm";
+import DataForm from "./DataForm/DataForm";
 import {ServiceRequestFormData} from "../../../library/forms/service-request-form";
+import {
+    buildCategoriesSelectOptions,
+    buildServicesSelectOptions,
+} from "../../../library/api/helpers/api-helpers";
 
 const sprintf = require("sprintf-js").sprintf;
 
 const ServiceRequestForm = ({data, config, formResponse}) => {
     const [serviceRequest, setServiceRequest] = useState({});
-    const [showForm, setShowForm] = useState(false);
-    const [servicesOptions, setServicesOptions] = useState({ services: [] });
-    const [servicesData, setServicesData] = useState({ services: {} });
-    const [categoryOptions, setCategoryOptions] = useState({ category: [] });
-    const [categoryData, setCategoryData] = useState({ category: {} });
+    const [services, setServices] = useState({ services: [] });
+    const [categories, setCategories] = useState({ category: [] });
 
     const addButtonLabel = "Add Service Request";
     const updateButtonLabel = "Update Service Request";
@@ -26,18 +27,14 @@ const ServiceRequestForm = ({data, config, formResponse}) => {
             endpoint: ApiConfig.endpoints.service,
             operation: `list`,
             onSuccess: (responseData) => {
-                setServicesOptions({
-                    services: getServicesSelect(responseData.data)
-                })
+                setServices(buildServicesSelectOptions(responseData.data))
             }
         })
         fetchRequest({
             endpoint: ApiConfig.endpoints.category,
             operation: `list`,
             onSuccess: (responseData) => {
-                setCategoryOptions({
-                    category: getCategoriesSelect(responseData.data)
-                })
+                setCategories(buildCategoriesSelectOptions(responseData.data))
             }
         })
     }, [])
@@ -49,43 +46,12 @@ const ServiceRequestForm = ({data, config, formResponse}) => {
                 operation: `${data.itemId}`,
                 onSuccess: (responseData) => {
                     setServiceRequest(responseData.data);
-                    setServicesData({
-                        services: {
-                            value: responseData?.data?.service?.id,
-                            label: responseData?.data?.service?.service_label
-                        }
-                    })
-                    if (isSet(responseData.data.category) && responseData.data.category !== null) {
-                        setCategoryData({
-                            category: {
-                                value: responseData?.data?.category?.id,
-                                label: responseData?.data?.category?.category_label
-                            }
-                        })
-                    }
-                    setShowForm(true);
                 }
             });
         }
     }, [data.itemId, data.action])
 
-    const getServicesSelect = (requests) => {
-        return requests.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.service_label
-            }
-        })
-    }
 
-    const getCategoriesSelect = (data) => {
-        return data.map((item, index) => {
-            return {
-                value: item.id,
-                label: item.category_label
-            }
-        })
-    }
     const submitHandler = (values) => {
         let requestData = {...values};
         if (data.action === "update") {
@@ -105,42 +71,12 @@ const ServiceRequestForm = ({data, config, formResponse}) => {
     }
     return (
         <>
-            {data.action === "update" && showForm &&
             <DataForm
-                data={
-                    ServiceRequestFormData(
-                        true,
-                        serviceRequest.service_request_name,
-                        serviceRequest.service_request_label,
-                    )
-                }
-                selectData={{
-                    ...servicesData,
-                    ...categoryData
-                }}
-                selectOptions={{
-                    ...servicesOptions,
-                    ...categoryOptions
-                }}
+                formType={"single"}
+                data={ServiceRequestFormData((data.action === "update"), serviceRequest, services, categories)}
                 submitCallback={submitHandler}
-                submitButtonText={updateButtonLabel}
+                submitButtonText={(data.action === "update")? updateButtonLabel : addButtonLabel}
             />
-            }
-            {data.action !== "update" &&
-            <DataForm
-                data={ServiceRequestFormData()}
-                selectData={{
-                    ...servicesData,
-                    ...categoryData
-                }}
-                selectOptions={{
-                    ...servicesOptions,
-                    ...categoryOptions
-                }}
-                submitCallback={submitHandler}
-                submitButtonText={addButtonLabel}
-            />
-            }
         </>
     );
 }

@@ -173,20 +173,20 @@ const ServiceRequestParameters = (props) => {
 
     return (
         <>
-            {serviceRequest.received && provider.received &&
             <SidebarLayout pageName={ServiceRequestParametersPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
+                        {serviceRequest.received && provider.received &&
                         <DataList
                             tableData={getTableData()}
                             tableColumns={getTableColumns()}
                             tableDropdownControls={getTableDropdownControls()}
                             modalConfig={getModalConfig()}
                         />
+                        }
                     </Col>
                 </>
             </SidebarLayout>
-            }
         </>
     )
 

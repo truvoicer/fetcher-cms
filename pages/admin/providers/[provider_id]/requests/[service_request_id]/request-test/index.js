@@ -55,14 +55,14 @@ const ServiceRequestTest = (props) => {
 
     return (
         <>
-            {isNotEmpty(provider) && isNotEmpty(serviceRequest) &&
             <SidebarLayout pageName={ServiceRequestTestPageName}>
+                {isNotEmpty(provider) && isNotEmpty(serviceRequest) &&
                 <ApiClient
                     provider={provider}
                     serviceRequest={serviceRequest}
                 />
+                }
             </SidebarLayout>
-            }
         </>
     )
 }

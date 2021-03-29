@@ -92,7 +92,7 @@ const ServiceRequestConfig = (props) => {
                     field: "item_name",
                     fieldType: "text",
                     fieldConfig: {
-                        endpoint: "service/request/config",
+                        endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, provider.data.id, serviceRequest.data.id),
                         extraData: {
                             service_request_id: serviceRequest.data.id,
                         }
@@ -142,7 +142,7 @@ const ServiceRequestConfig = (props) => {
                 modal: {
                     showModal: true,
                     modalTitle: "Delete Config Item",
-                    endpoint: "service/request/config",
+                    endpoint: sprintf(ApiConfig.endpoints.serviceRequestConfig, provider.data.id, serviceRequest.data.id),
                     modalFormName: "delete"
                 },
                 size: "md",
@@ -175,20 +175,20 @@ const ServiceRequestConfig = (props) => {
 
     return (
         <>
-            {serviceRequest.received && provider.received &&
             <SidebarLayout pageName={ServiceRequestConfigPageName}>
                 <>
                     <Col sm={12} md={12} lg={12}>
+                        {serviceRequest.received && provider.received &&
                         <DataList
                             tableData={getTableData()}
                             tableColumns={getTableColumns()}
                             tableDropdownControls={getTableDropdownControls()}
                             modalConfig={getModalConfig()}
                         />
+                        }
                     </Col>
                 </>
             </SidebarLayout>
-            }
         </>
     )
 }

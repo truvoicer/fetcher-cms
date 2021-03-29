@@ -1,24 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import {isNotEmpty, isSet} from "../../../../library/utils";
+import {isNotEmpty, isSet} from "../../../../../../library/utils";
 
-const FormList = ({
-                      data,
-                      name = "form_list",
-                      listItemKeyLabel = "Key",
-                      listItemValueLabel = "Value",
-                      addRowLabel = null,
-                      callback,
-                      arrayFieldIndex = false
-}) => {
+const FormListField = ({
+                           data,
+                           name = "form_list",
+                           listItemKeyLabel = "Key",
+                           listItemValueLabel = "Value",
+                           addRowLabel = null,
+                           callback,
+                           arrayFieldIndex = false
+                       }) => {
     const listClass = "form-list";
     const listGroupClass = "form-list-items";
     const listRowClass = "form-list-row";
     const listItemKeyClass = "form-list-item-key";
     const listItemValueClass = "form-list-item-value";
 
-    const [formList, setFormList] = useState(data);
+    const [initialSet, setInitialSet] = useState(false);
+    const [formList, setFormList] = useState([]);
     const [addRowLabelText, setAddRowLabelText] = useState("Add New");
 
     useEffect(() => {
@@ -27,8 +28,10 @@ const FormList = ({
         }
     }, [addRowLabel])
     useEffect(() => {
+
         if ((isSet(data) && Array.isArray(data))) {
             setFormList(data)
+            setInitialSet(true)
         }
     }, [data])
 
@@ -39,8 +42,11 @@ const FormList = ({
     }
 
     const removeFormListRow = (index, e) => {
-        const itemRow = document.getElementsByClassName("list-item-" + index.toString())
-        itemRow[0].remove()
+        setFormList(formList => {
+            let formListState = [...formList];
+            formListState.splice(index, 1)
+            return formListState;
+        })
         formChangeHandler()
     }
 
@@ -64,6 +70,7 @@ const FormList = ({
         })
         callback(name, queryData, arrayFieldIndex);
     }
+console.log(formList)
     return (
         <div className={listClass}>
             <button className={"btn btn-primary btn-sm add-row-button"}
@@ -93,10 +100,23 @@ const FormList = ({
                                 />
                             </Col>
                             <Col sm={12} md={12} lg={2}>
-                                <a className={"form-list-row--new"} onClick={addFormListRow}><i
-                                    className="fas fa-plus-circle"/></a>
-                                <a className={"form-list-row--remove"}
-                                   onClick={removeFormListRow.bind(this, index)}><i className="fas fa-trash-alt"/></a>
+                                <a className={"form-list-row--new"}
+                                   onClick={addFormListRow}
+                                   style={{
+                                       cursor: "pointer"
+                                   }}
+                                >
+                                    <i className="fas fa-plus-circle"/>
+                                </a>
+                                <a
+                                    className={"form-list-row--remove"}
+                                    onClick={removeFormListRow.bind(this, index)}
+                                    style={{
+                                        cursor: "pointer"
+                                    }}
+                                >
+                                    <i className="fas fa-trash-alt"/>
+                                </a>
                             </Col>
                         </Row>
                     </div>
@@ -108,4 +128,4 @@ const FormList = ({
 
 }
 
-export default FormList;
+export default FormListField;

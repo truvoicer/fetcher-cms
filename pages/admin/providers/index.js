@@ -8,6 +8,8 @@ import DataList from "../../../views/components/Tables/DataList";
 import ServiceRequestsExpandableTable
     from "../../../views/components/Tables/Expandable/Tables/ServiceRequestsExpandableTable";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
+import {ProviderFormData} from "../../../library/forms/provider-form";
+import FormBuilder from "../../../views/components/Forms/FormBuilder";
 
 const ManageProviders = (props) => {
     ManageProviders.PageName = "manage_providers";

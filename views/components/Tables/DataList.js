@@ -15,7 +15,6 @@ import RowMenu from "./Components/RowMenu";
 import ExpandableRow from "./Expandable/ExpandableRow";
 import Dropdown from "react-bootstrap/Dropdown";
 import SettingsDropdown from "../Dropdowns/SettingsDropdown";
-import {isFunction} from "formik";
 
 const DataList = ({
                       tableSettingsDropdown,
@@ -25,6 +24,7 @@ const DataList = ({
                       tableColumns,
                       tableData,
                       modalConfig,
+                      expandableRows = true,
                       inlineOnly = false,
                       dropdownOnly = true,
                       titleConfig = null
@@ -86,6 +86,7 @@ const DataList = ({
     }
 
     const getTableColumns = (columns, dropdownControls = [], inlineControls = []) => {
+        let hideControlsColumn = false;
         let hasColumnsConfig = false;
         let allToggle = false;
         let toggleType = null;
@@ -93,8 +94,11 @@ const DataList = ({
             allToggle = true;
             toggleType = "inline"
         }
+        if (isSet(tableData?.hideControlsColumn)) {
+            hideControlsColumn = tableData.hideControlsColumn
+        }
         let processColumns = columns.map((column, index) => {
-            if (isSet(column.controlsColumn) && column.controlsColumn) {
+            if (isSet(column.controlsColumn) && column.controlsColumn && !hideControlsColumn) {
                 hasColumnsConfig = true;
                 column.cell = row => getColumnControls(dropdownControls, inlineControls, row, showModal, allToggle, toggleType)
             }
@@ -104,7 +108,7 @@ const DataList = ({
             }
             return column
         });
-        if (!hasColumnsConfig) {
+        if (!hasColumnsConfig && !hideControlsColumn) {
             const controlObject = {
                 name: 'Controls',
                 allowOverflow: true,
@@ -341,7 +345,7 @@ const DataList = ({
                             tableInlineControls)}
                         data={data}
                         // onRowClicked={this.rowClickHandler}
-                        expandableRows={true}
+                        expandableRows={expandableRows}
                         expandableRowsComponent={
                             <ExpandableRow inlineControls={tableInlineControls}
                                            dropdownControls={tableDropdownControls}

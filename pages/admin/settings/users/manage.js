@@ -21,7 +21,7 @@ const ManageUsers = (props) => {
     const getTableData = () => {
         return {
             title: "Users",
-            endpoint: ApiConfig.endpoints.getUserList,
+            endpoint: `${ApiConfig.endpoints.admin}/user/list`,
             defaultColumnName: "username",
             defaultColumnLabel: "username",
             query: {
