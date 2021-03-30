@@ -49,7 +49,7 @@ const UserEntitiesTable = ({user = null, isSession = false}) => {
         return [
             {
                 control: "button",
-                text: "Edit",
+                text: isSession? "View" : "Edit",
                 action: "update",
                 modal: {
                     showModal: true,

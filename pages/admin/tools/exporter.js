@@ -30,79 +30,10 @@ const ExporterPage = (props) => {
 
     useEffect(() => {
         fetchRequest({
-            endpoint: ApiConfig.endpoints.service,
-            operation: `list`,
+            endpoint: ApiConfig.endpoints.tools,
+            operation: `export/list`,
             onSuccess: (responseData) => {
-                setExportFormList(exportFormList => {
-                    let cloneList = [...exportFormList];
-                    cloneList.push({
-                        show: false,
-                        id: "id",
-                        name: "services",
-                        label: "Services",
-                        nameField: "service_name",
-                        labelField: "service_label",
-                        data: responseData.data
-                    })
-                    return cloneList;
-                })
-            }
-        })
-        fetchRequest({
-            endpoint: ApiConfig.endpoints.category,
-            operation: `list`,
-            onSuccess: (responseData) => {
-                setExportFormList(exportFormList => {
-                    let cloneList = [...exportFormList];
-                    cloneList.push({
-                        show: false,
-                        id: "id",
-                        name: "categories",
-                        label: "Categories",
-                        nameField: "category_name",
-                        labelField: "category_label",
-                        data: responseData.data
-                    })
-                    return cloneList;
-                })
-            }
-        })
-        fetchRequest({
-            endpoint: ApiConfig.endpoints.provider,
-            operation: `list`,
-            onSuccess: (responseData) => {
-                setExportFormList(exportFormList => {
-                    let cloneList = [...exportFormList];
-                    cloneList.push({
-                        show: false,
-                        id: "id",
-                        name: "providers",
-                        label: "Providers",
-                        nameField: "provider_name",
-                        labelField: "provider_label",
-                        data: responseData.data
-                    })
-                    return cloneList;
-                })
-            }
-        })
-        fetchRequest({
-            endpoint: ApiConfig.endpoints.property,
-            operation: `list`,
-            onSuccess: (responseData) => {
-                setExportFormList(exportFormList => {
-                    let cloneList = [...exportFormList];
-                    cloneList.push({
-                        show: false,
-                        id: "id",
-                        name: "properties",
-                        label: "Properties",
-                        nameField: "property_name",
-                        labelField: "property_label",
-                        data: responseData.data
-                    })
-                    return cloneList;
-                })
+                setExportFormList(responseData.data)
             }
         })
     }, []);
