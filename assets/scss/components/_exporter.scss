@@ -1,0 +1,19 @@
+.exporter {
+  &--entities {
+    &--selector {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      &--label {
+        margin-left: 0;
+        min-width: 80px;
+      }
+      label {
+        margin-bottom: 0;
+      }
+    }
+    &--items {
+
+    }
+  }
+}

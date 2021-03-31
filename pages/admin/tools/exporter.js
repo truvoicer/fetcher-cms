@@ -1,15 +1,10 @@
 import React, {useEffect, useState} from "react";
 import SidebarLayout from "../../../views/layouts/SidebarLayout";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
 import {fetchRequest, postRequest} from "../../../library/api/fetcher-api/fetcher-middleware";
 import ApiConfig from "../../../config/api-config";
-import {Alert} from "react-bootstrap";
+import {Alert, Col, Row, Form, Card, Button, Modal} from "react-bootstrap";
 import {setBreadcrumbsPageNameAction} from "../../../library/redux/actions/breadcrumbs-actions";
-
-const sprintf = require("sprintf-js").sprintf
+import {isSet} from "../../../library/utils";
 
 export const ExporterPageName = "exporter";
 
@@ -21,6 +16,8 @@ const ExporterPage = (props) => {
 
     const [exportFormList, setExportFormList] = useState([]);
     const [exportData, setExportData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState(null);
     const [response, setResponse] = useState({
         show: false,
         success: false,
@@ -129,99 +126,163 @@ const ExporterPage = (props) => {
             }
         })
     }
+    const isChecked = (id, type) => {
+        const findExportItem = exportData.find(item => item.export_type === type);
+        if (!isSet(findExportItem)) {
+            return false;
+        }
+        const findId = findExportItem.export_data.find(item => item.id === id);
+        return isSet(findId);
+    }
     return (
         <SidebarLayout pageName={ExporterPageName}>
-            <Card>
-                <Card.Header>Exporter</Card.Header>
-                <Card.Body>
-                    <Row>
-                        <Col sm={12}>
-                            {response.show &&
-                            <Alert variant={response.success ? "success" : "danger"}>
-                                <p>{response.message}</p>
+            <div className={"exporter"}>
+                <Card>
+                    <Card.Header>Exporter</Card.Header>
+                    <Card.Body>
+                        <Row>
+                            <Col sm={12}>
+                                {response.show &&
+                                <Alert variant={response.success ? "success" : "danger"}>
+                                    <p>{response.message}</p>
 
-                                {Array.isArray(response.data) && response.data.map((item, index) => (
-                                    <React.Fragment key={index}>
-                                        {item.status === "success" ?
-                                            <div>
-                                                <p>
-                                                    {item.message} <br/>
-                                                    <a target={"_BLANK"} href={item.file_url}>{item.file_url}</a>
-                                                </p>
-                                            </div>
-                                            :
-                                            <div>
-                                                <p>{item.message}</p>
-                                            </div>
-                                        }
-                                    </React.Fragment>
-                                ))}
-                            </Alert>
-                            }
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col sm={12} md={12} lg={12}>
-                            <h4>Available Exports</h4>
-                            <Form onSubmit={submitHandler}>
-                                {exportFormList.map((exportItem, index) => (
-                                    <Row key={index} className={index > 0 ? "mt-5" : ""}>
-                                        <Col sm={12} md={2} lg={2}>
-                                            <div className={"form-group"}>
-                                                <div className="form-check checkbox">
-                                                    <input
-                                                        className="form-check-input"
-                                                        id={exportItem.name}
-                                                        type="checkbox"
-                                                        name={exportItem.name}
-                                                        value={exportItem.name}
-                                                        onChange={formTypeCheckHandler.bind(this, exportItem.name)}
-                                                    />
-                                                    <label className="form-check-label"
-                                                           htmlFor={exportItem.name}>
-                                                        {exportItem.label}
-                                                    </label>
+                                    {Array.isArray(response.data) && response.data.map((item, index) => (
+                                        <React.Fragment key={index}>
+                                            {item.status === "success" ?
+                                                <div>
+                                                    <p>
+                                                        {item.message} <br/>
+                                                        <a target={"_BLANK"} href={item.file_url}>{item.file_url}</a>
+                                                    </p>
                                                 </div>
-                                            </div>
-                                        </Col>
-                                        <Col sm={12} md={4} lg={4}>
-                                            {exportItem.show && exportItem.data.map((dataItem, dataItemIndex) => (
-                                                <div key={dataItemIndex} className={"form-check checkbox" + (dataItemIndex > 0 ? "mt-2" : "")}>
-                                                    <input
-                                                        className="form-check-input"
-                                                        id={dataItem[exportItem.nameField]}
-                                                        name={dataItem[exportItem.nameField]}
-                                                        type="checkbox"
-                                                        value={dataItem[exportItem.id]}
-                                                        onClick={
-                                                            formCheckHandler.bind(
-                                                                this,
-                                                                exportItem.name,
-                                                                dataItem[exportItem.id],
-                                                                exportItem.label)
-                                                        }
-                                                    />
-                                                    <label className="form-check-label"
-                                                           htmlFor={dataItem[exportItem.nameField]}>
-                                                        {dataItem[exportItem.labelField]}
-                                                    </label>
+                                                :
+                                                <div>
+                                                    <p>{item.message}</p>
                                                 </div>
-                                            ))}
-                                        </Col>
-                                    </Row>
-                                ))}
-                                <Row>
-                                    <Col sm={12} md={2} lg={2}>
-                                        <button type={"submit"} className={"btn btn-primary btn-lg"}>
-                                            Export Data
-                                        </button>
-                                    </Col>
-                                </Row>
-                            </Form>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
+                                            }
+                                        </React.Fragment>
+                                    ))}
+                                </Alert>
+                                }
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col sm={12} md={12} lg={12}>
+                                <div className={"exporter--entities"}>
+                                    <h4>Available Exports</h4>
+                                    <Form onSubmit={submitHandler}>
+                                        {exportFormList.map((exportItem, index) => (
+                                            <React.Fragment key={index}>
+                                                {exportItem.data.length > 0 &&
+                                                <Row key={index} className={index > 0 ? "mt-5" : ""}>
+                                                    <Col sm={12} md={2} lg={2}>
+                                                        <div className={"exporter--entities--selector"}>
+                                                            <label
+                                                                className="exporter--entities--selector--label"
+                                                                htmlFor={exportItem.name}
+                                                            >
+                                                                {exportItem.label}
+                                                            </label>
+                                                            <label className="c-switch c-switch-label c-switch-success">
+                                                                <input
+                                                                    className="c-switch-input"
+                                                                    type="checkbox"
+                                                                    id={exportItem.name}
+                                                                    name={exportItem.name}
+                                                                    value={exportItem.name}
+                                                                    onChange={formTypeCheckHandler.bind(this, exportItem.name)}
+                                                                />
+                                                                <span
+                                                                    className="c-switch-slider"
+                                                                    data-checked="✓"
+                                                                    data-unchecked="✕"
+                                                                />
+                                                            </label>
+                                                        </div>
+                                                    </Col>
+                                                    <Col sm={12} md={4} lg={4}>
+                                                        <div className={"exporter--entities--items"}>
+                                                            {exportItem.show &&
+                                                                <button
+                                                                    className="btn btn-md btn-ghost-primary active"
+                                                                    type="button"
+                                                                    aria-pressed="true"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        setModalContent(
+                                                                            <>
+                                                                                {exportItem.show && exportItem.data.map((dataItem, dataItemIndex) => (
+                                                                                    <div key={dataItemIndex}
+                                                                                         className={"form-check checkbox" + (dataItemIndex > 0 ? "mt-2" : "")}>
+                                                                                        <input
+                                                                                            className="form-check-input"
+                                                                                            id={dataItem[exportItem.nameField]}
+                                                                                            name={dataItem[exportItem.nameField]}
+                                                                                            type="checkbox"
+                                                                                            value={dataItem[exportItem.id]}
+                                                                                            checked={isChecked(dataItem.id, exportItem.name)}
+                                                                                            onChange={
+                                                                                                formCheckHandler.bind(
+                                                                                                    this,
+                                                                                                    exportItem.name,
+                                                                                                    dataItem[exportItem.id],
+                                                                                                    exportItem.label)
+                                                                                            }
+                                                                                        />
+                                                                                        <label className="form-check-label"
+                                                                                               htmlFor={dataItem[exportItem.nameField]}>
+                                                                                            {dataItem[exportItem.labelField]}
+                                                                                        </label>
+                                                                                    </div>
+                                                                                ))}
+                                                                            </>
+                                                                        )
+                                                                        setShowModal(true)
+                                                                    }}
+                                                                >
+                                                                    Select {exportItem.label}
+                                                                </button>
+                                                            }
+
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                                }
+                                            </React.Fragment>
+                                        ))}
+                                        <Row>
+                                            <Col sm={12} md={2} lg={2}>
+                                                <button type={"submit"} className={"btn btn-primary btn-lg"}>
+                                                    Export Data
+                                                </button>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Card.Body>
+                </Card>
+                <Modal
+                    show={showModal}
+                    onHide={() => {
+                        setShowModal(false)
+                    }}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Select Items</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        {modalContent}
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant="secondary">Close</Button>
+                        <Button variant="primary">Save changes</Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
         </SidebarLayout>
     )
 }
