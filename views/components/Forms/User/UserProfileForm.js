@@ -5,7 +5,7 @@ import ApiConfig from "../../../../config/api-config";
 import DataForm from "../DataForm/DataForm";
 import {UserProfileFormData} from "../../../../library/forms/user-profile-form";
 
-const UserProfileForm = ({operation, user = null, data, config}) => {
+const UserProfileForm = ({operation, user = null, data, config, formResponse}) => {
 
     const [userData, setUserData] = useState(null);
     const [formOperation, setFormOperation] = useState(null);
@@ -109,14 +109,27 @@ const UserProfileForm = ({operation, user = null, data, config}) => {
                     variant: "success",
                     message: responseData.message
                 })
+                switch (formOperation) {
+                    case "new_user":
+                    case "update_user":
+                        formResponse(200, responseData.message, responseData.data)
+                        break;
+                }
             },
             onError: (error) => {
                 console.log(error.response)
+                const errorMessage = error?.response?.data?.message || "Error saving user";
                 setResponse({
                     show: true,
                     variant: "danger",
-                    message: error?.response?.data?.message || "Error saving user"
+                    message: errorMessage
                 })
+                switch (formOperation) {
+                    case "new_user":
+                    case "update_user":
+                        formResponse(400, errorMessage, error?.response?.data)
+                        break;
+                }
             }
         })
     }

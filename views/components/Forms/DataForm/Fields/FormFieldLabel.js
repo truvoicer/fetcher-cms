@@ -17,7 +17,7 @@ function FormFieldLabel({errors, field}) {
             <>
                 {field.label}
                 <label className="text-black" htmlFor={field.name}>
-                <span className={"text-danger site-form--error--field"}>
+                <span className={"text-danger site-form--error--field ml-3"}>
                 {errors[field.name]}
                 </span>
                 </label>

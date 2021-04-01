@@ -17,7 +17,7 @@ import {
 
 
 export const SettingsApiTokensPageName = "settings_api_tokens";
-const SettingsUserApiTokens = ({session}) => {
+const SettingsUserApiTokens = ({session, userId}) => {
 
     useEffect(() => {
         if (!session[SESSION_AUTHENTICATING] && session[SESSION_AUTHENTICATED] && !isObjectEmpty(session[SESSION_USER])) {
@@ -37,7 +37,7 @@ const SettingsUserApiTokens = ({session}) => {
                 <Col sm={12} md={12} lg={12}>
                     {!isObjectEmpty(session[SESSION_USER]) &&
                         <ApiTokensTable
-                            userId={session[SESSION_USER].id}
+                            userId={userId}
                             admin
                         />
                     }

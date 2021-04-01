@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col";
 import {isSet} from "../../../library/utils";
 import DataForm from "./DataForm/DataForm";
 import {ApiTokenFormData} from "../../../library/forms/api-token-form";
+import {setErrorAlertAction} from "../../../library/redux/actions/global-actions";
 
 const ApiTokenForm = ({data, formResponse, config}) => {
     const [apiToken, setApiToken] = useState({});
@@ -35,13 +36,16 @@ const ApiTokenForm = ({data, formResponse, config}) => {
     }, [data.itemId, data.action, config.admin])
 
     const submitHandler = (values) => {
+        if (!config.admin) {
+            setErrorAlertAction("Not permitted")
+        }
         let requestData = {...values};
         if (data.action === "update") {
             requestData.id = data.itemId;
         }
         postRequest({
-            endpoint: ApiConfig.endpoints.admin,
-            operation: `user/api-token/${data.action}`,
+            endpoint: `${ApiConfig.endpoints.admin}/user/${config.userId}/api-token/${data.itemId}`,
+            operation: `${data.action}`,
             requestData: requestData,
             onSuccess: (responseData) => {
                 formResponse(200, responseData.message, responseData.data)

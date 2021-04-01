@@ -11,6 +11,7 @@ import UserEntitiesPermissionsForm from "../../../../views/components/Forms/Admi
 import {setBreadcrumbsPageNameAction} from "../../../../library/redux/actions/breadcrumbs-actions";
 import {SettingsUserPermissionsPageName} from "./[user_id]/permissions";
 import UserProfileForm from "../../../../views/components/Forms/User/UserProfileForm";
+import {formatDate} from "../../../../library/utils";
 
 export const ManageUsersPageName = "manage_users";
 const ManageUsers = (props) => {
@@ -53,11 +54,17 @@ const ManageUsers = (props) => {
                 name: 'Date Updated',
                 selector: 'date_updated',
                 sortable: true,
+                cell: row => {
+                    return formatDate(row.date_updated)
+                }
             },
             {
                 name: 'Date Added',
                 selector: 'date_added',
                 sortable: true,
+                cell: row => {
+                    return formatDate(row.date_added)
+                }
             }
         ];
     }

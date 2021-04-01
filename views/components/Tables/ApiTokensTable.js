@@ -47,6 +47,12 @@ const ApiTokensTable = ({userId, admin = false}) => {
     const getTableColumns = () => {
         return [
             {
+                name: 'Type',
+                selector: 'type',
+                sortable: true,
+                maxWidth: "100px",
+            },
+            {
                 name: 'Token',
                 selector: 'token',
                 sortable: true,

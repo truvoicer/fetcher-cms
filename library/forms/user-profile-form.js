@@ -5,6 +5,67 @@ export const UserProfileFormData = (
     operation = false,
     user = null,
 ) => {
+
+    const passwordField = () => {
+        return {
+            // dependsOn: {
+            //     field: "change_password",
+            //     value: true
+            // },
+            name: "new_password",
+            label: "New Password",
+            type: "password",
+            fieldType: "text",
+            placeHolder: "",
+            validation: {
+                rules: [
+                    {
+                        type: "password",
+                        allowedChars: ["alphanumeric", "symbols"]
+                    },
+                    {
+                        type: "length",
+                        min: 5,
+                        max: 16
+                    }
+                ]
+            }
+        }
+    }
+    const confirmPasswordField = () => {
+        return {
+            // dependsOn: {
+            //     field: "change_password",
+            //     value: true
+            // },
+            name: "confirm_password",
+            label: "Confirm password",
+            type: "password",
+            fieldType: "text",
+            placeHolder: "",
+            validation: {
+                rules: [
+                    {
+                        type: "match",
+                        matchField: "new_password",
+                    },
+                ]
+            }
+        }
+    }
+    const rolesField = (userRoles, userRolesOptions) => {
+        return {
+            rowIndex: 2,
+            columnIndex: 0,
+            name: "roles",
+            label: "Roles",
+            fieldType: "select",
+            multi: true,
+            options: userRolesOptions,
+            value: userRoles,
+        }
+    }
+
     let userRoles = [];
     if (isNotEmpty(user?.roles)) {
         userRoles = user.roles.map((item, index) => {
@@ -18,17 +79,33 @@ export const UserProfileFormData = (
     let extraFields = [];
     switch (operation) {
         case "new_user":
+            extraFields.push(rolesField(userRoles, userRolesOptions))
+            extraFields.push(passwordField())
+            extraFields.push(confirmPasswordField())
+            break;
         case "update_user":
+        case "update_user_profile":
             extraFields.push({
-                    rowIndex: 2,
-                    columnIndex: 0,
-                    name: "roles",
-                    label: "Roles",
-                    fieldType: "select",
-                    multi: true,
-                    options: userRolesOptions,
-                    value: userRoles,
+                rowIndex: 3,
+                columnIndex: 0,
+                label: "Change Password?",
+                name: "change_password",
+                description: "",
+                showLabel: false,
+                labelPosition: "",
+                placeHolder: "",
+                fieldType: "checkbox",
+                checkboxType: "true_false",
+                value: false,
+                options: [],
+                subFields: [
+                    passwordField(),
+                    confirmPasswordField()
+                ]
             })
+            if (operation === "update_user") {
+                extraFields.push(rolesField(userRoles, userRolesOptions))
+            }
             break;
     }
     return {
@@ -43,7 +120,7 @@ export const UserProfileFormData = (
                 placeHolder: "Enter a username",
                 fieldType: "text",
                 type: "text",
-                value: !isNotEmpty(user?.username)? "" : user.username,
+                value: !isNotEmpty(user?.username) ? "" : user.username,
             },
             {
                 rowIndex: 1,
@@ -55,66 +132,7 @@ export const UserProfileFormData = (
                 placeHolder: "Enter a email",
                 fieldType: "text",
                 type: "email",
-                value: !isNotEmpty(user?.email)? "" : user.email,
-            },
-            {
-                rowIndex: 3,
-                columnIndex: 0,
-                label: "Change Password?",
-                name: "change_password",
-                description: "",
-                showLabel: false,
-                labelPosition: "",
-                placeHolder: "",
-                fieldType: "checkbox",
-                checkboxType: "true_false",
-                value: false,
-                options: [],
-                subFields: [
-                    {
-                        dependsOn: {
-                            field: "change_password",
-                            value: true
-                        },
-                        name: "new_password",
-                        label: "New Password",
-                        type: "password",
-                        fieldType: "text",
-                        placeHolder: "",
-                        validation: {
-                            rules: [
-                                {
-                                    type: "password",
-                                    allowedChars: ["alphanumeric", "symbols"]
-                                },
-                                {
-                                    type: "length",
-                                    min: 5,
-                                    max: 16
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        dependsOn: {
-                            field: "change_password",
-                            value: true
-                        },
-                        name: "confirm_password",
-                        label: "Confirm password",
-                        type: "password",
-                        fieldType: "text",
-                        placeHolder: "",
-                        validation: {
-                            rules: [
-                                {
-                                    type: "match",
-                                    matchField: "new_password",
-                                },
-                            ]
-                        }
-                    },
-                ]
+                value: !isNotEmpty(user?.email) ? "" : user.email,
             },
             ...extraFields
         ]
